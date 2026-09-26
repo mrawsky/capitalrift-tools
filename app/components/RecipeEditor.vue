@@ -4,6 +4,7 @@ import { scoreRecipeAcrossTrends, validateRecipeComposition } from '../utils/dom
 import type { RecipePart, Trend } from '../utils/domain/types'
 
 const props = defineProps<{ trends: Trend[] }>()
+const ingredientOptions = INGREDIENTS.map(ingredient => ({ value: ingredient.id, label: ingredient.name }))
 const rows = ref<RecipePart[]>([
   { ingredientId: 'KETCHUP', share: 50 },
   { ingredientId: 'VINEGAR', share: 50 },
@@ -43,9 +44,7 @@ async function copyCustomRecipe() {
       <div class="editor-controls">
         <div v-for="(row, index) in rows" :key="index" class="editor-row">
           <label :for="`ingredient-${index}`" class="sr-only">Ingredient {{ index + 1 }}</label>
-          <select :id="`ingredient-${index}`" v-model="row.ingredientId">
-            <option v-for="ingredient in INGREDIENTS" :key="ingredient.id" :value="ingredient.id">{{ ingredient.name }}</option>
-          </select>
+          <SearchableSelect :id="`ingredient-${index}`" v-model="row.ingredientId" :options="ingredientOptions" placeholder="Search ingredients…" />
           <label :for="`share-${index}`" class="sr-only">Percentage for ingredient {{ index + 1 }}</label>
           <input :id="`share-${index}`" v-model.number="row.share" type="number" min="1" max="100" step="1">
           <span>%</span>
@@ -74,4 +73,3 @@ async function copyCustomRecipe() {
     </div>
   </section>
 </template>
-

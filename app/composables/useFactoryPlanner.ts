@@ -1,0 +1,29 @@
+import { FACTORY_CATALOG } from '../utils/factory/catalog'
+import { createFactory, createProductionLine, createSupplyLine, factoryFromPlan } from '../utils/factory/calculations'
+import { emptyFactoryState, FACTORY_STORAGE_KEY, parseFactoryState, serializeFactoryState } from '../utils/factory/persistence'
+import type { FactoryPlannerStateV1, SavedProductionPlan } from '../utils/factory/types'
+
+let saveTimer: ReturnType<typeof setTimeout> | null = null
+function id(prefix: string) { return `${prefix}-${globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`}` }
+
+export function useFactoryPlanner() {
+  const state = useState<FactoryPlannerStateV1>('factory-planner-state', emptyFactoryState); const ready = useState('factory-planner-ready', () => false); const watching = useState('factory-planner-watching', () => false); const storageMessage = useState('factory-planner-storage-message', () => '')
+  const selectedFactory = computed(() => state.value.factories.find(factory => factory.id === state.value.selectedFactoryId) ?? null)
+  function persist() { if (!import.meta.client || !ready.value) return; if (saveTimer) clearTimeout(saveTimer); saveTimer = setTimeout(() => { try { state.value.catalogVersion = FACTORY_CATALOG.version; localStorage.setItem(FACTORY_STORAGE_KEY, serializeFactoryState(state.value)); storageMessage.value = '' } catch { storageMessage.value = 'Changes are kept for this visit, but this browser could not save them.' } }, 180) }
+  function initialize() { if (!import.meta.client || ready.value) return; try { const stored = localStorage.getItem(FACTORY_STORAGE_KEY); if (stored) state.value = parseFactoryState(stored) } catch { storageMessage.value = 'Saved factory data could not be read. A fresh local workspace was opened.'; state.value = emptyFactoryState() } ready.value = true; if (!watching.value) { watching.value = true; watch(state, persist, { deep: true }) } }
+  function touchFactory() { if (selectedFactory.value) selectedFactory.value.updatedAt = new Date().toISOString() }
+  function addFactory(name = `Factory ${state.value.factories.length + 1}`) { const factory = createFactory(name); state.value.factories.push(factory); state.value.selectedFactoryId = factory.id; return factory }
+  function removeFactory(factoryId: string) { state.value.factories = state.value.factories.filter(factory => factory.id !== factoryId); if (state.value.selectedFactoryId === factoryId) state.value.selectedFactoryId = state.value.factories[0]?.id ?? null }
+  function addProduction(recipeId?: string) { if (!selectedFactory.value) return; selectedFactory.value.productions.push(createProductionLine(recipeId)); touchFactory() }
+  function addSupply(itemId?: string) { if (!selectedFactory.value) return; selectedFactory.value.supplies.push(createSupplyLine(itemId)); touchFactory() }
+  function setMachineOwned(stationId: string, owned: number) { if (!selectedFactory.value) return; const existing = selectedFactory.value.machines.find(machine => machine.stationId === stationId); if (existing) existing.owned = Math.max(0, Number(owned) || 0); else selectedFactory.value.machines.push({ stationId, owned: Math.max(0, Number(owned) || 0) }); touchFactory() }
+  function savePlan(input: Omit<SavedProductionPlan, 'id' | 'createdAt' | 'updatedAt'>) { const now = new Date().toISOString(); const plan: SavedProductionPlan = { ...input, id: id('plan'), createdAt: now, updatedAt: now }; state.value.plans.push(plan); return plan }
+  function removePlan(planId: string) { state.value.plans = state.value.plans.filter(plan => plan.id !== planId) }
+  function createFactoryFromSavedPlan(plan: SavedProductionPlan) { const factory = factoryFromPlan(plan, state.value, plan.name); state.value.factories.push(factory); state.value.selectedFactoryId = factory.id; return factory }
+  function mergePlanIntoFactory(plan: SavedProductionPlan, factoryId: string) { const target = state.value.factories.find(factory => factory.id === factoryId); if (!target) return; const planned = factoryFromPlan(plan, state.value, plan.name); for (const incoming of planned.productions) { const existing = target.productions.find(line => line.recipeId === incoming.recipeId && !line.label); if (existing) existing.assignedMachines += incoming.assignedMachines; else target.productions.push(incoming) } target.updatedAt = new Date().toISOString() }
+  function replaceFromImport(text: string) { state.value = parseFactoryState(text); ready.value = true }
+  function mergeFromImport(text: string) { const incoming = parseFactoryState(text); for (const factory of incoming.factories) { factory.id = id('factory'); factory.productions.forEach(line => line.id = id('production')); factory.supplies.forEach(line => line.id = id('supply')); state.value.factories.push(factory) } for (const plan of incoming.plans) state.value.plans.push({ ...plan, id: id('plan') }); if (!state.value.selectedFactoryId) state.value.selectedFactoryId = state.value.factories[0]?.id ?? null }
+  function clearFactoryData() { state.value = emptyFactoryState(); if (import.meta.client) localStorage.removeItem(FACTORY_STORAGE_KEY) }
+  function downloadBackup() { if (!import.meta.client) return; const blob = new Blob([serializeFactoryState(state.value)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = `capital-rift-tools-${new Date().toISOString().slice(0, 10)}.json`; anchor.click(); URL.revokeObjectURL(url) }
+  return { state, ready, storageMessage, selectedFactory, initialize, addFactory, removeFactory, addProduction, addSupply, setMachineOwned, savePlan, removePlan, createFactoryFromSavedPlan, mergePlanIntoFactory, replaceFromImport, mergeFromImport, clearFactoryData, downloadBackup, touchFactory }
+}

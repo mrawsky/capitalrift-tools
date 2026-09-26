@@ -1,11 +1,14 @@
-# Capital Rift Recipe Generator — Full Mechanics Reference
+# Capital Rift Tools — Reference
 
-> An unofficial, community-maintained calculator for Capital Rift local food trends and recipe taste matching. Current mechanics model: 2026-09-23 / v413.
+> Unofficial tools for Capital Rift restaurant recipes and factory production planning. Recipe model: 2026-09-23 / v413.
 
 ## Primary pages
 
-- [Recipe generator](/): Enter a restaurant chunkId, generate its three deterministic trends, and search 12 best-found recipes.
-- [Methodology](/methodology): Find a chunkId in the browser Network panel and audit location normalization, trend generation, scoring, and limitations.
+- [Tool hub](/): Choose a tool.
+- [Recipe calculator](/recipe): Enter a restaurant chunkId, generate its three deterministic trends, and search 12 best-found recipes.
+- [Recipe methodology](/recipe/methodology): Find a chunkId and review location normalization, scoring, and limitations.
+- [Factory planner](/factory): Track local factories, machines, production balances, and saved plans.
+- [Factory recipes](/factory/recipes): Search the bundled static production catalog.
 - [GitHub repository](https://github.com/mrawsky/capitalrift-recipe): Source code, fixtures, and contribution history.
 - [Report a mismatch](https://github.com/mrawsky/capitalrift-recipe/issues/new): Submit changed game mechanics or a reproducible calculation problem.
 
@@ -74,4 +77,6 @@ The verified model does not include ingredient cost, inventory, availability, pr
 
 Useful reports include the game version, date checked, restaurant chunkId, all three trend names in displayed order, recipe ingredients and percentages, the match and popularity shown by the game, and a screenshot or reproduction notes.
 
-Capital Rift and its associated names belong to their respective owners. This project is not affiliated with or endorsed by the game's developer or publisher.
+The factory planner stores its setup in the browser and makes no Capital Rift API calls. It does not sign in, scrape locations, read buildings, or automate play.
+
+Unofficial community project. Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.

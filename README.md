@@ -1,14 +1,20 @@
-# Capital Rift Recipe Generator
+# CapitalRift Tools
 
-**A community-made recipe lab for players who want to understand what the game is actually calculating.**
+**Unofficial tools for CapitalRift restaurant recipes and factory production planning.**
 
-I built this because Capital Rift gives us a rich Recipe Designer, but very little visibility into the numbers behind it. A restaurant's local trends depend on its map location, recipe names only reveal two of eight taste axes, and two recipes displaying the same rounded match can still perform differently.
+The site has two tools: a restaurant recipe calculator and a factory planner. Both run in the browser and use versioned local data.
 
-This project turns that hidden calculation into something players can inspect, reproduce, and improve together.
+Factory setups and saved production plans stay in local storage and can be backed up as JSON.
 
-> Current mechanics snapshot: **2026-09-23 / game version v413**
+> Current mechanics snapshot: **2026-09-27 / game version v425**
 
-[Open the methodology](./app/pages/methodology.vue) · [Report a problem or changed game mechanic](https://github.com/mrawsky/capitalrift-recipe/issues/new) · [View the repository](https://github.com/mrawsky/capitalrift-recipe)
+[Open the recipe methodology](./app/pages/methodology.vue) · [Report a problem](https://github.com/mrawsky/capitalrift-tools/issues/new) · [View the repository](https://github.com/mrawsky/capitalrift-recipe)
+
+## Factory planner
+
+Create named factories, enter raw supplies, record owned machines, assign recipes, and see production balances across the full network. The Planner expands a finished product into its inputs and required machines, and the Recipes page provides a searchable copy of the bundled production data.
+
+The factory tool does not sign in to Capital Rift, call its APIs, scrape locations, read buildings, or automate play. Data is entered by the user and calculations happen locally against a reviewed, versioned production catalog.
 
 ## What can I do with it?
 
@@ -69,7 +75,7 @@ These fixtures matter more than a vague claim that the calculator is “accurate
 
 Capital Rift can change. Ingredient vectors, validation rules, trend generation, or display rounding may be different in a future build. The project becomes much more useful when players share what they can verify.
 
-Please [open an issue](https://github.com/mrawsky/capitalrift-recipe/issues/new) if you find:
+Please [open an issue](https://github.com/mrawsky/capitalrift-tools/issues/new) if you find:
 
 - trend names that do not match the game for the same `chunkId`;
 - an ingredient vector or recipe score that changed after a patch;
@@ -90,11 +96,11 @@ Match and popularity shown by the game:
 Screenshot or reproduction notes:
 ```
 
-Pull requests are welcome too—whether they improve code, tests, documentation, accessibility, research notes, or the player experience. For mechanics changes, please include a reproducible fixture or explain how the value was recovered and verified.
+Pull requests are welcome too—whether they improve code, tests, documentation, accessibility, research notes, or the player experience. For mechanics changes, please include a reproducible fixture and explain how the value was checked.
 
 ## What is verified—and what is not
 
-The current model comes from reverse-engineering the game's client-side JavaScript and checking key outputs in the game UI.
+The current recipe model uses community-checked game data and known results from the game UI.
 
 The documented model covers:
 
@@ -146,7 +152,7 @@ npm run preview    # preview the production build
 app/
   components/       interface, results, editor, and player guidance
   composables/       Worker lifecycle and versioned local caching
-  pages/             generator and methodology routes
+  pages/             tool hub, recipe calculator, and factory dashboard routes
   utils/domain/      framework-independent game mechanics
   workers/           deterministic recipe search
 tests/               fixtures and domain regression tests
@@ -195,8 +201,8 @@ The sitemap is generated and prerendered during `npm run generate`. The two LLM 
 
 ## A small community project
 
-This is an unofficial tool made by [mrawsky](https://mrawsky.pro), but I would like its useful parts to belong to the people playing, testing, and documenting Capital Rift.
+This is an unofficial tool made by [mrawsky](https://mrawsky.pro), but I would like its useful parts to belong to the people playing, testing, and documenting CapitalRift.
 
-If it helped your restaurant, found a mismatch, or made the mechanics easier to understand, share what you learned. That feedback is how this stops being a one-off calculator and becomes a reliable community reference.
+If it helped your restaurant or factory give it star!, found a mismatch, or made the mechanics easier to understand, share what you learned. That feedback is how this stops being a one-off calculator and becomes a reliable community reference.
 
-Capital Rift and its associated names belong to their respective owners. This project is not affiliated with or endorsed by the game's developer or publisher.
+Unofficial community project. Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.

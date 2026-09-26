@@ -8,8 +8,8 @@ import '@fontsource/ibm-plex-mono/500.css'
   <div>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <NuxtRouteAnnouncer />
-    <AppHeader />
-    <NuxtPage />
-    <AppFooter />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>

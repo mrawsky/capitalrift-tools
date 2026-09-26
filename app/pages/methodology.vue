@@ -2,13 +2,13 @@
 import { GAME_MODEL } from '../utils/domain/model'
 
 const runtimeConfig = useRuntimeConfig()
-const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/methodology` : undefined)
+const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe/methodology` : undefined)
 
 useSeoMeta({
-  title: 'Methodology — Capital Rift Recipe Generator',
+  title: 'How the Recipe Calculator Works — Capital Rift Tools',
   description: 'Where to find a Capital Rift chunk ID and how location normalization, local trends, recipe profiles, match, and popularity are calculated.',
-  ogTitle: 'Capital Rift Recipe Generator Methodology',
-  ogDescription: 'A transparent explanation of the recovered local trend and recipe scoring mechanics.',
+  ogTitle: 'How the Capital Rift Recipe Calculator Works',
+  ogDescription: 'A clear explanation of the local trend and recipe scoring model.',
   ogType: 'article',
 })
 useHead(() => ({ link: canonical.value ? [{ rel: 'canonical', href: canonical.value }] : [] }))
@@ -17,9 +17,9 @@ useHead(() => ({ link: canonical.value ? [{ rel: 'canonical', href: canonical.va
 <template>
   <main id="main-content" class="methodology-page">
     <header class="methodology-hero">
-      <p class="eyebrow accent">DOCUMENTATION / MODEL {{ GAME_MODEL.label }}</p>
-      <h1>Every number,<br><em>in the open.</em></h1>
-      <p>This page separates verified mechanics from practical recommendations, so you can reproduce the calculation and spot changes after a game patch.</p>
+      <p class="eyebrow accent">HOW IT WORKS / MODEL {{ GAME_MODEL.label }}</p>
+      <h1>A clear look<br><em>at the calculator.</em></h1>
+      <p>This page explains the current local model, the information you enter, and what to re-check after a game update.</p>
     </header>
 
     <div class="methodology-layout">
@@ -113,7 +113,9 @@ popularity display = +13%</code></pre>
           <h2>Taste match is not business performance.</h2>
           <p>This tool does not model cost, inventory, supply, preparation time, station compatibility, pricing, profit, or availability. A field called <code>recipe</code> found in cart state represented the “Secret Recipe” upgrade, not a dish composition; restaurant menu data was empty in the inspected snapshot.</p>
           <p>After a patch, re-check the ingredient table, recipe validation, seed version, hash and PRNG constants, eligibility threshold, formulas, and rounding. Reproducing the three known trend names should happen before any new optimization is trusted.</p>
-          <p class="callout">Source confidence: algorithms and vectors were recovered from client JavaScript; key outputs were partially confirmed in the game UI. Generated names and search recommendations are tool output, not game-provided content.</p>
+          <p class="callout">The model uses community-checked game data and known examples. Generated names and search recommendations come from this tool, not from Capital Rift. Important results should be checked in game after an update.</p>
+          <p>The calculator never contacts Capital Rift. You copy the location ID yourself, and every calculation runs in this browser.</p>
+          <p><strong>Unofficial community project.</strong> Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.</p>
         </section>
 
         <section id="faq">

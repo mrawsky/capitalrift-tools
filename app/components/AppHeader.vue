@@ -1,17 +1,14 @@
-<script setup lang="ts">
-import { GAME_MODEL } from '../utils/domain/model'
-</script>
-
 <template>
   <header class="site-header">
-    <NuxtLink class="brand" to="/" aria-label="Capital Rift Recipe Lab home">
+    <NuxtLink class="brand" to="/" aria-label="Capital Rift Tools home">
       <span>CAPITAL RIFT</span>
-      <small>RECIPE LAB</small>
+      <small>TOOLS</small>
     </NuxtLink>
     <nav aria-label="Primary navigation">
-      <NuxtLink to="/#generator">Generator</NuxtLink>
-      <NuxtLink to="/methodology">Methodology</NuxtLink>
+      <NuxtLink to="/">Home</NuxtLink>
+      <NuxtLink to="/recipe">Recipe</NuxtLink>
+      <NuxtLink to="/factory/statistics">Factory</NuxtLink>
     </nav>
-    <span class="model-stamp">MODEL / {{ GAME_MODEL.label }}</span>
+    <span class="model-stamp">LOCAL-FIRST PLAYER TOOLS</span>
   </header>
 </template>

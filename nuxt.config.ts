@@ -24,16 +24,20 @@ export default defineNuxtConfig({
   },
   site: {
     url: productionSiteUrl || undefined,
-    name: 'Capital Rift Recipe Generator',
+    name: 'Capital Rift Tools',
   },
   sitemap: {
+    enabled: Boolean(productionSiteUrl),
     discoverImages: false,
     zeroRuntime: true,
   },
   nitro: {
     prerender: {
-      routes: ['/sitemap.xml'],
+      routes: productionSiteUrl ? ['/sitemap.xml'] : [],
     },
+  },
+  routeRules: {
+    '/methodology': { redirect: { to: '/recipe/methodology', statusCode: 301 } },
   },
   app: {
     head: {

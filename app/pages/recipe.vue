@@ -18,13 +18,13 @@ const status = ref('Ready for a restaurant location ID.')
 const shareCopied = ref(false)
 
 const initialId = computed(() => typeof route.query.id === 'string' ? route.query.id : '')
-const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/` : undefined)
+const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe` : undefined)
 
 useSeoMeta({
-  title: 'Capital Rift Tools — Recipe Calculator & Factory Planner',
-  description: 'Unofficial local tools for Capital Rift restaurant recipes and factory production planning.',
-  ogTitle: 'Capital Rift Tools',
-  ogDescription: 'Plan restaurant recipes and factory production in your browser.',
+  title: 'Recipe Calculator — Capital Rift Tools',
+  description: 'Unofficial calculator for Capital Rift restaurant recipes and local taste trends.',
+  ogTitle: 'Capital Rift Recipe Calculator',
+  ogDescription: 'Generate local trends, strong recipes, and exact match calculations from a restaurant chunk ID.',
   ogType: 'website',
   twitterCard: 'summary',
 })
@@ -36,10 +36,10 @@ useHead(() => ({
     textContent: JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebApplication',
-      name: 'Capital Rift Tools',
+      name: 'Capital Rift Recipe Calculator',
       applicationCategory: 'GameApplication',
       operatingSystem: 'Any modern browser',
-      description: 'Unofficial local tools for Capital Rift recipes and factory production.',
+      description: 'An unofficial local recipe and trend calculator for Capital Rift.',
       isAccessibleForFree: true,
     }),
   }],
@@ -81,27 +81,27 @@ async function copyShareLink() {
 }
 
 onMounted(() => {
-  if (initialId.value) navigateTo({ path: '/recipe', query: { id: initialId.value } }, { replace: true })
+  if (initialId.value) generate({ type: 'id', input: initialId.value })
 })
 </script>
 
 <template>
-  <main id="main-content">
-    <section class="hero hero--hub">
+  <main v-if="route.path === '/recipe'" id="main-content">
+    <section class="recipe-intro">
       <div class="hero__meta">
-        <span>UNOFFICIAL PLAYER TOOLS</span>
-        <span>LOCAL / NO GAME CONNECTION</span>
+        <span>UNOFFICIAL RECIPE CALCULATOR</span>
+        <span>MODEL {{ GAME_MODEL.label }}</span>
       </div>
-      <h1>Plan recipes.<br><em>Build factories.</em></h1>
+      <h1>Restaurant recipe calculator</h1>
       <div class="hero__footer">
-        <p>Two straightforward Capital Rift tools. Choose what you want to plan and keep your factory data in your browser.</p>
-        <NuxtLink to="/recipe" class="down-link">Open recipe calculator <span aria-hidden="true">→</span></NuxtLink>
+        <p>Enter a restaurant location ID to see local taste trends and recipe matches.</p>
+        <NuxtLink to="/recipe/methodology" class="down-link">How it works <span aria-hidden="true">→</span></NuxtLink>
       </div>
     </section>
 
-    <GeneratorForm v-if="false" :loading="loading" :initial-id="initialId" @generate="generate" />
+    <GeneratorForm :loading="loading" :initial-id="initialId" @generate="generate" />
 
-    <div v-if="false" class="status-region" aria-live="polite" aria-atomic="true">
+    <div class="status-region" aria-live="polite" aria-atomic="true">
       <p :class="{ error }">{{ status }}</p>
       <p v-if="error" class="error-detail">Check the value and make sure it identifies the restaurant chunk, not a neighboring map tile.</p>
     </div>
@@ -130,19 +130,17 @@ onMounted(() => {
       <RecipeEditor v-if="optimization" :trends="trends" />
     </template>
 
-    <section class="tool-grid" aria-label="Available tools">
+    <section class="trust-section">
       <div>
-        <p class="eyebrow accent">01 / RECIPE CALCULATOR</p>
-        <h2>Restaurant recipes</h2>
-        <p>Enter a restaurant location ID, see its local taste trends, and compare recipe matches.</p>
-        <NuxtLink class="button button--primary" to="/recipe">Open recipe calculator</NuxtLink>
+        <p class="eyebrow accent">CHECK IN GAME</p>
+        <h2>A useful estimate.<br>Easy to verify.</h2>
       </div>
-      <div>
-        <p class="eyebrow accent">02 / FACTORY PLANNER</p>
-        <h2>Factory production</h2>
-        <p>Track factories, machines, inputs, output, shortages, and saved production plans.</p>
-        <NuxtLink class="button" to="/factory/statistics">Open factory planner</NuxtLink>
+      <div class="trust-copy">
+        <p>The calculator uses a versioned local data model and community-checked examples. Capital Rift updates can change the results.</p>
+        <p>Recommendations optimize taste match only. They do not predict ingredient cost, supply, preparation time, station compatibility, or profit.</p>
+        <NuxtLink class="button button--quiet" to="/recipe/methodology">Read how it works</NuxtLink>
       </div>
     </section>
   </main>
+  <NuxtPage v-else />
 </template>

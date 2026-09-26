@@ -84,7 +84,7 @@ function submitCoordinates() {
     <details class="id-guide-panel">
       <summary><span>Where do I find the chunk ID?</span><small>Desktop browser · about 2 minutes</small></summary>
       <ChunkIdGuide compact />
-      <NuxtLink class="text-button guide-deep-link" to="/methodology#find-id">Open the full guide ↗</NuxtLink>
+      <NuxtLink class="text-button guide-deep-link" to="/recipe/methodology#find-id">Open the full guide ↗</NuxtLink>
     </details>
 
     <details class="coordinate-panel">
