@@ -37,7 +37,7 @@ function clearAll() {
     <aside class="factory-sidebar">
       <div><p class="eyebrow accent">FACTORY PLANNER</p><h2>Production desk</h2></div>
       <nav aria-label="Factory planner">
-        <NuxtLink to="/factory">Tutorial / About</NuxtLink><NuxtLink to="/factory/statistics">Statistics</NuxtLink><NuxtLink to="/factory/production">Production</NuxtLink><NuxtLink to="/factory/machines">Machines</NuxtLink><NuxtLink to="/factory/planner">Planner</NuxtLink><NuxtLink to="/factory/recipes">Recipes</NuxtLink>
+        <NuxtLink to="/factory">Tutorial / About</NuxtLink><NuxtLink to="/factory/statistics">Statistics</NuxtLink><NuxtLink to="/factory/production">Production</NuxtLink><NuxtLink to="/factory/machines">Machines</NuxtLink><NuxtLink to="/factory/planner">Planner</NuxtLink><NuxtLink to="/factory/recipes">Recipes</NuxtLink><NuxtLink to="/factory/blueprints">Blueprints</NuxtLink>
       </nav>
       <div class="factory-sidebar__storage">
         <label for="factory-picker">Current factory</label>

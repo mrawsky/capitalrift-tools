@@ -77,5 +77,5 @@ export interface OptimizationRequest {
   trends: Trend[]
   recipesPerTrend?: number
   pairOnly?: boolean
+  allowedIngredientIds?: string[]
 }
-

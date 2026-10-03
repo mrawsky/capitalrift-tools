@@ -3,6 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare:reference": "node scripts/generate-reference.mjs",
+    "prebuild": "npm run prepare:reference",
+    "pregenerate": "npm run prepare:reference",
+    "verify:equipment": "node scripts/verify-equipment.mjs",
+    "verify:seo": "node scripts/verify-generated-site.mjs",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",

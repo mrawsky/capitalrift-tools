@@ -1,0 +1,41 @@
+{
+  "entries": [
+    {
+      "id": "community-tools",
+      "date": "2026-10-03",
+      "gameVersion": "v435",
+      "title": "More tools for factories and restaurants",
+      "summary": "New crafting and resource tools, easier recipe sharing, and more reliable factory plans.",
+      "evidence": "Restaurant, crafting, and equipment data was checked against a current version of the game. This is not a live connection; check important results in game after an update.",
+      "changes": [
+        {
+          "title": "New tools",
+          "items": [
+            "Find ingredients and crafting instructions for all 249 products.",
+            "Calculate batches, materials, and leftovers for a complete crafting chain.",
+            "Compare storage options, calculate hauling trips, and estimate mining output.",
+            "Start a factory plan from a ready-made blueprint."
+          ]
+        },
+        {
+          "title": "Easier planning and sharing",
+          "items": [
+            "Factory plans now include enough machines and ingredients for full-speed production.",
+            "Applying a plan keeps your owned machines and existing supplies unchanged.",
+            "Find restaurant recipes using only the ingredients you can get.",
+            "Save restaurants and recipes in your browser, share them, and download backups.",
+            "Preview shared factory blueprints before saving them."
+          ]
+        },
+        {
+          "title": "Fixes and updates",
+          "items": [
+            "Crafting pages are easier to find through search and related recipe links.",
+            "Game data updates now live here, with links from every tool.",
+            "Improved headings, spacing, and checklists in the mining, storage, hauling, and blueprint guides."
+          ]
+        }
+      ]
+    }
+  ]
+}

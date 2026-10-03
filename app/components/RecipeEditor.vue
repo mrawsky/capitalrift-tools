@@ -3,13 +3,14 @@ import { INGREDIENTS, INGREDIENT_BY_ID } from '../utils/domain/ingredients'
 import { scoreRecipeAcrossTrends, validateRecipeComposition } from '../utils/domain/scoring'
 import type { RecipePart, Trend } from '../utils/domain/types'
 
-const props = defineProps<{ trends: Trend[] }>()
+const props = defineProps<{ trends: Trend[]; chunkId: string; initialParts?: RecipePart[] }>()
 const ingredientOptions = INGREDIENTS.map(ingredient => ({ value: ingredient.id, label: ingredient.name }))
 const rows = ref<RecipePart[]>([
   { ingredientId: 'KETCHUP', share: 50 },
   { ingredientId: 'VINEGAR', share: 50 },
 ])
 const copied = ref(false)
+watch(() => props.initialParts, parts => { if (parts) rows.value = parts.map(part => ({ ...part })) }, { immediate: true })
 const total = computed(() => rows.value.reduce((sum, row) => sum + Number(row.share || 0), 0))
 const errors = computed(() => validateRecipeComposition(rows.value.map(row => ({ ...row, share: Number(row.share) }))))
 const result = computed(() => errors.value.length ? null : scoreRecipeAcrossTrends(rows.value, props.trends))
@@ -67,6 +68,7 @@ async function copyCustomRecipe() {
             <small>+{{ item.score.uiPopularityBonusPercent }}% popularity · exact {{ (item.score.match * 100).toFixed(4) }}%</small>
           </div>
           <button class="text-button" type="button" @click="copyCustomRecipe">{{ copied ? 'Copied' : 'Copy custom recipe' }} ↗</button>
+          <RecipeActions :parts="rows" :chunk-id="chunkId" />
         </template>
         <p v-else class="empty-state">Complete a valid recipe to calculate all three local matches.</p>
       </div>

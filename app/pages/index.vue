@@ -1,148 +1,26 @@
 <script setup lang="ts">
-import { locationFromLonLat, parseChunkIdInput, type ParsedLocation } from '../utils/domain/location'
-import { generateTrends, trendSeed } from '../utils/domain/trends'
-import { GAME_MODEL } from '../utils/domain/model'
-import type { OptimizationResponse, Trend } from '../utils/domain/types'
-
+import { FACTORY_CATALOG, productPath } from '../utils/factory/catalog'
 const route = useRoute()
-const router = useRouter()
-const runtimeConfig = useRuntimeConfig()
-const { optimize } = useRecipeOptimizer()
-
-const location = ref<ParsedLocation | null>(null)
-const trends = ref<Trend[]>([])
-const optimization = ref<OptimizationResponse | null>(null)
-const loading = ref(false)
-const error = ref('')
-const status = ref('Ready for a restaurant location ID.')
-const shareCopied = ref(false)
-
-const initialId = computed(() => typeof route.query.id === 'string' ? route.query.id : '')
-const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/` : undefined)
-
-useSeoMeta({
-  title: 'Capital Rift Tools — Recipe Calculator & Factory Planner',
-  description: 'Unofficial local tools for Capital Rift restaurant recipes and factory production planning.',
-  ogTitle: 'Capital Rift Tools',
-  ogDescription: 'Plan restaurant recipes and factory production in your browser.',
-  ogType: 'website',
-  twitterCard: 'summary',
-})
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: 'canonical', href: canonical.value }] : [],
-  script: [{
-    type: 'application/ld+json',
-    textContent: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'Capital Rift Tools',
-      applicationCategory: 'GameApplication',
-      operatingSystem: 'Any modern browser',
-      description: 'Unofficial local tools for Capital Rift recipes and factory production.',
-      isAccessibleForFree: true,
-    }),
-  }],
-}))
-
-async function generate(payload: { type: 'id', input: string } | { type: 'coordinates', longitude: number, latitude: number }) {
-  error.value = ''
-  optimization.value = null
-  loading.value = true
-  status.value = 'Normalizing the location and generating local trends.'
-
-  try {
-    const nextLocation = payload.type === 'id'
-      ? parseChunkIdInput(payload.input)
-      : locationFromLonLat(payload.longitude, payload.latitude)
-    const nextTrends = generateTrends(nextLocation.locationKey)
-    location.value = nextLocation
-    trends.value = nextTrends
-    await router.replace({ query: { id: nextLocation.originalId } })
-    status.value = 'Searching deterministic recipe candidates. The page remains usable while the worker runs.'
-    optimization.value = await optimize(nextLocation.locationKey, nextTrends)
-    status.value = `Generated 12 best-found recipes from ${optimization.value.candidatesEvaluated.toLocaleString('en-US')} evaluated candidates.`
-    await nextTick()
-    document.querySelector('#calculation-chain')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
-  }
-  catch (cause) {
-    error.value = cause instanceof Error ? cause.message : 'Unable to generate recipes for that location.'
-    status.value = error.value
-  }
-  finally {
-    loading.value = false
-  }
-}
-
-async function copyShareLink() {
-  await navigator.clipboard.writeText(window.location.href)
-  shareCopied.value = true
-  setTimeout(() => shareCopied.value = false, 1800)
-}
-
+useToolSeo('Unofficial Capital Rift Tools: Crafting Recipes & Factory Planner', 'Find Capital Rift crafting recipes, calculate ingredients, plan balanced factories, and match restaurant recipes to local tastes.', true)
 onMounted(() => {
-  if (initialId.value) navigateTo({ path: '/recipe', query: { id: initialId.value } }, { replace: true })
+  if (typeof route.query.id === 'string') navigateTo({ path: '/recipe', query: { id: route.query.id } }, { replace: true })
 })
+const popular = ['nails', 'machine_parts', 'battery', 'mining_barrow', 'sonar_array', 'survey_tower']
 </script>
 
 <template>
   <main id="main-content">
     <section class="hero hero--hub">
-      <div class="hero__meta">
-        <span>UNOFFICIAL PLAYER TOOLS</span>
-        <span>LOCAL / NO GAME CONNECTION</span>
-      </div>
-      <h1>Plan recipes.<br><em>Build factories.</em></h1>
-      <div class="hero__footer">
-        <p>Two straightforward Capital Rift tools. Choose what you want to plan and keep your factory data in your browser.</p>
-        <NuxtLink to="/recipe" class="down-link">Open recipe calculator <span aria-hidden="true">→</span></NuxtLink>
-      </div>
+      <div class="hero__meta"><span>UNOFFICIAL PLAYER TOOLS</span><span>LOCAL / NO GAME CONNECTION</span></div>
+      <h1>Find the recipe.<br><em>Plan the production.</em></h1>
+      <div class="hero__footer"><p>Crafting answers, balanced factory plans, and restaurant recipes for Capital Rift. Save your work in your browser and share a blueprint without an account.</p><NuxtLink class="down-link" to="/factory/recipes">Browse {{ FACTORY_CATALOG.recipes.length }} crafting recipes →</NuxtLink></div>
     </section>
-
-    <GeneratorForm v-if="false" :loading="loading" :initial-id="initialId" @generate="generate" />
-
-    <div v-if="false" class="status-region" aria-live="polite" aria-atomic="true">
-      <p :class="{ error }">{{ status }}</p>
-      <p v-if="error" class="error-detail">Check the value and make sure it identifies the restaurant chunk, not a neighboring map tile.</p>
-    </div>
-
-    <template v-if="location && trends.length">
-      <section id="calculation-chain" class="chain-section" aria-labelledby="chain-title">
-        <header class="section-heading">
-          <p class="eyebrow accent">02 / CALCULATION CHAIN</p>
-          <h2 id="chain-title">From one map tile to three complete targets.</h2>
-          <p>The raw ID is reduced to the zoom-12 grid before the deterministic seed is built.</p>
-        </header>
-        <ol class="calculation-chain">
-          <li><span>01 / INPUT</span><strong>{{ location.originalId }}</strong></li>
-          <li><span>02 / LOCATION KEY</span><strong>{{ location.locationKey }}</strong></li>
-          <li><span>03 / SEED</span><strong>{{ trendSeed(location.locationKey) }}</strong></li>
-          <li><span>04 / TRENDS</span><strong>{{ trends.map(trend => trend.name).join(' · ') }}</strong></li>
-        </ol>
-        <div class="button-row share-row">
-          <button class="button button--quiet" type="button" @click="copyShareLink">{{ shareCopied ? 'Link copied' : 'Copy share link' }}</button>
-          <NuxtLink class="text-button" to="/recipe/methodology">How it works →</NuxtLink>
-        </div>
-        <span class="sr-only" aria-live="polite">{{ shareCopied ? 'Share link copied to clipboard.' : '' }}</span>
-      </section>
-
-      <TrendResults v-if="optimization" :trends="trends" :optimization="optimization" />
-      <RecipeEditor v-if="optimization" :trends="trends" />
-    </template>
-
     <section class="tool-grid" aria-label="Available tools">
-      <div>
-        <p class="eyebrow accent">01 / RECIPE CALCULATOR</p>
-        <h2>Restaurant recipes</h2>
-        <p>Enter a restaurant location ID, see its local taste trends, and compare recipe matches.</p>
-        <NuxtLink class="button button--primary" to="/recipe">Open recipe calculator</NuxtLink>
-      </div>
-      <div>
-        <p class="eyebrow accent">02 / FACTORY PLANNER</p>
-        <h2>Factory production</h2>
-        <p>Track factories, machines, inputs, output, shortages, and saved production plans.</p>
-        <NuxtLink class="button" to="/factory/statistics">Open factory planner</NuxtLink>
-      </div>
+      <div><p class="eyebrow accent">01 / CRAFTING REFERENCE</p><h2>What does it take?</h2><p>Look up every craftable product, calculate batches and ingredients, and follow its complete production chain.</p><NuxtLink class="button button--primary" to="/factory/recipes">Browse crafting recipes</NuxtLink></div>
+      <div><p class="eyebrow accent">02 / FACTORY PLANNER</p><h2>Balance the chain.</h2><p>Plan whole machines, record what you own, and check external supplies and shortages. Save and share standalone blueprints.</p><NuxtLink class="button" to="/factory/planner">Open production planner</NuxtLink><NuxtLink class="text-button reference-actions" to="/factory/blueprints">Try a starter blueprint →</NuxtLink></div>
+      <div><p class="eyebrow accent">03 / RESTAURANT RECIPES</p><h2>Match local tastes.</h2><p>Find restaurant trends, choose available ingredients, and save custom recipes. </p><NuxtLink class="button" to="/recipe">Open recipe calculator</NuxtLink></div>
+      <div><p class="eyebrow accent">04 / RESOURCE WORKFLOW</p><h2>Supply your factory.</h2><p>Compare storage using your in-game capacities, calculate hauling trips, and estimate mining equipment effects from the saved client snapshot.</p><div class="button-row resource-actions"><NuxtLink class="button" to="/tools/storage">Storage</NuxtLink><NuxtLink class="button" to="/tools/hauling">Hauling</NuxtLink><NuxtLink class="button" to="/tools/mining">Mining</NuxtLink></div></div>
     </section>
+    <section class="hub-reference"><h2>Popular crafting questions</h2><ul class="reference-links"><li v-for="id in popular" :key="id"><NuxtLink :to="productPath(id)">{{ FACTORY_CATALOG.itemById.get(id)?.name }}</NuxtLink></li></ul><p><NuxtLink to="/changelog">See the latest tools and data updates →</NuxtLink></p><p>One Iron Bar makes 20 Nails. Machine Parts use 2 Steel Sheet and 6 Wire per batch. Open a recipe for quantities, machines, and the whole chain.</p></section>
   </main>
 </template>

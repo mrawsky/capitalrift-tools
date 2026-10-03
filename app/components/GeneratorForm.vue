@@ -75,7 +75,7 @@ function submitCoordinates() {
       </div>
       <div class="button-row">
         <button class="button button--primary" type="submit" :disabled="loading">
-          {{ loading ? 'Searching recipes…' : 'Generate 12 recipes' }}
+          {{ loading ? 'Searching recipes…' : 'Find recipe candidates' }}
         </button>
         <button class="button button--quiet" type="button" :disabled="loading" @click="useExample">Use verified example</button>
       </div>

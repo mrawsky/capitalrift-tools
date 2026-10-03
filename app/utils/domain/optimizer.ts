@@ -3,7 +3,19 @@ import { GAME_MODEL } from './model'
 import { recipeSignature, scoreRecipe } from './scoring'
 import type { OptimizationRequest, OptimizationResponse, RecipeCandidate, RecipePart, Trend, TrendOptimizationResult } from './types'
 
-export const OPTIMIZER_VERSION = '1.0.0'
+export const OPTIMIZER_VERSION = '1.1.0'
+
+export function normalizeAllowedIngredients(ids?: readonly string[]) {
+  if (ids === undefined) return INGREDIENTS.map(ingredient => ingredient.id).sort()
+  const known = new Set(INGREDIENTS.map(ingredient => ingredient.id))
+  if (ids.some(id => !known.has(id))) throw new Error('An unavailable ingredient was selected.')
+  const selected = [...new Set(ids)].sort()
+  if (selected.length < 2) throw new Error('Select at least two available ingredients.')
+  return selected
+}
+export function optimizationCacheKey(locationKey: string, ids?: readonly string[]) {
+  return `${locationKey}:${GAME_MODEL.cacheKey}:${OPTIMIZER_VERSION}:${normalizeAllowedIngredients(ids).join(',')}`
+}
 
 function compareCandidates(a: RecipeCandidate, b: RecipeCandidate): number {
   if (a.score.match !== b.score.match) return b.score.match - a.score.match
@@ -35,18 +47,20 @@ function selectDiverse(candidates: RecipeCandidate[], count: number): RecipeCand
   return selected
 }
 
-export function optimizeTrend(trend: Trend, recipesPerTrend = 4, pairOnly = false): TrendOptimizationResult {
+export function optimizeTrend(trend: Trend, recipesPerTrend = 4, pairOnly = false, allowedIngredientIds?: readonly string[]): TrendOptimizationResult {
+  const allowed = new Set(normalizeAllowedIngredients(allowedIngredientIds))
+  const ingredients = INGREDIENTS.filter(ingredient => allowed.has(ingredient.id))
   let candidatesEvaluated = 0
   const bestByPair: RecipeCandidate[] = []
   const pool = new Map<string, RecipeCandidate>()
 
-  for (let left = 0; left < INGREDIENTS.length - 1; left++) {
-    for (let right = left + 1; right < INGREDIENTS.length; right++) {
+  for (let left = 0; left < ingredients.length - 1; left++) {
+    for (let right = left + 1; right < ingredients.length; right++) {
       let pairBest: RecipeCandidate | undefined
       for (let share = 1; share < 100; share++) {
         const candidate = makeCandidate([
-          { ingredientId: INGREDIENTS[left]!.id, share },
-          { ingredientId: INGREDIENTS[right]!.id, share: 100 - share },
+          { ingredientId: ingredients[left]!.id, share },
+          { ingredientId: ingredients[right]!.id, share: 100 - share },
         ], trend)
         candidatesEvaluated++
         if (!pairBest || compareCandidates(candidate, pairBest) < 0) pairBest = candidate
@@ -68,7 +82,7 @@ export function optimizeTrend(trend: Trend, recipesPerTrend = 4, pairOnly = fals
           let best = current
           for (const donor of current.parts) {
             if (donor.share <= amount) continue
-            for (const ingredient of INGREDIENTS) {
+            for (const ingredient of ingredients) {
               if (ingredient.id === donor.ingredientId) continue
               const targetExists = current.parts.some(part => part.ingredientId === ingredient.id)
               if (!targetExists && current.parts.length >= 8) continue
@@ -100,7 +114,7 @@ export function optimizeTrend(trend: Trend, recipesPerTrend = 4, pairOnly = fals
 }
 
 export function optimizeRecipes(request: OptimizationRequest): OptimizationResponse {
-  const results = request.trends.map(trend => optimizeTrend(trend, request.recipesPerTrend ?? 4, request.pairOnly ?? false))
+  const results = request.trends.map(trend => optimizeTrend(trend, request.recipesPerTrend ?? 4, request.pairOnly ?? false, request.allowedIngredientIds))
   return {
     requestId: request.requestId,
     modelVersion: GAME_MODEL.label,

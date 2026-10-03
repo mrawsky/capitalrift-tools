@@ -6,6 +6,7 @@
         <p class="footer-title">Plan it.<br>Build it.</p>
       </div>
       <div class="footer-actions">
+        <NuxtLink to="/changelog" class="footer-link"><span>Changelog & game data updates</span><span aria-hidden="true">→</span></NuxtLink>
         <NuxtLink to="/recipe/methodology" class="footer-link">
           <span>How the recipe calculator works</span>
           <span aria-hidden="true">→</span>

@@ -80,7 +80,7 @@ input::placeholder { color: #68675f; }
 .searchable-select__option.is-selected:not(.is-active) { color: var(--accent); }
 .searchable-select__option.is-disabled { cursor: not-allowed; opacity: .4; }
 .searchable-select__empty { margin: 0; padding: .8rem 1rem; color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .72rem; }
-.button-row { display: grid; flex-wrap: wrap; gap: .75rem; }
+.button-row { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
 .button { min-height: 3.6rem; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--rule); padding: .9rem 1.25rem; background: transparent; color: var(--paper); cursor: pointer; font-size: .74rem; text-transform: uppercase; transition: background 160ms ease, color 160ms ease, border-color 160ms ease; }
 .button:hover:not(:disabled), .button:focus-visible { border-color: var(--accent); background: var(--accent); color: var(--ink); }
 .button--primary { border-color: var(--accent); background: var(--accent); color: var(--ink); }
@@ -327,7 +327,95 @@ tfoot { color: var(--accent); }
 .factory-panel table th:last-child, .factory-panel table td:last-child { padding-right: 1.25rem; }
 
 
+/* Crafting reference and account-free community tools */
+.tool-breadcrumbs ol { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 1.5rem 0 0; padding: 0; color: var(--muted); font-size: .8rem; }
+.tool-breadcrumbs li + li::before { content: '/'; margin-right: .5rem; color: var(--muted); }
+.tool-breadcrumbs a, .reference-links a, .factory-panel table a, .reference-note a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
+.reference-content, .reference-controls { padding: 1.25rem; }
+.tool-guide { padding: clamp(1.25rem, 3vw, 2.5rem); }
+.tool-guide p { max-width: 70ch; margin: 0; color: var(--muted); line-height: 1.7; }
+.tool-guide__header .eyebrow { margin-bottom: .75rem; color: var(--accent); }
+.tool-guide h2 { max-width: 32ch; margin: 0 0 .85rem; font-size: clamp(1.5rem, 2.6vw, 2.25rem); font-weight: 600; line-height: 1.15; letter-spacing: -.035em; }
+.tool-guide h3 { margin: 0 0 .8rem; font-size: 1.1rem; font-weight: 600; }
+.tool-guide strong { color: var(--paper); font-weight: 600; }
+.tool-guide p a, .tool-guide__list a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
+.tool-guide__steps { max-width: 78ch; list-style: none; counter-reset: guide-step; margin: 1.75rem 0 0; padding: 0; }
+.tool-guide__steps > li { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 1rem; padding-block: 1rem; border-top: 1px solid var(--rule); counter-increment: guide-step; }
+.tool-guide__steps > li::before { content: counter(guide-step, decimal-leading-zero); display: grid; width: 2.25rem; height: 2.25rem; place-items: center; border: 1px solid var(--rule); color: var(--accent); font-family: 'IBM Plex Mono', monospace; font-size: .75rem; }
+.tool-guide__steps strong { display: block; margin-bottom: .3rem; font-size: 1.05rem; }
+.tool-guide__list { max-width: 74ch; list-style: disc; margin: 1.5rem 0 0; padding-left: 1.25rem; }
+.tool-guide__list li { margin-block: .85rem; padding-left: .3rem; color: var(--muted); line-height: 1.7; }
+.tool-guide__list li::marker { color: var(--accent); }
+.tool-guide__layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr); gap: clamp(1.25rem, 3vw, 3rem); align-items: start; margin-top: 1.75rem; }
+.tool-guide__layout .tool-guide__list { margin: 0; }
+.tool-guide__layout .tool-guide__list li:first-child { margin-top: 0; }
+.tool-guide__field { min-width: 0; border: 1px solid var(--rule); padding: 1.25rem; background: var(--ink); }
+.tool-guide__field label { display: block; margin-bottom: .65rem; color: var(--muted); font-size: .75rem; }
+.tool-guide__field input { width: 100%; min-height: 2.8rem; }
+.tool-guide__field .form-note { margin-top: .8rem; }
+.tool-guide .tool-guide__status { max-width: none; margin-top: 1.5rem; border-left: 2px solid var(--accent); padding: .8rem 1rem; background: color-mix(in srgb, var(--accent) 4%, transparent); }
+.tool-guide__related, .tool-guide__actions { margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: 1.25rem; }
+.tool-guide__related .form-note { margin-top: .85rem; }
+.tool-guide__actions { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.25rem; }
+.reference-controls input { max-width: 20rem; margin-top: .5rem; }
+.reference-content p, .reference-controls p, .reference-note { color: var(--muted); line-height: 1.65; }
+.reference-answer { margin: 1.5rem 0; line-height: 1.7; }
+.reference-content .reference-answer { color: var(--paper); }
+.reference-note { margin-top: 1.5rem; font-size: .85rem; }
+.reference-links { display: flex; flex-wrap: wrap; gap: 1rem 2rem; list-style: none; margin: 0; padding: 1.25rem; }
+.reference-actions { margin-top: 1.5rem; }
+.kpi-grid .kpi-name { font-size: clamp(1.1rem, 2vw, 1.8rem); line-height: 1.2; overflow-wrap: anywhere; }
+.equipment-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.equipment-form label, .reference-controls label, .reference-content > label { display: block; margin-bottom: .5rem; font-size: .8rem; }
+.equipment-form input { min-height: 2.8rem; }
+.storage-comparison input { min-width: 8rem; min-height: 2.8rem; }
+.blueprint-card h2 { margin-top: 0; }
+.blueprint-card h3 { font-size: 1rem; }
+.blueprint-card ul { padding-left: 1.25rem; color: var(--muted); line-height: 1.7; }
+.hub-reference { margin: 3rem var(--gutter); border-top: 1px solid var(--rule); padding-top: 1.5rem; }
+.hub-reference h2 { font-size: clamp(1.5rem, 3vw, 2.7rem); }
+.hub-reference p { color: var(--muted); }
+.hub-reference .reference-links { padding-inline: 0; }
+.tool-grid .resource-actions { width: 100%; flex-wrap: nowrap; }
+.tool-grid .resource-actions > .button { flex: 1; width: auto; min-width: 0; padding-inline: clamp(.5rem, 2vw, 1rem); }
+.changelog-page { max-width: 76rem; margin-inline: auto; }
+.changelog-list { list-style: none; margin: 2rem 0; padding: 0; }
+.changelog-entry { border: 1px solid var(--rule); padding: clamp(1.25rem, 4vw, 3rem); background: var(--ink-soft); scroll-margin-top: calc(var(--header-h) + 1rem); }
+.changelog-entry + .changelog-entry { margin-top: 2rem; }
+.changelog-meta { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; color: var(--muted); font-size: .9rem; }
+.changelog-badge { border: 1px solid var(--accent); padding: .25rem .55rem; color: var(--accent); font-family: 'IBM Plex Mono', monospace; font-size: .65rem; text-transform: uppercase; }
+.changelog-entry h2 { max-width: 24ch; margin: 1rem 0 .75rem; font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.15; }
+.changelog-summary { max-width: 64ch; margin: 0; color: var(--muted); font-size: 1.05rem; line-height: 1.65; }
+.changelog-build { margin: 1rem 0 0; color: var(--muted); font-size: .85rem; }
+.changelog-build strong { color: var(--paper); }
+.changelog-group { max-width: 68ch; margin-top: 2rem; }
+.changelog-group h3 { margin: 0 0 .65rem; font-size: 1.15rem; }
+.changelog-items { list-style: disc; margin: 0; padding-left: 1.35rem; }
+.changelog-items li { margin-block: .65rem; padding-left: .25rem; font-size: 1rem; line-height: 1.7; }
+.changelog-items li::marker { color: var(--accent); }
+.changelog-evidence { margin-top: 2rem; border-top: 1px solid var(--rule); padding-top: 1rem; color: var(--muted); font-size: .85rem; line-height: 1.65; }
+.changelog-evidence summary { cursor: pointer; }
+.changelog-evidence p { max-width: 68ch; margin-bottom: 0; }
+.ingredient-availability, .restaurant-library, .library-message { margin: 1.5rem var(--gutter); }
+.ingredient-availability { border: 1px solid var(--rule); padding: 1.25rem; }
+.ingredient-availability summary { cursor: pointer; }
+.ingredient-availability fieldset { margin-top: 1.5rem; border: 0; padding: 0; }
+.ingredient-availability fieldset > p { color: var(--muted); }
+.ingredient-options { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; margin-top: 1.5rem; }
+.ingredient-options label { display: flex; gap: .6rem; align-items: center; font-size: .9rem; }
+.ingredient-options input { width: 1rem; min-height: 1rem; }
+.recipe-library-actions { display: flex; flex-wrap: wrap; gap: .7rem 1rem; margin-top: 1rem; }
+.recipe-library-actions .form-note { width: 100%; }
+.restaurant-library .button-row input { flex: 1; min-width: 10rem; }
+.library-list { padding: 0; list-style: none; }
+.library-list li { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; padding: .75rem 0; border-bottom: 1px solid var(--rule); }
+.library-list li > span { color: var(--muted); font-size: .8rem; }
+.library-list .icon-button { margin-left: auto; }
+.file-picker { width: auto; max-width: 100%; }
+.button-row { flex-wrap: wrap; }
+
 @media (max-width: 900px) {
+  .ingredient-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-header { grid-template-columns: 1fr auto; }
   .model-stamp { display: none; }
   .panel-heading, .section-heading, .generator-form, .trend-header, .editor-layout, .trust-section { grid-template-columns: 1fr; }
@@ -356,6 +444,9 @@ tfoot { color: var(--accent); }
 }
 
 @media (max-width: 640px) {
+  .tool-guide__layout { grid-template-columns: 1fr; }
+  .tool-guide__steps > li { gap: .75rem; }
+  .equipment-form, .ingredient-options { grid-template-columns: 1fr; }
   :root { --header-h: 4rem; }
   .site-header nav { gap: .75rem; font-size: .62rem; }
   .brand { font-size: .85rem; }

@@ -9,6 +9,7 @@ const props = defineProps<{
   trend: Trend
   trends: Trend[]
   rank: number
+  chunkId: string
 }>()
 
 const copied = ref(false)
@@ -76,7 +77,7 @@ async function copyRecipe() {
     </details>
 
     <button class="text-button" type="button" @click="copyRecipe">{{ copied ? 'Copied' : 'Copy recipe' }} <span aria-hidden="true">↗</span></button>
+    <RecipeActions :parts="candidate.parts" :chunk-id="chunkId" />
     <span class="sr-only" aria-live="polite">{{ copied ? 'Recipe copied to clipboard.' : '' }}</span>
   </article>
 </template>
-

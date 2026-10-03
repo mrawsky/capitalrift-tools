@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { optimizeRecipes, optimizeTrend } from '../app/utils/domain/optimizer'
 import { GAME_MODEL } from '../app/utils/domain/model'
+import { CURRENT_RELEASE_KEY } from '../app/utils/changelog'
 import { validateRecipeComposition } from '../app/utils/domain/scoring'
 import { generateTrends } from '../app/utils/domain/trends'
 
@@ -32,6 +33,6 @@ describe('recipe optimizer', () => {
     const trend = generateTrends('12/2286/1348')[0]!
     const response = optimizeRecipes({ requestId: 'model-test', trends: [trend], pairOnly: true })
     expect(response.modelVersion).toBe(GAME_MODEL.label)
-    expect(GAME_MODEL).toMatchObject({ date: '2026-09-23', gameVersion: 'v413' })
+    expect(GAME_MODEL).toEqual({ label: CURRENT_RELEASE_KEY, cacheKey: CURRENT_RELEASE_KEY })
   })
 })

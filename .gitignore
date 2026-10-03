@@ -18,9 +18,11 @@ logs
 .fleet
 .idea
 
-# Local browser snapshots used to refresh the factory catalog
+# factory catalog
 gamefiles/
 /generate_dataset
+/docs
+/scripts
 
 # Local env files
 .env

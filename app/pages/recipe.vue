@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { locationFromLonLat, parseChunkIdInput, type ParsedLocation } from '../utils/domain/location'
 import { generateTrends, trendSeed } from '../utils/domain/trends'
-import { GAME_MODEL } from '../utils/domain/model'
 import type { OptimizationResponse, Trend } from '../utils/domain/types'
+import type { RecipePart } from '../utils/domain/types'
+import { INGREDIENTS } from '../utils/domain/ingredients'
+import { parseShareFragment, type SharedRecipe } from '../utils/sharing'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +18,9 @@ const loading = ref(false)
 const error = ref('')
 const status = ref('Ready for a restaurant location ID.')
 const shareCopied = ref(false)
+const allowedIngredientIds = ref(INGREDIENTS.map(ingredient => ingredient.id))
+const initialParts = ref<RecipePart[] | undefined>()
+const libraryMessage = ref('')
 
 const initialId = computed(() => typeof route.query.id === 'string' ? route.query.id : '')
 const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe` : undefined)
@@ -46,6 +51,7 @@ useHead(() => ({
 }))
 
 async function generate(payload: { type: 'id', input: string } | { type: 'coordinates', longitude: number, latitude: number }) {
+  if (loading.value) return
   error.value = ''
   optimization.value = null
   loading.value = true
@@ -60,8 +66,8 @@ async function generate(payload: { type: 'id', input: string } | { type: 'coordi
     trends.value = nextTrends
     await router.replace({ query: { id: nextLocation.originalId } })
     status.value = 'Searching deterministic recipe candidates. The page remains usable while the worker runs.'
-    optimization.value = await optimize(nextLocation.locationKey, nextTrends)
-    status.value = `Generated 12 best-found recipes from ${optimization.value.candidatesEvaluated.toLocaleString('en-US')} evaluated candidates.`
+    optimization.value = await optimize(nextLocation.locationKey, nextTrends, [...allowedIngredientIds.value])
+    status.value = `Generated ${optimization.value.results.reduce((total, result) => total + result.candidates.length, 0)} best-found recipes using ${allowedIngredientIds.value.length} selected ingredients from ${optimization.value.candidatesEvaluated.toLocaleString('en-US')} evaluated candidates.`
     await nextTick()
     document.querySelector('#calculation-chain')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
   }
@@ -75,13 +81,29 @@ async function generate(payload: { type: 'id', input: string } | { type: 'coordi
 }
 
 async function copyShareLink() {
-  await navigator.clipboard.writeText(window.location.href)
-  shareCopied.value = true
-  setTimeout(() => shareCopied.value = false, 1800)
+  try {
+    const url = new URL('/recipe', window.location.origin)
+    if (location.value) url.searchParams.set('id', location.value.originalId)
+    await navigator.clipboard.writeText(url.href)
+    shareCopied.value = true
+    setTimeout(() => shareCopied.value = false, 1800)
+  } catch { libraryMessage.value = 'The browser could not copy the location link. Copy the page address or download a recipe JSON instead.' }
 }
 
+function openSavedRecipe(recipe: SharedRecipe) {
+  if (loading.value) return
+  initialParts.value = recipe.parts.map(part => ({ ...part }))
+  libraryMessage.value = `Opened ${recipe.name}. Its composition is rescored with the current model; nothing was saved or replaced.`
+  generate({ type: 'id', input: recipe.chunkId })
+}
+watch(allowedIngredientIds, () => { if (!loading.value) { optimization.value = null; status.value = 'Ingredient availability changed. Generate again to search with this selection.' } }, { deep: true })
 onMounted(() => {
-  if (initialId.value) generate({ type: 'id', input: initialId.value })
+  if (route.path !== '/recipe') return
+  try {
+    const shared = parseShareFragment(window.location.hash)
+    if (shared) { if (shared.type !== 'restaurant-recipe') throw new Error('Open factory blueprints in the production planner.'); openSavedRecipe(shared); return }
+    if (initialId.value) generate({ type: 'id', input: initialId.value })
+  } catch (cause) { libraryMessage.value = cause instanceof Error ? cause.message : 'Invalid shared recipe link.' }
 })
 </script>
 
@@ -90,7 +112,7 @@ onMounted(() => {
     <section class="recipe-intro">
       <div class="hero__meta">
         <span>UNOFFICIAL RECIPE CALCULATOR</span>
-        <span>MODEL {{ GAME_MODEL.label }}</span>
+        <NuxtLink to="/changelog">Latest updates →</NuxtLink>
       </div>
       <h1>Restaurant recipe calculator</h1>
       <div class="hero__footer">
@@ -99,11 +121,13 @@ onMounted(() => {
       </div>
     </section>
 
+    <details class="ingredient-availability"><summary>Choose ingredients you can obtain · {{ allowedIngredientIds.length }} selected</summary><fieldset :disabled="loading"><legend>Available ingredients for recommendations</legend><p>Select at least two. This limits taste optimization; it does not estimate inventory quantities, cost, or station compatibility.</p><div class="button-row"><button class="button" type="button" @click="allowedIngredientIds = INGREDIENTS.map(ingredient => ingredient.id)">Select all</button><button class="button" type="button" @click="allowedIngredientIds = []">Clear selection</button></div><div class="ingredient-options"><label v-for="ingredient in INGREDIENTS" :key="ingredient.id"><input v-model="allowedIngredientIds" type="checkbox" :value="ingredient.id">{{ ingredient.name }}</label></div></fieldset></details>
     <GeneratorForm :loading="loading" :initial-id="initialId" @generate="generate" />
+    <p v-if="libraryMessage" class="library-message" role="status">{{ libraryMessage }}</p>
 
     <div class="status-region" aria-live="polite" aria-atomic="true">
       <p :class="{ error }">{{ status }}</p>
-      <p v-if="error" class="error-detail">Check the value and make sure it identifies the restaurant chunk, not a neighboring map tile.</p>
+      <p v-if="error" class="error-detail">Check the restaurant chunk ID and select at least two available ingredients.</p>
     </div>
 
     <template v-if="location && trends.length">
@@ -126,9 +150,10 @@ onMounted(() => {
         <span class="sr-only" aria-live="polite">{{ shareCopied ? 'Share link copied to clipboard.' : '' }}</span>
       </section>
 
-      <TrendResults v-if="optimization" :trends="trends" :optimization="optimization" />
-      <RecipeEditor v-if="optimization" :trends="trends" />
+      <TrendResults v-if="optimization" :trends="trends" :optimization="optimization" :chunk-id="location.originalId" />
+      <RecipeEditor :trends="trends" :chunk-id="location.originalId" :initial-parts="initialParts" />
     </template>
+    <RestaurantLibrary :chunk-id="location?.originalId" :busy="loading" @open-restaurant="generate({ type: 'id', input: $event })" @open-recipe="openSavedRecipe" />
 
     <section class="trust-section">
       <div>
@@ -136,7 +161,7 @@ onMounted(() => {
         <h2>A useful estimate.<br>Easy to verify.</h2>
       </div>
       <div class="trust-copy">
-        <p>The calculator uses a versioned local data model and community-checked examples. Capital Rift updates can change the results.</p>
+        <p>The calculator uses local game data and community-checked examples. See the <NuxtLink to="/changelog">changelog and data updates</NuxtLink> after a game patch.</p>
         <p>Recommendations optimize taste match only. They do not predict ingredient cost, supply, preparation time, station compatibility, or profit.</p>
         <NuxtLink class="button button--quiet" to="/recipe/methodology">Read how it works</NuxtLink>
       </div>

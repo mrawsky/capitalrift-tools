@@ -2,19 +2,27 @@
 
 **Unofficial tools for CapitalRift restaurant recipes and factory production planning.**
 
-The site has two tools: a restaurant recipe calculator and a factory planner. Both run in the browser and use versioned local data.
+The site includes a complete crafting reference, batch and full-chain quantity calculators, a balanced factory planner, restaurant optimization, reviewed starter blueprints, and storage, hauling, and mining helpers. Calculations run locally against dated data.
 
 Factory setups and saved production plans stay in local storage and can be backed up as JSON.
 
-> Current mechanics snapshot: **2026-09-27 / game version v425**
+> See the [changelog](/changelog) for tool updates, checked game builds, and data provenance.
 
-[Open the recipe methodology](./app/pages/methodology.vue) · [Report a problem](https://github.com/mrawsky/capitalrift-tools/issues/new) · [View the repository](https://github.com/mrawsky/capitalrift-recipe)
+[Open the recipe methodology](./app/pages/methodology.vue) · [Report a problem](https://github.com/mrawsky/capitalrift-tools/issues/new) · [View the repository](https://github.com/mrawsky/capitalrift-tools)
 
 ## Factory planner
 
 Create named factories, enter raw supplies, record owned machines, assign recipes, and see production balances across the full network. The Planner expands a finished product into its inputs and required machines, and the Recipes page provides a searchable copy of the bundled production data.
 
 The factory tool does not sign in to Capital Rift, call its APIs, scrape locations, read buildings, or automate play. Data is entered by the user and calculations happen locally against a reviewed, versioned production catalog.
+
+The planner combines shared demands before rounding machines and propagates full-speed consumption upstream. New factories leave owned inventory empty: enter owned machines and external supplies separately. Statistics describe nominal capacity rather than production under shortages. Older plans show a recalculation notice; existing factory data stays unchanged.
+
+Every craftable item has a page at `/factory/recipes/<item-slug>`, with quantities, a complete batch chain, and reverse uses. `/factory/blueprints` provides reviewed starters. Portable blueprint links and JSON exclude personal network surplus and open a preview without replacing local data.
+
+Restaurant locations and compositions can be saved, shared, and backed up as JSON. Selected available ingredients constrain search and cache identity. Scoring still excludes stock quantities, cost, and station compatibility.
+
+`/tools/hauling` and `/tools/mining` use checked saved-client tables with overrides or measured baselines. `/tools/storage` compares player-entered current capacities because rendering defaults may be overridden by the server.
 
 ## What can I do with it?
 
@@ -160,18 +168,9 @@ tests/               fixtures and domain regression tests
 
 The mechanics live outside Vue components so they can be reviewed and tested without running the interface. The expensive search runs in a Web Worker to keep the page responsive.
 
-The global mechanics identity lives in [`app/utils/domain/model.ts`](./app/utils/domain/model.ts):
+Game version history lives only in [app/data/changelog.json](./app/data/changelog.json), rendered at [/changelog](/changelog). Add a newest-first entry there with a unique ID, date, checked game build, evidence, and changes. There are no game build labels to update in the tool pages, factory catalog, equipment tables, or discovery templates.
 
-```ts
-export const GAME_MODEL = {
-  date: '2026-09-23',
-  gameVersion: 'v413',
-  label: '2026-09-23 / v413',
-  cacheKey: '2026-09-23-v413',
-}
-```
-
-Updating it refreshes the public model labels, optimizer metadata, and cache namespace together.
+Cache identity and shared-file compatibility derive an internal release key from the current entry. Changing its checked game build or date refreshes that identity automatically. JSON schema and calculation versions remain independent so existing local saves can still be read.
 
 ## Updating the mechanics after a patch
 
@@ -183,23 +182,22 @@ Before changing displayed recommendations:
 4. Re-check profile rounding, distance denominator, match clamp, popularity constants, and UI rounding.
 5. Reproduce all three trend names for both known location fixtures.
 6. Update or add tests before changing public methodology copy.
-7. Update `GAME_MODEL`; change the optimizer version too if the search behavior changed.
+7. Record the checked build and evidence in `app/data/changelog.json`; change the optimizer version too if the search behavior changed.
 
 Evidence should be labeled honestly. Client-code findings, UI-confirmed behavior, reasonable inference, and generated suggestions are not the same level of certainty.
 
 ## Deployment
 
-The project supports a standard Nuxt server deployment or static generation. Set `NUXT_PUBLIC_SITE_URL` to the production origin to emit canonical links and absolute discovery URLs. Vercel's production URL is detected automatically when available; no production domain is hard-coded.
+The project supports a standard Nuxt server deployment or static generation. Set `NUXT_PUBLIC_SITE_URL` to the production origin to emit canonical links and absolute discovery URLs. Vercel's production URL is detected automatically when available; otherwise the default origin comes from `app/data/tool-metadata.json`. Sitemap generation remains enabled without environment variables and has a runtime fallback.
 
 Discovery files:
 
 - `/sitemap.xml` — automatically indexes the public Nuxt routes;
+- `/changelog` — tool updates, fixes, and checked game build history;
 - `/llms.txt` — concise tool, documentation, and community links for AI systems;
 - `/llms-full.txt` — full mechanics, formulas, verified fixture, limitations, and contribution guidance.
 
-The sitemap is generated and prerendered during `npm run generate`. The two LLM files are intentionally static files in `public/` and are copied to the deployment unchanged. When `GAME_MODEL` changes, update the model label in both static LLM files as part of the same mechanics revision.
-
-## A small community project
+## Community project
 
 This is an unofficial tool made by [mrawsky](https://mrawsky.pro), but I would like its useful parts to belong to the people playing, testing, and documenting CapitalRift.
 

@@ -3,7 +3,7 @@ import { buildLedger } from '../../utils/factory/calculations'
 import { itemName } from '../../utils/factory/catalog'
 
 definePageMeta({ layout: 'factory' })
-useSeoMeta({ title: 'Factory Statistics — Capital Rift Tools', description: 'See production balances, shortages, and machine capacity across locally saved factories.' })
+useToolSeo('Capital Rift Factory Statistics & Supply Balances', 'Check nominal production capacity, shortages, and owned machine counts across your locally saved Capital Rift factories.')
 const { state, selectedFactory } = useFactoryPlanner()
 const scope = ref<'all' | 'current'>('all')
 const factories = computed(() => scope.value === 'current' && selectedFactory.value ? [selectedFactory.value] : state.value.factories)
@@ -17,7 +17,7 @@ function fmt(value: number) { return value.toLocaleString('en-US', { maximumFrac
 
 <template>
   <main id="main-content" class="factory-page">
-    <FactoryPageHeader eyebrow="Statistics" title="Your production at a glance." description="Factories share one network here. A negative balance means your recipes need more of that item than your current setup makes." />
+    <FactoryPageHeader eyebrow="Statistics" title="Your production at a glance." description="Factories share one planning network here. These are nominal full-speed balances; actual production depends on owned machines, supplies, storage, and transport." />
     <div class="factory-toolbar"><label for="statistics-scope">View</label><select id="statistics-scope" v-model="scope"><option value="all">All factories</option><option value="current" :disabled="!selectedFactory">Current factory</option></select></div>
     <section class="kpi-grid" aria-label="Factory totals">
       <article><span>Factories</span><strong>{{ factories.length }}</strong></article><article><span>Production lines</span><strong>{{ productionCount }}</strong></article><article><span>Items short</span><strong :class="{ danger: shortages.length }">{{ shortages.length }}</strong></article><article><span>Machines assigned</span><strong>{{ machineTotals.assigned }} / {{ machineTotals.owned }}</strong><small v-if="machineTotals.missing">{{ machineTotals.missing }} missing</small></article>

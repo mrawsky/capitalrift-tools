@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'factory' })
-useSeoMeta({ title: 'Factory Planner Tutorial — Capital Rift Tools', description: 'Learn how to track factories, machines, production, and shortages locally in your browser.' })
+useToolSeo('Capital Rift Factory Planner: Setup & Tutorial', 'Learn how to track factories, owned machines, production capacity, and required supplies. Start with a reviewed blueprint or a crafting recipe.')
 const { state, addFactory } = useFactoryPlanner()
 function start() { if (!state.value.factories.length) addFactory('My first factory'); navigateTo('/factory/production') }
 </script>

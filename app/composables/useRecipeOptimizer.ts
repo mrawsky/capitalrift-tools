@@ -1,5 +1,4 @@
-import { optimizeRecipes } from '../utils/domain/optimizer'
-import { GAME_MODEL } from '../utils/domain/model'
+import { optimizationCacheKey, optimizeRecipes } from '../utils/domain/optimizer'
 import type { OptimizationRequest, OptimizationResponse, Trend } from '../utils/domain/types'
 
 const CACHE_KEY = 'capital-rift-recipe-cache-v1'
@@ -15,7 +14,7 @@ function readCache(): CacheEntry[] {
   if (!import.meta.client) return []
   try {
     const parsed = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '[]')
-    return Array.isArray(parsed) ? parsed : []
+    return Array.isArray(parsed) ? parsed.filter(entry => entry && typeof entry.key === 'string' && Array.isArray(entry.value?.results)).slice(0, MAX_CACHE_ENTRIES) : []
   }
   catch {
     return []
@@ -37,13 +36,13 @@ export function useRecipeOptimizer() {
 
   onBeforeUnmount(() => activeWorker?.terminate())
 
-  async function optimize(locationKey: string, trends: Trend[]): Promise<OptimizationResponse> {
-    const key = `${locationKey}:${GAME_MODEL.cacheKey}:1.0.0`
+  async function optimize(locationKey: string, trends: Trend[], allowedIngredientIds?: string[]): Promise<OptimizationResponse> {
+    const key = optimizationCacheKey(locationKey, allowedIngredientIds)
     const cached = readCache().find(entry => entry.key === key)
     if (cached?.value?.results?.length === 3) return cached.value
 
     const requestId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`
-    const request: OptimizationRequest = { requestId, trends, recipesPerTrend: 4 }
+    const request: OptimizationRequest = { requestId, trends, recipesPerTrend: 4, allowedIngredientIds }
 
     let response: OptimizationResponse
     try {

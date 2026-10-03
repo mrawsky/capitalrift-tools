@@ -1,0 +1,16 @@
+<script setup lang="ts">
+import { GAME_MODEL } from '../utils/domain/model'
+import type { SharedRecipe } from '../utils/sharing'
+const props = defineProps<{ chunkId?: string; busy?: boolean }>()
+const emit = defineEmits<{ openRestaurant: [chunkId: string]; openRecipe: [recipe: SharedRecipe] }>()
+const { library, storageMessage, initialize, saveRestaurant, removeRestaurant, removeRecipe, importBackup, exportBackup } = useRestaurantLibrary()
+const name = ref('')
+const message = ref('')
+const events = useToolEvents()
+onMounted(initialize)
+function save() { if (!props.chunkId) return; try { saveRestaurant(props.chunkId, name.value); message.value = 'Restaurant saved locally.'; events('restaurant_save') } catch (error) { message.value = error instanceof Error ? error.message : 'Could not save this restaurant.' } }
+async function importFile(event: Event) { const input = event.target as HTMLInputElement; try { const file = input.files?.[0]; if (!file) return; if (file.size > 512000) throw new Error('Restaurant backup must be smaller than 500 KiB.'); importBackup(await file.text()); message.value = 'Backup merged. Existing restaurants and recipes were kept.' } catch (error) { message.value = error instanceof Error ? error.message : 'Could not import this backup.' } finally { input.value = '' } }
+</script>
+<template>
+  <section class="restaurant-library factory-panel"><div class="panel-title"><h2>Saved restaurants & recipes</h2><span>Only in this browser</span></div><div class="reference-content"><div v-if="chunkId" class="button-row"><label class="sr-only" for="restaurant-name">Restaurant name</label><input id="restaurant-name" v-model="name" maxlength="120" placeholder="Restaurant name (optional)"><button class="button" type="button" @click="save">Save this restaurant</button></div><h3>Restaurants</h3><ul class="library-list"><li v-for="restaurant in library.restaurants" :key="restaurant.id"><button class="text-button" type="button" :disabled="busy" @click="emit('openRestaurant', restaurant.chunkId)">{{ restaurant.name }}</button><span>{{ restaurant.chunkId }}</span><button class="icon-button" type="button" :aria-label="`Remove ${restaurant.name}`" @click="removeRestaurant(restaurant.id)">×</button></li></ul><p v-if="!library.restaurants.length" class="form-note">Generate a location to save your first restaurant.</p><h3>Recipe compositions</h3><ul class="library-list"><li v-for="recipe in library.recipes" :key="recipe.id"><button class="text-button" type="button" :disabled="busy" @click="emit('openRecipe', recipe)">{{ recipe.name }}</button><span>{{ recipe.chunkId }}<small v-if="recipe.modelVersion !== GAME_MODEL.label"> · older model, rescored when opened</small></span><button class="icon-button" type="button" :aria-label="`Remove ${recipe.name}`" @click="removeRecipe(recipe.id)">×</button></li></ul><p v-if="!library.recipes.length" class="form-note">Use Save recipe beside a candidate or custom mix.</p><div class="button-row"><button class="button" type="button" @click="exportBackup">Export restaurant backup</button><label class="button" for="restaurant-import">Merge restaurant backup</label><input id="restaurant-import" class="file-picker" type="file" accept="application/json,.json" @change="importFile"></div><p class="form-note" role="status">{{ storageMessage || message }}</p></div></section>
+</template>

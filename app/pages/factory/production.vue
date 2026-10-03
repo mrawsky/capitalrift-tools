@@ -3,7 +3,7 @@ import { FACTORY_CATALOG, itemName } from '../../utils/factory/catalog'
 import { buildLedger } from '../../utils/factory/calculations'
 
 definePageMeta({ layout: 'factory' })
-useSeoMeta({ title: 'Factory Production — Capital Rift Tools', description: 'Enter factory supplies and machine recipe assignments.' })
+useToolSeo('Capital Rift Factory Production & External Supplies', 'Record external supplies and assigned production recipes. Compare nominal input demand with full-speed capacity in each local factory.')
 const { state, selectedFactory, addFactory, removeFactory, addProduction, addSupply, touchFactory } = useFactoryPlanner()
 const recipes = [...FACTORY_CATALOG.recipes].sort((a, b) => itemName(a.productId).localeCompare(itemName(b.productId)))
 const items = [...FACTORY_CATALOG.items].sort((a, b) => a.name.localeCompare(b.name))
@@ -20,7 +20,7 @@ function fmt(value: number) { return value.toLocaleString('en-US', { maximumFrac
 
 <template>
   <main id="main-content" class="factory-page">
-    <FactoryPageHeader eyebrow="Production" title="What each factory makes." description="Record supplies that arrive without a recipe, then assign recipes to machines. Output and ingredient use are calculated automatically." />
+    <FactoryPageHeader eyebrow="Production" title="What each factory makes." description="Record external supplies and assign recipes to machines. Balances show nominal full-speed capacity; enter owned inventory on Machines and verify actual throughput in game." />
     <section v-if="!selectedFactory" class="factory-empty"><h2>Create a factory to begin</h2><p>Factories keep their production lines and machine inventory separate.</p><button class="button button--primary" @click="addFactory()">New factory</button></section>
     <template v-else>
       <section class="factory-panel factory-name-panel"><label for="factory-name">Factory name</label><input id="factory-name" v-model.trim="selectedFactory.name" @change="touchFactory"><button class="button button--danger" type="button" @click="removeCurrent">Remove factory</button></section>

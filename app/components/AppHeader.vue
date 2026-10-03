@@ -7,7 +7,9 @@
     <nav aria-label="Primary navigation">
       <NuxtLink to="/">Home</NuxtLink>
       <NuxtLink to="/recipe">Recipe</NuxtLink>
-      <NuxtLink to="/factory/statistics">Factory</NuxtLink>
+      <NuxtLink to="/factory/recipes">Crafting</NuxtLink>
+      <NuxtLink to="/factory/planner">Factory</NuxtLink>
+      <NuxtLink to="/changelog">Changelog</NuxtLink>
     </nav>
     <span class="model-stamp">LOCAL-FIRST PLAYER TOOLS</span>
   </header>

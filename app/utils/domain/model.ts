@@ -1,11 +1,4 @@
-/**
- * Single source of truth for the game mechanics snapshot used by the app.
- * Update this object when the ingredient table or current game formulas are
- * verified against a new Capital Rift build.
- */
-export const GAME_MODEL = Object.freeze({
-  date: '2026-09-23',
-  gameVersion: 'v413',
-  label: '2026-09-23 / v413',
-  cacheKey: '2026-09-23-v413',
-} as const)
+import { CURRENT_RELEASE_KEY } from '../changelog'
+
+// Internal cache/share identity. Game build history is maintained only in the changelog.
+export const GAME_MODEL = Object.freeze({ label: CURRENT_RELEASE_KEY, cacheKey: CURRENT_RELEASE_KEY })

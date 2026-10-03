@@ -5,6 +5,7 @@ import type { OptimizationResponse, Trend } from '../utils/domain/types'
 defineProps<{
   trends: Trend[]
   optimization: OptimizationResponse
+  chunkId: string
 }>()
 </script>
 
@@ -12,8 +13,8 @@ defineProps<{
   <section class="results-section" aria-labelledby="results-title">
     <header class="section-heading">
       <p class="eyebrow accent">03 / OPTIMIZED RECIPES</p>
-      <h2 id="results-title">Twelve menu candidates, ranked by exact match.</h2>
-      <p>Best found—not claimed as global optima. Every two-ingredient mix was checked exhaustively; larger recipes use deterministic refinement.</p>
+      <h2 id="results-title">Menu candidates, ranked by exact match.</h2>
+      <p>Best found—not claimed as global optima. Every two-ingredient mix among your selected ingredients was checked exhaustively; larger recipes use deterministic refinement.</p>
     </header>
 
     <article v-for="trend in trends" :key="trend.index" class="trend-block">
@@ -33,6 +34,7 @@ defineProps<{
           :trend="trend"
           :trends="trends"
           :rank="index + 1"
+          :chunk-id="chunkId"
         />
       </div>
     </article>
@@ -45,4 +47,3 @@ defineProps<{
     </footer>
   </section>
 </template>
-

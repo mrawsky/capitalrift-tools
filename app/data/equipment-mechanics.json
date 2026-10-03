@@ -1,0 +1,21 @@
+{
+  "evidence": "Data was checked against a current version of the game. This is not a live-game measurement. Verify current equipment details in game after updates.",
+  "hauling": [
+    { "id": "sedan", "name": "Sedan", "cargo": 1200, "mode": "road" },
+    { "id": "suv", "name": "SUV", "cargo": 2400, "mode": "road" },
+    { "id": "van", "name": "Van", "cargo": 6000, "mode": "road" },
+    { "id": "truck", "name": "Box Truck", "cargo": 15000, "mode": "road" },
+    { "id": "barge", "name": "Harbor Barge", "cargo": 40000, "mode": "sea" },
+    { "id": "coaster", "name": "Coastal Freighter", "cargo": 125000, "mode": "sea" },
+    { "id": "feeder", "name": "Feeder Container Ship", "cargo": 400000, "mode": "sea" },
+    { "id": "seawise", "name": "Seawise Giant Class", "cargo": 1200000, "mode": "sea" }
+  ],
+  "mining": [
+    { "itemId": "mining_barrow", "multiplier": 1.5 },
+    { "itemId": "skid_steer", "multiplier": 2 },
+    { "itemId": "drill_rig", "multiplier": 3 },
+    { "itemId": "mining_excavator", "multiplier": 5 },
+    { "itemId": "haul_truck", "multiplier": 7 },
+    { "itemId": "bucket_wheel_excavator", "multiplier": 10 }
+  ]
+}

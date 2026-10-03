@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { GAME_MODEL } from '../utils/domain/model'
 
 const runtimeConfig = useRuntimeConfig()
 const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe/methodology` : undefined)
@@ -17,7 +16,7 @@ useHead(() => ({ link: canonical.value ? [{ rel: 'canonical', href: canonical.va
 <template>
   <main id="main-content" class="methodology-page">
     <header class="methodology-hero">
-      <p class="eyebrow accent">HOW IT WORKS / MODEL {{ GAME_MODEL.label }}</p>
+      <p class="eyebrow accent">HOW IT WORKS</p>
       <h1>A clear look<br><em>at the calculator.</em></h1>
       <p>This page explains the current local model, the information you enter, and what to re-check after a game update.</p>
     </header>
@@ -114,7 +113,7 @@ popularity display = +13%</code></pre>
           <p>This tool does not model cost, inventory, supply, preparation time, station compatibility, pricing, profit, or availability. A field called <code>recipe</code> found in cart state represented the “Secret Recipe” upgrade, not a dish composition; restaurant menu data was empty in the inspected snapshot.</p>
           <p>After a patch, re-check the ingredient table, recipe validation, seed version, hash and PRNG constants, eligibility threshold, formulas, and rounding. Reproducing the three known trend names should happen before any new optimization is trusted.</p>
           <p class="callout">The model uses community-checked game data and known examples. Generated names and search recommendations come from this tool, not from Capital Rift. Important results should be checked in game after an update.</p>
-          <p>The calculator never contacts Capital Rift. You copy the location ID yourself, and every calculation runs in this browser.</p>
+          <p>See the <NuxtLink class="accent" to="/changelog">changelog</NuxtLink> for checked game builds and tool updates. The calculator never contacts Capital Rift. You copy the location ID yourself, and every calculation runs in this browser.</p>
           <p><strong>Unofficial community project.</strong> Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.</p>
         </section>
 
@@ -124,7 +123,7 @@ popularity display = +13%</code></pre>
           <details><summary>Does the tool contact the game?</summary><p>No. The generator, trend calculation, scoring, and search run locally in your browser.</p></details>
           <details><summary>Why do nearby restaurants show the same trends?</summary><p>They can normalize to the same zoom-12 tile, and therefore the same seed.</p></details>
           <details><summary>Is the first recipe globally optimal?</summary><p>No global claim is made. All two-ingredient recipes are checked exhaustively; larger mixes are refined deterministically and labeled best found.</p></details>
-          <details><summary>Why does my in-game number differ after an update?</summary><p>The developer may have changed an ingredient vector, seed version, generation constant, or scoring rule. Verify the model version and re-check the known fixture.</p></details>
+          <details><summary>Why does my in-game number differ after an update?</summary><p>The developer may have changed an ingredient vector, seed version, generation constant, or scoring rule. Check the <NuxtLink class="accent" to="/changelog">changelog and game data history</NuxtLink> and re-check the known fixture.</p></details>
         </section>
       </article>
     </div>

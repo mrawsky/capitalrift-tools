@@ -15,7 +15,7 @@ function sanitizePlan(value: any): SavedProductionPlan | null {
   const recipeOverrides = value.recipeOverrides && typeof value.recipeOverrides === 'object'
     ? Object.fromEntries(Object.entries(value.recipeOverrides).filter(([, recipeId]) => typeof recipeId === 'string').map(([overrideProductId, recipeId]) => [overrideProductId, migrateLegacyRecipeId(recipeId as string, overrideProductId)])) as Record<string, string>
     : {}
-  return { id: string(value.id), name: string(value.name).trim(), productId, targetRatePerMinute: finiteNonNegative(value.targetRatePerMinute), useNetworkSurplus: Boolean(value.useNetworkSurplus), recipeOverrides, createdAt: string(value.createdAt, new Date().toISOString()), updatedAt: string(value.updatedAt, new Date().toISOString()) }
+  return { id: string(value.id), name: string(value.name).trim(), productId, targetRatePerMinute: finiteNonNegative(value.targetRatePerMinute), useNetworkSurplus: Boolean(value.useNetworkSurplus), recipeOverrides, calculationVersion: typeof value.calculationVersion === 'number' ? value.calculationVersion : undefined, createdAt: string(value.createdAt, new Date().toISOString()), updatedAt: string(value.updatedAt, new Date().toISOString()) }
 }
 export function parseFactoryState(input: string | unknown): FactoryPlannerStateV1 {
   const value: any = typeof input === 'string' ? JSON.parse(input) : input

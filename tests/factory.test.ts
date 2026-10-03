@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import rawCatalog from '../app/data/factory-catalog.json'
+import { CURRENT_RELEASE_KEY } from '../app/utils/changelog'
 import { FACTORY_CATALOG } from '../app/utils/factory/catalog'
 import { buildLedger, planProduction } from '../app/utils/factory/calculations'
 import { emptyFactoryState, parseFactoryState, serializeFactoryState } from '../app/utils/factory/persistence'
@@ -78,7 +79,7 @@ describe('factory planner domain', () => {
   it('migrates legacy generated recipe ids in factories and plans', () => {
     const parsed = parseFactoryState({
       schemaVersion: 1,
-      catalogVersion: '2026-09-03',
+      catalogVersion: 'legacy-catalog',
       selectedFactoryId: 'factory-1',
       factories: [{
         ...factory(),
@@ -106,8 +107,8 @@ describe('factory planner domain', () => {
   })
 
   it('ships a consistent bundled catalog', () => {
-    expect(Object.keys(rawCatalog).sort()).toEqual(['items', 'recipes', 'version'])
-    expect(FACTORY_CATALOG.version).toBe('2026-09-27')
+    expect(Object.keys(rawCatalog).sort()).toEqual(['items', 'recipes'])
+    expect(FACTORY_CATALOG.version).toBe(CURRENT_RELEASE_KEY)
     expect(FACTORY_CATALOG.items).toHaveLength(329)
     expect(FACTORY_CATALOG.recipes).toHaveLength(249)
     expect(new Set(FACTORY_CATALOG.recipes.map(recipe => recipe.id)).size).toBe(FACTORY_CATALOG.recipes.length)
