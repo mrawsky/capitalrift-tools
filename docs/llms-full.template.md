@@ -1,0 +1,99 @@
+# Capital Rift Tools — Reference
+
+> [Changelog and game data history](/changelog): Latest tools, fixes, checked game builds, and data provenance.
+
+## Crafting, capacity, and community tools
+
+Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The {{RECIPE_COUNT}} pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
+
+Batches are `ceil(requestedQuantity / batchOutput)`. Inputs are batches times ingredients per batch. Shared demands are aggregated before rounding in both quantity chains and continuous plans. The continuous planner propagates whole-machine full-speed demand upstream; `perMinute` means output units/min, not batches/min.
+
+One Iron Bar makes 20 Nails at the Manufacturing Press. Requesting 21 Nails requires two Iron Bars and produces 40 Nails. Machine Parts use two Steel Sheet and six Wire per batch.
+
+New factories record required production assignments without claiming machines are owned. Enter raw supplies and owned inventory separately. Statistics are nominal full-speed balances, not a simulation of machines stopping for shortages. Legacy plans show a recalculation notice; existing factories remain unchanged.
+
+[Starter blueprints](/factory/blueprints) are reviewed catalog-backed examples. Portable blueprint links and JSON exclude personal network surplus. Shared data opens as a preview without replacing local workspaces; saving is explicit. Restaurant locations and compositions can also be saved locally, shared, and backed up as JSON.
+
+[Storage comparison](/tools/storage) uses player-entered current capacities, accepted goods, and placement notes. Visual defaults may be overridden by server capacities and are not published as verified limits. Unknown remains unknown.
+
+[Hauling](/tools/hauling) uses checked saved-client base capacities, permits a current-capacity override, and predicts whole trips only. [Mining equipment](/tools/mining) uses checked client vehicle multipliers with a player-entered unequipped baseline. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and logistics are excluded. No live resource map, freight duration, market tracker, or profit optimizer is provided.
+
+## Primary pages
+
+- [Tool hub](/): Choose a tool.
+- [Changelog](/changelog): Tool updates and checked game build history.
+- [Recipe calculator](/recipe): Enter a restaurant chunkId, generate its three deterministic trends, and search 12 best-found recipes.
+- [Recipe methodology](/recipe/methodology): Find a chunkId and review location normalization, scoring, and limitations.
+- [Factory planner](/factory): Track local factories, machines, production balances, and saved plans.
+- [Factory recipes](/factory/recipes): Search the bundled static production catalog.
+- [GitHub repository]({{REPOSITORY}}): Source code, fixtures, and contribution history.
+- [Report a mismatch]({{REPOSITORY}}/issues/new): Submit changed game mechanics or a reproducible calculation problem.
+
+## Input and location normalization
+
+The preferred input is the selected restaurant's chunkId in `zoom/tileX/tileY` format. It can be found in the Response body of the Capital Rift request beginning `building-info?ref=player%2F…`.
+
+The chunkId is normalized to zoom 12 using floor division by `2 ** (zoom - 12)`. Zoom values below 12 are invalid.
+
+Example: `15/18295/10789` normalizes to `12/2286/1348`.
+
+## Taste axes
+
+The canonical order is Sweet, Salty, Sour, Bitter, Umami, Spice, Richness, Freshness. All calculations use all eight axes, even when a trend name mentions only two.
+
+## Trend generation
+
+The seed is `crtrend:1:<locationKey>`. An xmur3-style hash initializes Mulberry32. Three trends are generated in deterministic order. Each trend contains two distinct primary axes, one additional boosted axis, and baseline values on every axis. Unordered primary pairs cannot repeat.
+
+## Recipe rules and profile
+
+A valid recipe composition has 2–8 unique known ingredients. Every share is an integer from 1 to 100 and shares total exactly 100. There is no 5% step restriction.
+
+For each taste axis:
+
+```text
+profile[axis] = sum(ingredientVector[axis] * share) / sum(shares)
+profile[axis] = Math.round(profile[axis] * 100) / 100
+```
+
+Match is calculated from the profile after this two-decimal rounding.
+
+## Match and popularity
+
+```text
+distance = sum(abs(recipeProfile[axis] - trendTarget[axis]))
+match = clamp(1 - distance / 28, 0, 1)
+uiMatchPercent = Math.round(match * 100)
+popularityMultiplier = 1 + 0.25 * clamp(match, 0, 1) ** 1.6
+```
+
+The overall popularity bonus uses the best match among the three local trends. Exact match ranks recommendations before game-facing display rounding.
+
+## Verified fixture
+
+- Input chunkId: `15/18295/10789`
+- Normalized location: `12/2286/1348`
+- Seed: `crtrend:1:12/2286/1348`
+- Trends in order: Sour & Sweet; Salty & Richness; Richness & Spice
+- Recipe: Ketchup 50% + Vinegar 50%
+- Profile: `(3.5, 2, 7.5, 0.5, 1.5, 0.5, 0, 1.5)`
+- Sour & Sweet distance: `9`
+- Exact match: `0.6785714286`
+- Game display: `68%`
+- Popularity display: `+13%`
+
+## Search behavior
+
+Every pair among selected available ingredients is searched exhaustively. Larger recipes use deterministic refinement restricted to the same selection. Availability and optimizer version are included in cache identity. Results are labeled best found and are not claimed to be global mathematical optima.
+
+## Limitations
+
+The verified model does not include ingredient cost, quantities in stock, preparation time, station compatibility, menu pricing, profit, or supply. Suggested recipe names are generated by this tool and are not supplied by the game. Important results should be checked in the in-game Recipe Designer after a patch.
+
+## Community verification
+
+Useful reports include the game version, date checked, restaurant chunkId, all three trend names in displayed order, recipe ingredients and percentages, the match and popularity shown by the game, and a screenshot or reproduction notes.
+
+The factory planner stores its setup in the browser and makes no Capital Rift API calls. It does not sign in, scrape locations, read buildings, or automate play.
+
+Unofficial community project. Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.

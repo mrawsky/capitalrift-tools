@@ -21,8 +21,10 @@ logs
 # factory catalog
 gamefiles/
 /generate_dataset
-/docs
-/scripts
+/docs/equipment-evidence.md
+/scripts/verify-equipment.mjs
+/scripts/verify-runtime.mjs
+/scripts/verify-generated-site.mjs
 
 # Local env files
 .env
