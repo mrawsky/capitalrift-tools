@@ -94,6 +94,7 @@
     "engine": "Engine",
     "engine_block": "Engine Block",
     "fabric": "Fabric",
+    "fan_heater": "Fan Heater",
     "felt": "Felt",
     "filing_cabinet": "Filing Cabinet",
     "fish": "Cod Fillet",
@@ -131,6 +132,8 @@
     "hydraulic_cylinder": "Hydraulic Cylinder",
     "hydraulic_pump": "Hydraulic Pump",
     "hydraulics_shop": "Hydraulics Shop",
+    "industrial_ac": "Industrial AC",
+    "industrial_heater": "Industrial Heater",
     "ink": "Ink",
     "iron_bar": "Iron Bar",
     "iron_ore": "Iron Ore",
@@ -214,6 +217,7 @@
     "polished_concrete": "Polished Concrete",
     "polysilicon": "Polysilicon",
     "pork": "Pork",
+    "portable_ac": "Portable AC",
     "potato": "Potato",
     "potato_seeds": "Seed Potatoes",
     "potted_palm": "Potted Palm",
@@ -1098,6 +1102,19 @@
         "wool": 2
       }
     },
+    "fan_heater": {
+      "label": "Build a fan heater",
+      "station": "metal_shop",
+      "product": "fan_heater",
+      "batch": 1,
+      "rate": 0.05,
+      "inputs": {
+        "copper_wire": 3,
+        "plastic_part": 2,
+        "steel_sheet": 1,
+        "wire": 4
+      }
+    },
     "felt": {
       "label": "Press felt",
       "station": "loom",
@@ -1327,6 +1344,34 @@
         "copper_wire": 6,
         "gear": 2,
         "machine_parts": 1
+      }
+    },
+    "industrial_ac": {
+      "label": "Build an industrial AC",
+      "station": "machine_shop",
+      "product": "industrial_ac",
+      "batch": 1,
+      "rate": 0.005,
+      "inputs": {
+        "circuit_board": 3,
+        "copper_wire": 30,
+        "machine_parts": 8,
+        "plastic_part": 6,
+        "steel_sheet": 30
+      }
+    },
+    "industrial_heater": {
+      "label": "Build an industrial heater",
+      "station": "metal_shop",
+      "product": "industrial_heater",
+      "batch": 1,
+      "rate": 0.008,
+      "inputs": {
+        "circuit_board": 2,
+        "copper_wire": 16,
+        "machine_parts": 6,
+        "steel_beam": 2,
+        "steel_sheet": 30
       }
     },
     "ink": {
@@ -2206,6 +2251,19 @@
       "rate": 0.35,
       "inputs": {
         "quartz": 6
+      }
+    },
+    "portable_ac": {
+      "label": "Build a portable AC",
+      "station": "electronics_bench",
+      "product": "portable_ac",
+      "batch": 1,
+      "rate": 0.035,
+      "inputs": {
+        "circuit_board": 1,
+        "copper_wire": 4,
+        "machine_parts": 1,
+        "plastic_part": 3
       }
     },
     "potted_palm": {

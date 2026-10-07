@@ -1,6 +1,26 @@
 {
   "entries": [
     {
+      "id": "v440-climate-recipes",
+      "date": "2026-10-07",
+      "gameVersion": "V440",
+      "title": "V440: Fan heater, Portable AC, Industrial heater and Industrial AC recipes",
+      "summary": "Four new crafting recipes, with ingredient calculators and complete factory production chains.",
+      "evidence": "Crafting definitions were checked against the latest version of the game on 7 October 2026. Verify important results in game after an update.",
+      "changes": [
+        {
+          "title": "New crafting recipes",
+          "items": [
+            "Added Fan Heater crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "Added Portable Air Conditioner crafting at the Electronics Bench, with batch quantities, materials, and production planning.",
+            "Added Industrial Heater crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "Added Industrial Air Conditioner crafting at the Electronics Bench, with batch quantities, materials, and production planning.",
+            "The crafting reference now includes 255 recipes."
+          ]
+        }
+      ]
+    },
+    {
       "id": "v438-climate-recipes",
       "date": "2026-10-07",
       "gameVersion": "V438",

@@ -7,9 +7,13 @@ export const CRAFTING_QUESTIONS = [
   { productId: 'copper_bar', question: 'How do you make Copper Bars?' },
   { productId: 'fabric', question: 'How do you make Fabric?' },
   { productId: 'mining_barrow', question: 'How do you craft a Mining Barrow?' },
+  { productId: 'fan_heater', question: 'How do you make a Fan Heater?' },
+  { productId: 'industrial_heater', question: 'How do you make an Industrial Heater?' },
+  { productId: 'industrial_ac', question: 'How do you make an Industrial Air Conditioner?' },
+  { productId: 'portable_ac', question: 'How do you make a Portable Air Conditioner?' },
 ]
 
-export const NEW_CRAFTING_PRODUCTS = ['space_heater', 'air_conditioner']
+export const NEW_CRAFTING_PRODUCTS = ['space_heater', 'air_conditioner', 'fan_heater', 'industrial_heater', 'industrial_ac', 'portable_ac', ]
 
 export function craftingAnswer(productId: string) {
   const recipe = defaultRecipeFor(productId)
