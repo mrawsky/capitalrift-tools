@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { CHANGELOG } from '../utils/changelog'
-useToolSeo('Capital Rift Tools Changelog & Game Data Updates', 'See new Capital Rift community tools, fixes, and the game builds used to check restaurant, crafting, and equipment data.')
+useToolSeo('Capital Rift Tools Changelog & Game Data Updates', 'See the latest Capital Rift crafting additions, calculator improvements, and checked game updates, with dated evidence for changes to the bundled data.')
 const formatDate = (date: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(`${date}T00:00:00Z`))
 </script>
 

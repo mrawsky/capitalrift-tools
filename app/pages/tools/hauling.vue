@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { EQUIPMENT_MECHANICS, tripsRequired } from '../../utils/equipment'
-useToolSeo('Capital Rift Hauling Calculator & Delivery Setup', 'Compare saved-client vehicle cargo capacities, calculate trips for your materials, and check delivery requests and storage before setting up hauling.', true)
+useToolSeo('Capital Rift Hauling Calculator & Delivery Setup', 'Calculate Capital Rift hauling trips from vehicle cargo capacity. Compare vehicles and follow delivery setup checks for storage, requests, and shipping.', true)
 const vehicle = ref(EQUIPMENT_MECHANICS.hauling[0]!.id)
 const quantity = ref(1000)
 const capacityOverride = ref<number | ''>('')

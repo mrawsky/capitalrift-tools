@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { containersRequired } from '../../utils/equipment'
 import { itemName, productPath } from '../../utils/factory/catalog'
-useToolSeo('Capital Rift Storage Comparison & Capacity Calculator', 'Compare storage crates, racks, lockers, containers, and silos using current in-game capacities. Calculate containers needed and open their crafting recipes.', true)
+useToolSeo('Capital Rift Storage Comparison & Capacity Calculator', 'Compare Capital Rift storage using capacities from your game. Calculate containers needed, record accepted goods, and open the matching crafting recipes.', true)
 const quantity = ref(1000)
 const values = reactive<Record<string, { capacity?: number; accepts: string; placement: string }>>({})
 const ids = ['crate', 'rack', 'cabinet', 'shelving_unit', 'stockroom_rack', 'storage_locker', 'pallet_rack', 'lumber_stack', 'shipping_container', 'grain_silo', 'oil_drum']

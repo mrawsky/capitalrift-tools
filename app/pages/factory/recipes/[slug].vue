@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FACTORY_CATALOG, FACTORY_MODEL, REPOSITORY_URL, defaultRecipeFor, itemName, productFromSlug, productPath, recipesUsing } from '../../../utils/factory/catalog'
+import { craftingAnswer, craftingDescription } from '../../../utils/factory/reference'
 import { calculateBatch, planQuantity } from '../../../utils/factory/calculations'
 
 definePageMeta({ layout: 'factory', validate: route => typeof route.params.slug === 'string' && Boolean(productFromSlug(route.params.slug)) })
@@ -14,9 +15,9 @@ const chain = computed(() => planQuantity(productId.value, validQuantity.value ?
 const uses = computed(() => recipesUsing(productId.value))
 const events = useToolEvents()
 watch(productId, () => { quantity.value = 1 })
-useToolSeo(() => `Capital Rift ${name.value}: Recipe, Yield & Calculator`, () => `How to make ${name.value} in Capital Rift: ${recipe.value.inputs.map(input => `${input.quantity} ${itemName(input.itemId)}`).join(', ')} yields ${recipe.value.batch}. Calculate quantities and plan the chain.`, true)
+useToolSeo(() => `Capital Rift ${name.value} Recipe & Crafting Calculator`, () => craftingDescription(productId.value), true)
 function fmt(value: number) { return value.toLocaleString('en-US', { maximumFractionDigits: 4 }) }
-const answer = computed(() => `Make ${fmt(recipe.value.batch)} ${name.value} per batch at a ${itemName(recipe.value.stationId)} using ${recipe.value.inputs.map(input => `${fmt(input.quantity)} ${itemName(input.itemId)}`).join(' + ')}.`)
+const answer = computed(() => craftingAnswer(productId.value))
 const focusedAnswers: Record<string, string> = {
   nails: 'One Iron Bar produces 20 Nails. To make 21 Nails, run two batches: use 2 Iron Bars and receive 40 Nails.',
   machine_parts: 'Machine Parts are made at the Manufacturing Press. The quantity calculator below covers the direct recipe; the chain also includes Wire and Steel Sheet production.',

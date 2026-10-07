@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { EQUIPMENT_MECHANICS, miningAssignment } from '../../utils/equipment'
 import { FACTORY_CATALOG, itemName, productPath } from '../../utils/factory/catalog'
-useToolSeo('Capital Rift Mining Equipment & Supply Estimator', 'Compare mining vehicle multipliers from the saved client, estimate a crew from your entered base rate, and add an external supply to your local factory.', true)
+useToolSeo('Capital Rift Mining Equipment & Supply Estimator', 'Estimate Capital Rift mining supply from your measured base rate, crew, and vehicle multipliers. Compare equipment and add the estimate to a factory plan.', true)
 const miners = ref(1)
 const baseRate = ref(1)
 const vehicles = reactive<Record<string, number>>({})

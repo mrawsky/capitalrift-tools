@@ -4,7 +4,7 @@ import { PLAN_CALCULATION_VERSION, planProduction } from '../../utils/factory/ca
 import { downloadToolJson, MAX_SHARE_FILE_BYTES, parseSharedTool, parseShareFragment, shareFragment, type SharedFactoryPlan } from '../../utils/sharing'
 
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Production Planner & Shareable Blueprints', 'Plan balanced whole-machine factory chains, see full-speed capacity and required supplies, then save or share a Capital Rift blueprint.', true)
+useToolSeo('Capital Rift Production Planner & Shareable Blueprints', 'Plan Capital Rift production chains with whole machines and raw material requirements. Check full-speed capacity, then save or share a factory blueprint.', true)
 const route = useRoute()
 const { state, selectedFactory, savePlan, removePlan, createFactoryFromSavedPlan, mergePlanIntoFactory } = useFactoryPlanner()
 const products = [...FACTORY_CATALOG.recipesByProduct.keys()].sort((a, b) => itemName(a).localeCompare(itemName(b)))

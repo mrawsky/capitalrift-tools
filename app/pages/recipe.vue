@@ -8,7 +8,6 @@ import { parseShareFragment, type SharedRecipe } from '../utils/sharing'
 
 const route = useRoute()
 const router = useRouter()
-const runtimeConfig = useRuntimeConfig()
 const { optimize } = useRecipeOptimizer()
 
 const location = ref<ParsedLocation | null>(null)
@@ -23,32 +22,7 @@ const initialParts = ref<RecipePart[] | undefined>()
 const libraryMessage = ref('')
 
 const initialId = computed(() => typeof route.query.id === 'string' ? route.query.id : '')
-const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe` : undefined)
-
-useSeoMeta({
-  title: 'Recipe Calculator — Capital Rift Tools',
-  description: 'Unofficial calculator for Capital Rift restaurant recipes and local taste trends.',
-  ogTitle: 'Capital Rift Recipe Calculator',
-  ogDescription: 'Generate local trends, strong recipes, and exact match calculations from a restaurant chunk ID.',
-  ogType: 'website',
-  twitterCard: 'summary',
-})
-
-useHead(() => ({
-  link: canonical.value ? [{ rel: 'canonical', href: canonical.value }] : [],
-  script: [{
-    type: 'application/ld+json',
-    textContent: JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'WebApplication',
-      name: 'Capital Rift Recipe Calculator',
-      applicationCategory: 'GameApplication',
-      operatingSystem: 'Any modern browser',
-      description: 'An unofficial local recipe and trend calculator for Capital Rift.',
-      isAccessibleForFree: true,
-    }),
-  }],
-}))
+useToolSeo('Capital Rift Restaurant Recipe Calculator & Taste Trends', 'Find Capital Rift restaurant recipes from your location ID. Match local taste trends, choose available ingredients, and save or share your recipes.', true)
 
 async function generate(payload: { type: 'id', input: string } | { type: 'coordinates', longitude: number, latitude: number }) {
   if (loading.value) return

@@ -3,7 +3,7 @@ import { buildLedger } from '../../utils/factory/calculations'
 import { itemName } from '../../utils/factory/catalog'
 
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Factory Statistics & Supply Balances', 'Check nominal production capacity, shortages, and owned machine counts across your locally saved Capital Rift factories.')
+useToolSeo('Capital Rift Factory Statistics & Supply Balances', 'Check Capital Rift factory input shortages, output surpluses, and machine counts. Compare nominal full-speed supply balances across your saved factories.')
 const { state, selectedFactory } = useFactoryPlanner()
 const scope = ref<'all' | 'current'>('all')
 const factories = computed(() => scope.value === 'current' && selectedFactory.value ? [selectedFactory.value] : state.value.factories)

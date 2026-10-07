@@ -3,7 +3,7 @@ import { FACTORY_CATALOG, REPOSITORY_URL, defaultRecipeFor, itemName, productPat
 import { planProduction } from '../../utils/factory/calculations'
 
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Starter Factory Blueprints', 'Start production with catalog-backed plans for nails, machine parts, battery packs, and mining barrows. See machines and required external supplies.')
+useToolSeo('Capital Rift Factory Blueprints: Nails, Parts & Batteries', 'Start a Capital Rift factory from a reviewed blueprint for Nails, Machine Parts, Battery Packs, or Mining Barrows, with machines and raw supply requirements.')
 const blueprints = ['nails', 'machine_parts', 'battery', 'mining_barrow'].map(productId => {
   const target = defaultRecipeFor(productId)!.perMinute
   const result = planProduction(productId, target)

@@ -1,16 +1,6 @@
 <script setup lang="ts">
 
-const runtimeConfig = useRuntimeConfig()
-const canonical = computed(() => runtimeConfig.public.siteUrl ? `${String(runtimeConfig.public.siteUrl).replace(/\/$/, '')}/recipe/methodology` : undefined)
-
-useSeoMeta({
-  title: 'How the Recipe Calculator Works — Capital Rift Tools',
-  description: 'Where to find a Capital Rift chunk ID and how location normalization, local trends, recipe profiles, match, and popularity are calculated.',
-  ogTitle: 'How the Capital Rift Recipe Calculator Works',
-  ogDescription: 'A clear explanation of the local trend and recipe scoring model.',
-  ogType: 'article',
-})
-useHead(() => ({ link: canonical.value ? [{ rel: 'canonical', href: canonical.value }] : [] }))
+useToolSeo('Capital Rift Restaurant Recipes: Trends & Scoring Explained', 'Learn how Capital Rift restaurant location IDs produce local tastes, how recipes are scored, and how to reproduce match and popularity calculations.', false, 'article')
 </script>
 
 <template>

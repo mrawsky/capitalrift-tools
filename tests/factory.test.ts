@@ -109,8 +109,8 @@ describe('factory planner domain', () => {
   it('ships a consistent bundled catalog', () => {
     expect(Object.keys(rawCatalog).sort()).toEqual(['items', 'recipes'])
     expect(FACTORY_CATALOG.version).toBe(CURRENT_RELEASE_KEY)
-    expect(FACTORY_CATALOG.items).toHaveLength(329)
-    expect(FACTORY_CATALOG.recipes).toHaveLength(249)
+    expect(FACTORY_CATALOG.items).toHaveLength(331)
+    expect(FACTORY_CATALOG.recipes).toHaveLength(251)
     expect(new Set(FACTORY_CATALOG.recipes.map(recipe => recipe.id)).size).toBe(FACTORY_CATALOG.recipes.length)
     for (const recipe of FACTORY_CATALOG.recipes) {
       expect(FACTORY_CATALOG.itemById.has(recipe.productId)).toBe(true)
@@ -122,6 +122,14 @@ describe('factory planner domain', () => {
   })
 
   it('includes current game recipe fixtures and new production chains', () => {
+    expect(FACTORY_CATALOG.recipeById.get('space_heater')).toMatchObject({
+      stationId: 'metal_shop', productId: 'space_heater', batch: 1, perMinute: 0.025,
+      inputs: [{ itemId: 'circuit_board', quantity: 1 }, { itemId: 'copper_wire', quantity: 6 }, { itemId: 'steel_sheet', quantity: 8 }, { itemId: 'wire', quantity: 6 }],
+    })
+    expect(FACTORY_CATALOG.recipeById.get('air_conditioner')).toMatchObject({
+      stationId: 'electronics_bench', productId: 'air_conditioner', batch: 1, perMinute: 0.02,
+      inputs: [{ itemId: 'circuit_board', quantity: 1 }, { itemId: 'copper_wire', quantity: 10 }, { itemId: 'machine_parts', quantity: 2 }, { itemId: 'plastic_part', quantity: 3 }, { itemId: 'steel_sheet', quantity: 6 }],
+    })
     expect(FACTORY_CATALOG.recipeById.get('computer_case')).toMatchObject({
       stationId: 'manufacturing_press',
       productId: 'computer_case',

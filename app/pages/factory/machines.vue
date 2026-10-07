@@ -3,7 +3,7 @@ import { FACTORY_CATALOG, itemName } from '../../utils/factory/catalog'
 import { buildLedger } from '../../utils/factory/calculations'
 
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Factory Machines: Owned & Required Capacity', 'Record the machines you actually own and compare them with assigned, spare, and missing production capacity.')
+useToolSeo('Capital Rift Factory Machines: Owned & Required Capacity', 'Record owned Capital Rift factory machines and compare them with recipe assignments. Find spare capacity and missing machines before expanding production.')
 const { selectedFactory, setMachineOwned } = useFactoryPlanner()
 const ledger = computed(() => selectedFactory.value ? buildLedger([selectedFactory.value]) : buildLedger([]))
 const rows = computed(() => FACTORY_CATALOG.stationIds.map((stationId) => ledger.value.machineRows.find(row => row.stationId === stationId) ?? { stationId, owned: 0, assigned: 0, spare: 0, missing: 0, productionCount: 0 }).sort((a, b) => itemName(a.stationId).localeCompare(itemName(b.stationId))))

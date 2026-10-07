@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Factory Planner: Setup & Tutorial', 'Learn how to track factories, owned machines, production capacity, and required supplies. Start with a reviewed blueprint or a crafting recipe.')
+useToolSeo('Capital Rift Factory Planner: Setup & Tutorial', 'Learn to set up a Capital Rift factory plan: choose a crafting chain, enter owned machines and raw supplies, then check output capacity and shortages.')
 const { state, addFactory } = useFactoryPlanner()
 function start() { if (!state.value.factories.length) addFactory('My first factory'); navigateTo('/factory/production') }
 </script>

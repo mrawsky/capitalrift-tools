@@ -1,5 +1,6 @@
 {
   "items": {
+    "air_conditioner": "Air Conditioner",
     "anchor_chain": "Anchor Chain",
     "aquarium": "Aquarium",
     "armchair": "Armchair",
@@ -262,6 +263,7 @@
     "soy": "Soy Sauce",
     "soybean": "Soybeans",
     "soybean_seeds": "Soybean Seed",
+    "space_heater": "Space Heater",
     "stage_platform": "Stage Platform",
     "stanchion": "Queue Stanchion",
     "station_fryer": "Fryer Station",
@@ -331,6 +333,20 @@
     "workbench": "Workbench"
   },
   "recipes": {
+    "air_conditioner": {
+      "label": "Build an air conditioner",
+      "station": "electronics_bench",
+      "product": "air_conditioner",
+      "batch": 1,
+      "rate": 0.02,
+      "inputs": {
+        "circuit_board": 1,
+        "copper_wire": 10,
+        "machine_parts": 2,
+        "plastic_part": 3,
+        "steel_sheet": 6
+      }
+    },
     "anchor_chain": {
       "label": "Forge anchor chain",
       "station": "foundry",
@@ -2619,6 +2635,19 @@
       "rate": 50.1,
       "inputs": {
         "soybean": 6
+      }
+    },
+    "space_heater": {
+      "label": "Build a space heater",
+      "station": "metal_shop",
+      "product": "space_heater",
+      "batch": 1,
+      "rate": 0.025,
+      "inputs": {
+        "circuit_board": 1,
+        "copper_wire": 6,
+        "steel_sheet": 8,
+        "wire": 6
       }
     },
     "stage_platform": {

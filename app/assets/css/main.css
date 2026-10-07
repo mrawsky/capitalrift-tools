@@ -332,6 +332,11 @@ tfoot { color: var(--accent); }
 .tool-breadcrumbs li + li::before { content: '/'; margin-right: .5rem; color: var(--muted); }
 .tool-breadcrumbs a, .reference-links a, .factory-panel table a, .reference-note a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
 .reference-content, .reference-controls { padding: 1.25rem; }
+.crafting-questions > h2 { margin: 0 0 1.25rem; }
+.crafting-questions article { padding-block: 1.25rem; border-top: 1px solid var(--rule); }
+.crafting-questions h3 { margin: 0 0 .65rem; font-size: 1.1rem; line-height: 1.4; }
+.crafting-questions h3 a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
+.crafting-questions p { max-width: 75ch; margin: 0; overflow-wrap: anywhere; }
 .tool-guide { padding: clamp(1.25rem, 3vw, 2.5rem); }
 .tool-guide p { max-width: 70ch; margin: 0; color: var(--muted); line-height: 1.7; }
 .tool-guide__header .eyebrow { margin-bottom: .75rem; color: var(--accent); }

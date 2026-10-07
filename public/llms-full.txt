@@ -4,7 +4,7 @@
 
 ## Crafting, capacity, and community tools
 
-Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 249 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
+Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 251 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
 
 Batches are `ceil(requestedQuantity / batchOutput)`. Inputs are batches times ingredients per batch. Shared demands are aggregated before rounding in both quantity chains and continuous plans. The continuous planner propagates whole-machine full-speed demand upstream; `perMinute` means output units/min, not batches/min.
 

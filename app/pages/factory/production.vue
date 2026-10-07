@@ -3,7 +3,7 @@ import { FACTORY_CATALOG, itemName } from '../../utils/factory/catalog'
 import { buildLedger } from '../../utils/factory/calculations'
 
 definePageMeta({ layout: 'factory' })
-useToolSeo('Capital Rift Factory Production & External Supplies', 'Record external supplies and assigned production recipes. Compare nominal input demand with full-speed capacity in each local factory.')
+useToolSeo('Capital Rift Factory Production & External Supplies', 'Track Capital Rift factory recipes, assigned machines, and external material supplies. Compare production capacity with ingredient demand in each factory.')
 const { state, selectedFactory, addFactory, removeFactory, addProduction, addSupply, touchFactory } = useFactoryPlanner()
 const recipes = [...FACTORY_CATALOG.recipes].sort((a, b) => itemName(a.productId).localeCompare(itemName(b.productId)))
 const items = [...FACTORY_CATALOG.items].sort((a, b) => a.name.localeCompare(b.name))

@@ -22,9 +22,13 @@ logs
 gamefiles/
 /generate_dataset
 /docs/equipment-evidence.md
+/docs/seo-2026-10-07.md
 /scripts/verify-equipment.mjs
 /scripts/verify-runtime.mjs
 /scripts/verify-generated-site.mjs
+/scripts/verify-seo.mjs
+/scripts/indexnow.mjs
+/seo
 
 # Local env files
 .env
