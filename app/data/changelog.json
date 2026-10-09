@@ -1,6 +1,28 @@
 {
   "entries": [
     {
+      "id": "v446-powergrid-recipes",
+      "date": "2026-10-09",
+      "gameVersion": "V446",
+      "title": "V446: Coal bunker, Coal Generator, Oil Generator, Wind Turbine, Water Turbine and Fuel Tank recipes",
+      "summary": "Six new crafting recipes, with ingredient calculators and complete factory production chains.",
+      "evidence": "Crafting definitions were checked against the latest version of the game on 7 October 2026. Verify important results in game after an update.",
+      "changes": [
+        {
+          "title": "New crafting recipes",
+          "items": [
+            "Added Coal Bunker crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "Added Coal Generator crafting at the Machine Shop, with batch quantities, materials, and production planning.",
+            "Added Oil Generator crafting at the Machine Shop, with batch quantities, materials, and production planning.",
+            "Added Wind Turbine crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "Added Water Turbine crafting at the Machine Shop, with batch quantities, materials, and production planning.",
+            "Added Fuel Tank crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "The crafting reference now includes 261 recipes."
+          ]
+        }
+      ]
+    },
+    {
       "id": "v440-climate-recipes",
       "date": "2026-10-07",
       "gameVersion": "V440",

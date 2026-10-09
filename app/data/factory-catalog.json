@@ -55,6 +55,9 @@
     "chip_fab": "Chip Fab",
     "circuit_board": "Circuit Board",
     "clothing_rack": "Clothing Rack",
+    "coal": "Coal",
+    "coal_bunker": "Coal Bunker",
+    "coal_generator": "Coal-fired Generator Set",
     "coat_check_counter": "Coat Check Counter",
     "cocktail_cart": "Cocktail Cart",
     "cocktail_table": "Cocktail Table",
@@ -107,6 +110,7 @@
     "fountain": "Fountain",
     "franks": "Franks",
     "fryer_oil": "Fryer Oil",
+    "fuel_tank": "Fuel Tank",
     "furnace": "Furnace",
     "gaming_table_frame": "Gaming Table Frame",
     "gaming_workshop": "Gaming Workshop",
@@ -132,6 +136,7 @@
     "hydraulic_cylinder": "Hydraulic Cylinder",
     "hydraulic_pump": "Hydraulic Pump",
     "hydraulics_shop": "Hydraulics Shop",
+    "hydro_turbine": "Water Turbine",
     "industrial_ac": "Industrial AC",
     "industrial_heater": "Industrial Heater",
     "ink": "Ink",
@@ -190,6 +195,7 @@
     "nutella": "Hazelnut spread",
     "office_chair": "Office Chair",
     "oil_drum": "Liquid Drum",
+    "oil_generator": "Oil-fired Generator Set",
     "oil_pump": "Pumpjack",
     "oil_refinery": "Oil Refinery",
     "onion_seeds": "Onion Seeds",
@@ -323,6 +329,7 @@
     "wasabi_seeds": "Wasabi Seeds",
     "wheat": "Wheat",
     "wheat_seeds": "Wheat Seed",
+    "wind_turbine": "Wind Turbine",
     "window_curtain": "Curtain Wall",
     "window_office": "Office Window",
     "window_ribbon": "Ribbon Window",
@@ -777,6 +784,36 @@
         "wire": 12
       }
     },
+    "coal_bunker": {
+      "label": "Build a coal bunker",
+      "station": "metal_shop",
+      "product": "coal_bunker",
+      "batch": 1,
+      "rate": 0.025,
+      "inputs": {
+        "gear": 4,
+        "steel_beam": 10,
+        "steel_plate": 20,
+        "steel_sheet": 30
+      }
+    },
+    "coal_generator": {
+      "label": "Build a coal-fired generator set",
+      "station": "machine_shop",
+      "product": "coal_generator",
+      "batch": 1,
+      "rate": 0.005,
+      "inputs": {
+        "circuit_board": 20,
+        "computer": 1,
+        "copper_wire": 80,
+        "hull_section": 8,
+        "machine_parts": 60,
+        "marine_engine": 10,
+        "steel_beam": 30,
+        "steel_plate": 40
+      }
+    },
     "coat_check_counter": {
       "label": "Build a coat check counter",
       "station": "carpentry_bench",
@@ -1181,6 +1218,19 @@
         "sunflower": 12
       }
     },
+    "fuel_tank": {
+      "label": "Build a fuel tank",
+      "station": "metal_shop",
+      "product": "fuel_tank",
+      "batch": 1,
+      "rate": 0.028,
+      "inputs": {
+        "concrete": 6,
+        "steel_beam": 6,
+        "steel_plate": 16,
+        "steel_sheet": 40
+      }
+    },
     "gaming_table_frame": {
       "label": "Frame a gaming table",
       "station": "carpentry_bench",
@@ -1344,6 +1394,23 @@
         "copper_wire": 6,
         "gear": 2,
         "machine_parts": 1
+      }
+    },
+    "hydro_turbine": {
+      "label": "Build a water turbine",
+      "station": "machine_shop",
+      "product": "hydro_turbine",
+      "batch": 1,
+      "rate": 0.0035,
+      "inputs": {
+        "computer": 1,
+        "copper_wire": 40,
+        "gear": 60,
+        "hull_section": 6,
+        "machine_parts": 50,
+        "propeller": 8,
+        "steel_beam": 10,
+        "steel_plate": 60
       }
     },
     "industrial_ac": {
@@ -2038,6 +2105,22 @@
       "rate": 0.2,
       "inputs": {
         "steel_sheet": 4
+      }
+    },
+    "oil_generator": {
+      "label": "Build an oil-fired generator set",
+      "station": "machine_shop",
+      "product": "oil_generator",
+      "batch": 1,
+      "rate": 0.0065,
+      "inputs": {
+        "circuit_board": 10,
+        "computer": 1,
+        "copper_wire": 60,
+        "hull_section": 4,
+        "machine_parts": 30,
+        "marine_engine": 8,
+        "steel_plate": 30
       }
     },
     "oil_pump": {
@@ -3263,6 +3346,24 @@
       "inputs": {
         "nails": 40,
         "plank": 32
+      }
+    },
+    "wind_turbine": {
+      "label": "Build a wind turbine",
+      "station": "metal_shop",
+      "product": "wind_turbine",
+      "batch": 1,
+      "rate": 0.0088,
+      "inputs": {
+        "circuit_board": 10,
+        "concrete": 20,
+        "copper_wire": 40,
+        "gear": 60,
+        "hull_section": 2,
+        "machine_parts": 30,
+        "plastic_sheet": 60,
+        "steel_beam": 20,
+        "steel_plate": 60
       }
     },
     "window_standard": {
