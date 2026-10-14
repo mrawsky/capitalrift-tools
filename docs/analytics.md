@@ -4,7 +4,7 @@ The site uses [PostHog](https://posthog.com) for product analytics, feature flag
 
 Analytics is privacy-conscious: it records which tools are used and how, never recipe, factory, or survey contents. Local data stays in the browser. A notice in the site footer links this behaviour to players.
 
-All event names and feature-flag keys live in `app/utils/analytics.ts`. The shared helpers are:
+All event names and feature-flag keys live in `app/utils/analytics.ts`. The shared helpers live in `app/composables/useAnalytics.ts`:
 
 - `useAnalytics()` — `capture(event, props)`, `captureTool(tool, props)`, `log(level, message, attrs)`.
 - `useToolTelemetry(tool)` — emits `tool_viewed` on mount, a debounced `tool_calculated`, and explicit `action(name, props, delay)`.
