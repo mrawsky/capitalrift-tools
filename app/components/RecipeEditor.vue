@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { INGREDIENTS, INGREDIENT_BY_ID } from '../utils/domain/ingredients'
 import { scoreRecipeAcrossTrends, validateRecipeComposition } from '../utils/domain/scoring'
+import { recipeCost } from '../utils/domain/cost'
+import { FEATURE_FLAGS } from '../utils/analytics'
 import type { RecipePart, Trend } from '../utils/domain/types'
 
 const props = defineProps<{ trends: Trend[]; chunkId: string; initialParts?: RecipePart[] }>()
@@ -14,6 +16,8 @@ watch(() => props.initialParts, parts => { if (parts) rows.value = parts.map(par
 const total = computed(() => rows.value.reduce((sum, row) => sum + Number(row.share || 0), 0))
 const errors = computed(() => validateRecipeComposition(rows.value.map(row => ({ ...row, share: Number(row.share) }))))
 const result = computed(() => errors.value.length ? null : scoreRecipeAcrossTrends(rows.value, props.trends))
+const cost = computed(() => errors.value.length ? null : recipeCost(rows.value))
+const showCost = useFeatureFlag(FEATURE_FLAGS.recipeCost)
 
 function addRow() {
   const next = INGREDIENTS.find(ingredient => !rows.value.some(row => row.ingredientId === ingredient.id))
@@ -67,6 +71,7 @@ async function copyCustomRecipe() {
             <strong>{{ item.score.uiMatchPercent }}%</strong>
             <small>+{{ item.score.uiPopularityBonusPercent }}% popularity · exact {{ (item.score.match * 100).toFixed(4) }}%</small>
           </div>
+          <p v-if="cost && showCost" class="form-note" role="status">Estimated ingredient base cost: {{ cost.total.toFixed(3) }}<template v-if="cost.unpriced.length"> ({{ cost.unpriced.length }} ingredient(s) unpriced)</template>. Cost is shown for reference; candidates are ranked by taste match only.</p>
           <button class="text-button" type="button" @click="copyCustomRecipe">{{ copied ? 'Copied' : 'Copy custom recipe' }} ↗</button>
           <RecipeActions :parts="rows" :chunk-id="chunkId" />
         </template>

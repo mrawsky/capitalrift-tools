@@ -100,6 +100,48 @@ export function planQuantity(productId: string, quantity: number, catalog = FACT
   return { rows, hasCycle: graph.hasCycle }
 }
 
+// Plans several finished products together, combining shared inputs before any
+// batch is rounded. Used by the shopping list and the power-station checklist.
+export function planQuantityMulti(targets: Readonly<Record<string, number>>, catalog = FACTORY_CATALOG): QuantityPlanResult {
+  const recipes = new Map<string, FactoryRecipe | null>()
+  const visiting = new Set<string>()
+  const visited = new Set<string>()
+  const order: string[] = []
+  let hasCycle = false
+  function visit(itemId: string) {
+    if (visiting.has(itemId)) { hasCycle = true; return }
+    if (visited.has(itemId)) return
+    visiting.add(itemId)
+    const recipe = catalog.recipesByProduct.get(itemId)?.[0] ?? null
+    recipes.set(itemId, recipe)
+    for (const input of recipe?.inputs ?? []) visit(input.itemId)
+    visiting.delete(itemId)
+    visited.add(itemId)
+    order.push(itemId)
+  }
+  const required: Record<string, number> = {}
+  const depths: Record<string, number> = {}
+  for (const [productId, quantity] of Object.entries(targets)) {
+    visit(productId)
+    required[productId] = (required[productId] ?? 0) + nonNegative(quantity)
+    if (!(productId in depths)) depths[productId] = 0
+  }
+  const rows: QuantityPlanResult['rows'] = []
+  for (const itemId of order.reverse()) {
+    const demand = required[itemId] ?? 0
+    if (demand <= 0) continue
+    const recipe = recipes.get(itemId)
+    const batch = recipe ? calculateBatch(recipe, demand) : null
+    const depth = depths[itemId] ?? 0
+    rows.push({ itemId, required: demand, batches: batch?.batches ?? 0, output: batch?.output ?? 0, excess: batch?.excess ?? 0, depth, recipeId: recipe?.id ?? null })
+    if (!hasCycle) for (const input of batch?.inputs ?? []) {
+      add(required, input.itemId, input.quantity)
+      depths[input.itemId] = Math.max(depths[input.itemId] ?? 0, depth + 1)
+    }
+  }
+  return { rows, hasCycle }
+}
+
 function id(prefix: string) { return `${prefix}-${globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`}` }
 export function factoryFromPlan(plan: SavedProductionPlan, state: FactoryPlannerStateV1, name: string): Factory {
   if (!FACTORY_CATALOG.recipesByProduct.has(plan.productId) || !Number.isFinite(plan.targetRatePerMinute) || plan.targetRatePerMinute <= 0) throw new Error('This saved product or target rate is unavailable. Preview and update the plan first.')

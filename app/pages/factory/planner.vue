@@ -2,6 +2,7 @@
 import { FACTORY_CATALOG, itemName, productPath } from '../../utils/factory/catalog'
 import { PLAN_CALCULATION_VERSION, planProduction } from '../../utils/factory/calculations'
 import { downloadToolJson, MAX_SHARE_FILE_BYTES, parseSharedTool, parseShareFragment, shareFragment, type SharedFactoryPlan } from '../../utils/sharing'
+import { FEATURE_FLAGS } from '../../utils/analytics'
 
 definePageMeta({ layout: 'factory' })
 useToolSeo('Capital Rift Production Planner & Shareable Blueprints', 'Plan Capital Rift production chains with whole machines and raw material requirements. Check full-speed capacity, then save or share a factory blueprint.', true)
@@ -22,6 +23,11 @@ const events = useToolEvents()
 const validRate = computed(() => Number.isFinite(targetRate.value) && targetRate.value > 0 && targetRate.value <= 1e6)
 const result = computed(() => planProduction(productId.value, validRate.value ? targetRate.value : 0, { factories: state.value.factories, useNetworkSurplus: useSurplus.value, recipeOverrides }))
 const root = computed(() => result.value.rows.find(row => row.itemId === productId.value))
+const assignedMachines = computed(() => { const map = new Map<string, number>(); for (const row of result.value.rows) if (row.stationId && row.machines > 0) map.set(row.stationId, (map.get(row.stationId) ?? 0) + row.machines); return [...map].map(([stationId, count]) => ({ stationId, count })) })
+const shopping = ref<{ addProduct: (productId: string, quantity?: number) => void } | null>(null)
+const showClimatePower = useFeatureFlag(FEATURE_FLAGS.plannerClimatePower)
+const showShoppingList = useFeatureFlag(FEATURE_FLAGS.combinedShoppingList)
+function addToShoppingList() { if (!validRate.value) return; shopping.value?.addProduct(productId.value, targetRate.value); message.value = `Added ${itemName(productId.value)} (${fmt(targetRate.value)}/min) to the combined shopping list below.` }
 watch(productId, () => { for (const key of Object.keys(recipeOverrides)) delete recipeOverrides[key] }, { flush: 'sync' })
 watch(() => [route.query.product, route.query.rate], () => {
   if (typeof route.query.product !== 'string' || !products.includes(route.query.product)) return
@@ -87,6 +93,18 @@ function fmt(value: number) { return value.toLocaleString('en-US', { maximumFrac
       <div class="planner-save"><label class="sr-only" for="plan-name">Plan name</label><input id="plan-name" v-model="planName" maxlength="120" placeholder="Plan name (optional)"><button class="button button--primary" type="button" :disabled="!validRate || result.hasCycle" @click="saveCurrent">{{ sharedPreview ? 'Save this preview locally' : 'Save plan' }}</button></div>
       <div class="button-row reference-content"><button class="button" type="button" :disabled="!validRate || result.hasCycle" @click="copyLink">Copy blueprint link</button><button class="button" type="button" :disabled="!validRate || result.hasCycle" @click="downloadToolJson(portable(), 'capital-rift-blueprint.json')">Download blueprint JSON</button><label class="button" for="blueprint-import">Preview blueprint JSON</label><input id="blueprint-import" class="file-picker" type="file" accept="application/json,.json" @change="importBlueprint"></div><p class="form-note" role="status">{{ message }}</p>
     </section>
+    <FactoryClimatePower v-if="showClimatePower" :machines="assignedMachines" />
     <section class="factory-panel"><div class="panel-title"><h2>Saved plans</h2><span>{{ state.plans.length }}</span></div><div v-if="state.plans.length" class="saved-plans"><article v-for="plan in state.plans" :key="plan.id"><div><h3>{{ plan.name }}</h3><p>{{ itemName(plan.productId) }} · {{ fmt(plan.targetRatePerMinute) }}/min<span v-if="plan.useNetworkSurplus"> · uses surplus</span></p><p v-if="plan.calculationVersion !== PLAN_CALCULATION_VERSION" class="danger">Legacy plan: applying it recalculates whole-machine capacity. Existing factories stay unchanged.</p></div><div><button class="button" type="button" @click="previewSaved(plan)">Preview standalone</button><button class="button button--primary" type="button" @click="applyNew(plan)">New factory</button><button class="button" type="button" :disabled="!selectedFactory" @click="applyCurrent(plan)">Add to current</button><button class="icon-button" type="button" :aria-label="`Delete ${plan.name}`" @click="removePlan(plan.id)">×</button></div></article></div><p v-else class="factory-empty factory-empty--small">No saved plans yet. Try a <NuxtLink to="/factory/blueprints">starter blueprint</NuxtLink>.</p></section>
+    <section class="factory-panel reference-content">
+      <div class="panel-title"><h2>Supply &amp; logistics</h2></div>
+      <p class="panel-note">The chain above is nominal capacity. Source the external inputs and move them with the resource tools.</p>
+      <div class="button-row"><NuxtLink class="button" to="/tools/logistics">Logistics &amp; throughput</NuxtLink><NuxtLink class="button" to="/tools/resources">Mining &amp; survey notebook</NuxtLink><NuxtLink class="button" to="/tools/troubleshoot">Troubleshoot a stall</NuxtLink><NuxtLink class="button" to="/factory/statistics">Factory statistics</NuxtLink></div>
+    </section>
+    <section v-if="showShoppingList" class="factory-panel">
+      <div class="panel-title"><h2>Add to combined shopping list</h2></div>
+      <p class="panel-note">Plan this product together with others and gather each raw material once.</p>
+      <div class="button-row reference-content"><button class="button button--primary" type="button" :disabled="!validRate || result.hasCycle" @click="addToShoppingList">Add {{ itemName(productId) }} ({{ fmt(validRate ? targetRate : 0) }}/min)</button><NuxtLink class="button" to="/factory/shopping">Open full shopping list</NuxtLink></div>
+      <div class="reference-content"><CombinedShoppingList ref="shopping" /></div>
+    </section>
   </main>
 </template>

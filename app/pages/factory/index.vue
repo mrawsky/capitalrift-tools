@@ -17,6 +17,11 @@ function start() { if (!state.value.factories.length) addFactory('My first facto
       <div><p class="eyebrow accent">PLAN NEXT</p><h2>Build a production chain</h2><p>Choose a finished item and a target rate. The planner expands every known recipe, counts machines, and leaves raw inputs clearly marked.</p><NuxtLink class="button mt-6" to="/factory/planner">Open planner</NuxtLink></div>
       <div><p class="eyebrow accent">LOCAL BY DESIGN</p><h2>Your setup stays here</h2><p>Factories and plans are saved in this browser. Export a JSON backup when you want to move them. The tool makes no Capital Rift requests and does not read your account.</p><button class="button button--primary mt-6" type="button" @click="start">{{ state.factories.length ? 'Continue to production' : 'Create your first factory' }}</button></div>
     </section>
+    <section class="factory-panel reference-content">
+      <div class="panel-title"><h2>Related factory tools</h2></div>
+      <p class="panel-note">Plan several products together, source the raw materials, and check the heat and power a factory needs.</p>
+      <div class="button-row"><NuxtLink class="button" to="/factory/shopping">Combined shopping list</NuxtLink><NuxtLink class="button" to="/tools/logistics">Logistics &amp; throughput</NuxtLink><NuxtLink class="button" to="/tools/resources">Mining &amp; survey notebook</NuxtLink><NuxtLink class="button" to="/tools/electricity">Electricity cost</NuxtLink><NuxtLink class="button" to="/tools/cooling">Cooling planner</NuxtLink><NuxtLink class="button" to="/tools/troubleshoot">Troubleshooting FAQ</NuxtLink></div>
+    </section>
     <section class="factory-panel legal-note"><h2>Unofficial community project</h2><p>Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.</p></section>
   </main>
 </template>

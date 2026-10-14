@@ -1,0 +1,51 @@
+{
+  "evidence": "Heat, temperature and cooling figures were checked against a current version of the game. Verify current values in game after updates.",
+  "deviceHeat": {
+    "air_conditioner": -200,
+    "space_heater": 200,
+    "fan_heater": 70,
+    "portable_ac": -70,
+    "industrial_heater": 1500,
+    "industrial_ac": -1500
+  },
+  "machineHeat": {
+    "steel_mill": 300,
+    "foundry": 275,
+    "brick_kiln": 250,
+    "furnace": 225,
+    "glazing_line": 175,
+    "vulcanizer": 150,
+    "chemical_plant": 110,
+    "kitchen": 110,
+    "manufacturing_press": 90,
+    "metal_shop": 90,
+    "machine_shop": 75,
+    "hydraulics_shop": 75,
+    "chip_fab": 60,
+    "sawmill": 60,
+    "stonecutter": 60,
+    "mill": 50,
+    "loom": 40,
+    "electronics_bench": 40,
+    "gaming_workshop": 40,
+    "carpentry_bench": 30
+  },
+  "config": {
+    "outdoorBase": 27,
+    "outdoorLatAmplitude": 32,
+    "indoorBase": 20,
+    "indoorOutdoorFactor": 0.55,
+    "floorDepthPerFloor": 0.25,
+    "floorDepthMax": 3,
+    "basementDepthPerFloor": 3,
+    "minArea": 8,
+    "minTemp": -30,
+    "maxTemp": 50,
+    "comfortLow": 18,
+    "comfortHigh": 24,
+    "comfortThreshold": 28,
+    "acCoolingPerUnit": 1500,
+    "slowdownPerDegree": 0.025,
+    "slowdownFloor": 0.75
+  }
+}

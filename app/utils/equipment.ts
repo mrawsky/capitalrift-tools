@@ -8,6 +8,18 @@ export function tripsRequired(quantity: number, capacity: number): number | null
 export function containersRequired(quantity: number, capacity: number | undefined) {
   return capacity === undefined ? null : tripsRequired(quantity, capacity)
 }
+// Connects a measured round trip to a steady demand: how many vehicles keep up,
+// how often each delivers, and the stock consumed between deliveries.
+export function throughputPlan(demandPerMinute: number, capacity: number, roundTripMinutes: number) {
+  if (!Number.isFinite(demandPerMinute) || demandPerMinute < 0 || !finitePositive(capacity) || !finitePositive(roundTripMinutes)) return null
+  const perVehiclePerMinute = capacity / roundTripMinutes
+  return {
+    perVehiclePerMinute,
+    vehiclesNeeded: demandPerMinute === 0 ? 0 : Math.ceil(demandPerMinute / perVehiclePerMinute),
+    tripsPerHour: 60 / roundTripMinutes,
+    bufferStock: demandPerMinute * roundTripMinutes,
+  }
+}
 export function miningAssignment(miners: number, vehicles: Readonly<Record<string, number>>) {
   if (!Number.isInteger(miners) || miners < 0 || miners > 1000) return []
   const selected: number[] = []

@@ -4,7 +4,7 @@
 
 ## Crafting, capacity, and community tools
 
-Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 251 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
+Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 261 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
 
 Batches are `ceil(requestedQuantity / batchOutput)`. Inputs are batches times ingredients per batch. Shared demands are aggregated before rounding in both quantity chains and continuous plans. The continuous planner propagates whole-machine full-speed demand upstream; `perMinute` means output units/min, not batches/min.
 
@@ -14,18 +14,31 @@ New factories record required production assignments without claiming machines a
 
 [Starter blueprints](/factory/blueprints) are reviewed catalog-backed examples. Portable blueprint links and JSON exclude personal network surplus. Shared data opens as a preview without replacing local workspaces; saving is explicit. Restaurant locations and compositions can also be saved locally, shared, and backed up as JSON.
 
-[Storage comparison](/tools/storage) uses player-entered current capacities, accepted goods, and placement notes. Visual defaults may be overridden by server capacities and are not published as verified limits. Unknown remains unknown.
+[Logistics](/tools/logistics) combines hauling, storage and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only. [Resources](/tools/resources) estimates mining supply from checked client vehicle multipliers and a player-entered unequipped baseline, and keeps a local survey notebook. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and live logistics are excluded.
 
-[Hauling](/tools/hauling) uses checked saved-client base capacities, permits a current-capacity override, and predicts whole trips only. [Mining equipment](/tools/mining) uses checked client vehicle multipliers with a player-entered unequipped baseline. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and logistics are excluded. No live resource map, freight duration, market tracker, or profit optimizer is provided.
+## Power, climate, rent and market
+
+Power draw comes from the client tables. Average device draw is `ratedWatts * duty / 1000` kW; machines draw their full rating while working, a 10% standby share while idle, and nothing while paused. Energy is billed with the client's `kWh = kW * 0.5` per minute factor at the entered price. The client uses a default `$0.162/kWh` and a log price curve between `$0.06` and `$0.40/kWh`.
+
+Generators are coal (5000 kW, 3.6 coal/MWh), oil (4000 kW, 3.4 diesel or 6.5 crude/MWh), hydro (2000 kW) and wind (750 kW), with availability 1, 1, 0.9 and 0.97. Fuel demand uses `ratedKw * 0.5 / 1000 * perMwh`.
+
+Room temperature is `building + depth + deviceHeat + machineHeat` over the area, where `outdoor = 27 - 32 * sin²(latitude)`, `building = 20 + 0.55 * (outdoor - 20)`, upper floors add `min(3, floor * 0.25)`, and basements subtract `floor * 3`. Above `28°C` production runs at `max(0.75, 1 - 0.025 * (temp - 28))`, and air conditioners needed are `ceil((rawTemp - 28) * area / 1500)`.
+
+Rent is `$0.85/m²/day` with a `$6` minimum and a tapered rentable area; lease terms are a 48-day down payment, a 7-day term, 168-day compensation and one-day arrears before eviction. Wages are `$3.30/min` per active worker with a `$1000` hire cost. Solvency reports when cash reaches zero, when seizable assets run out, and when unpaid rent risks eviction.
 
 ## Primary pages
 
 - [Tool hub](/): Choose a tool.
 - [Changelog](/changelog): Tool updates and checked game build history.
 - [Recipe calculator](/recipe): Enter a restaurant chunkId, generate its three deterministic trends, and search 12 best-found recipes.
+- [Menu code reader](/recipe/menu): Decode CRRCP1 and CRMENU1 codes and score dishes for a location.
 - [Recipe methodology](/recipe/methodology): Find a chunkId and review location normalization, scoring, and limitations.
 - [Factory planner](/factory): Track local factories, machines, production balances, and saved plans.
 - [Factory recipes](/factory/recipes): Search the bundled static production catalog.
+- [Combined shopping list](/factory/shopping): Plan several products and combine their material chains.
+- [Electricity cost](/tools/electricity), [Cooling planner](/tools/cooling), [Power station](/tools/power-station): power and climate tools.
+- [Business & property](/tools/business), [Market prices](/tools/market): money, rent and trading tools.
+- [Logistics](/tools/logistics), [Resources](/tools/resources), [Troubleshooter](/tools/troubleshoot): resource and setup tools.
 - [GitHub repository](https://github.com/mrawsky/capitalrift-tools): Source code, fixtures, and contribution history.
 - [Report a mismatch](https://github.com/mrawsky/capitalrift-tools/issues/new): Submit changed game mechanics or a reproducible calculation problem.
 
@@ -88,7 +101,7 @@ Every pair among selected available ingredients is searched exhaustively. Larger
 
 ## Limitations
 
-The verified model does not include ingredient cost, quantities in stock, preparation time, station compatibility, menu pricing, profit, or supply. Suggested recipe names are generated by this tool and are not supplied by the game. Important results should be checked in the in-game Recipe Designer after a patch.
+The verified taste model does not optimize ingredient cost, quantities in stock, preparation time, station compatibility, menu pricing, profit, or supply. An estimated ingredient base cost is shown for reference only. Suggested recipe names are generated by this tool and are not supplied by the game. Important results should be checked in the in-game Recipe Designer after a patch.
 
 ## Community verification
 

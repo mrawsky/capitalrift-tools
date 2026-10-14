@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import rawCatalog from '../app/data/factory-catalog.json'
 import { CURRENT_RELEASE_KEY } from '../app/utils/changelog'
 import { FACTORY_CATALOG } from '../app/utils/factory/catalog'
-import { buildLedger, planProduction } from '../app/utils/factory/calculations'
+import { buildLedger, planProduction, planQuantityMulti } from '../app/utils/factory/calculations'
 import { emptyFactoryState, parseFactoryState, serializeFactoryState } from '../app/utils/factory/persistence'
 import type { Factory, FactoryCatalog } from '../app/utils/factory/types'
 
@@ -66,6 +66,13 @@ describe('factory planner domain', () => {
     expect(result.rows.some(row => row.itemId === 'ore')).toBe(false)
   })
 
+  it('combines shared inputs across several products', () => {
+    const result = planQuantityMulti({ bar: 2, part: 3 }, catalog)
+    expect(result.rows.find(row => row.itemId === 'part')).toMatchObject({ required: 3, batches: 3 })
+    expect(result.rows.find(row => row.itemId === 'bar')).toMatchObject({ required: 8, batches: 8 })
+    expect(result.rows.find(row => row.itemId === 'ore')).toMatchObject({ required: 24, recipeId: null })
+  })
+
   it('round-trips and sanitizes local state', () => {
     const state = emptyFactoryState()
     state.factories = [factory()]
@@ -109,8 +116,8 @@ describe('factory planner domain', () => {
   it('ships a consistent bundled catalog', () => {
     expect(Object.keys(rawCatalog).sort()).toEqual(['items', 'recipes'])
     expect(FACTORY_CATALOG.version).toBe(CURRENT_RELEASE_KEY)
-    expect(FACTORY_CATALOG.items).toHaveLength(331)
-    expect(FACTORY_CATALOG.recipes).toHaveLength(251)
+    expect(FACTORY_CATALOG.items).toHaveLength(342)
+    expect(FACTORY_CATALOG.recipes).toHaveLength(261)
     expect(new Set(FACTORY_CATALOG.recipes.map(recipe => recipe.id)).size).toBe(FACTORY_CATALOG.recipes.length)
     for (const recipe of FACTORY_CATALOG.recipes) {
       expect(FACTORY_CATALOG.itemById.has(recipe.productId)).toBe(true)

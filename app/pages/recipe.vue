@@ -5,6 +5,7 @@ import type { OptimizationResponse, Trend } from '../utils/domain/types'
 import type { RecipePart } from '../utils/domain/types'
 import { INGREDIENTS } from '../utils/domain/ingredients'
 import { parseShareFragment, type SharedRecipe } from '../utils/sharing'
+import { FEATURE_FLAGS } from '../utils/analytics'
 
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +21,17 @@ const shareCopied = ref(false)
 const allowedIngredientIds = ref(INGREDIENTS.map(ingredient => ingredient.id))
 const initialParts = ref<RecipePart[] | undefined>()
 const libraryMessage = ref('')
+const showMenuCode = useFeatureFlag(FEATURE_FLAGS.recipeMenuEmbed)
+const { log } = useAnalytics()
+
+const recipeGenerationLogger = {
+  info(message: string, attributes: Record<string, number | string>) {
+    log('info', message, attributes)
+  },
+  error(message: string, attributes: Record<string, number | string>) {
+    log('error', message, attributes)
+  },
+}
 
 const initialId = computed(() => typeof route.query.id === 'string' ? route.query.id : '')
 useToolSeo('Capital Rift Restaurant Recipe Calculator & Taste Trends', 'Find Capital Rift restaurant recipes from your location ID. Match local taste trends, choose available ingredients, and save or share your recipes.', true)
@@ -30,6 +42,10 @@ async function generate(payload: { type: 'id', input: string } | { type: 'coordi
   optimization.value = null
   loading.value = true
   status.value = 'Normalizing the location and generating local trends.'
+  recipeGenerationLogger.info('recipe generation started', {
+    input_method: payload.type,
+    selected_ingredient_count: allowedIngredientIds.value.length,
+  })
 
   try {
     const nextLocation = payload.type === 'id'
@@ -41,11 +57,22 @@ async function generate(payload: { type: 'id', input: string } | { type: 'coordi
     await router.replace({ query: { id: nextLocation.originalId } })
     status.value = 'Searching deterministic recipe candidates. The page remains usable while the worker runs.'
     optimization.value = await optimize(nextLocation.locationKey, nextTrends, [...allowedIngredientIds.value])
-    status.value = `Generated ${optimization.value.results.reduce((total, result) => total + result.candidates.length, 0)} best-found recipes using ${allowedIngredientIds.value.length} selected ingredients from ${optimization.value.candidatesEvaluated.toLocaleString('en-US')} evaluated candidates.`
+    const resultCount = optimization.value.results.reduce((total, result) => total + result.candidates.length, 0)
+    recipeGenerationLogger.info('recipe generation completed', {
+      input_method: payload.type,
+      selected_ingredient_count: allowedIngredientIds.value.length,
+      result_count: resultCount,
+      candidates_evaluated: optimization.value.candidatesEvaluated,
+    })
+    status.value = `Generated ${resultCount} best-found recipes using ${allowedIngredientIds.value.length} selected ingredients from ${optimization.value.candidatesEvaluated.toLocaleString('en-US')} evaluated candidates.`
     await nextTick()
     document.querySelector('#calculation-chain')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
   }
   catch (cause) {
+    recipeGenerationLogger.error('recipe generation failed', {
+      input_method: payload.type,
+      failure_type: cause instanceof Error ? 'generation_error' : 'unknown_error',
+    })
     error.value = cause instanceof Error ? cause.message : 'Unable to generate recipes for that location.'
     status.value = error.value
   }
@@ -91,7 +118,10 @@ onMounted(() => {
       <h1>Restaurant recipe calculator</h1>
       <div class="hero__footer">
         <p>Enter a restaurant location ID to see local taste trends and recipe matches.</p>
-        <NuxtLink to="/recipe/methodology" class="down-link">How it works <span aria-hidden="true">→</span></NuxtLink>
+        <div class="recipe-intro__links">
+          <NuxtLink to="/recipe/methodology" class="down-link">How it works <span aria-hidden="true">→</span></NuxtLink>
+          <NuxtLink to="/recipe/menu" class="down-link">Read a menu code <span aria-hidden="true">→</span></NuxtLink>
+        </div>
       </div>
     </section>
 
@@ -129,6 +159,15 @@ onMounted(() => {
     </template>
     <RestaurantLibrary :chunk-id="location?.originalId" :busy="loading" @open-restaurant="generate({ type: 'id', input: $event })" @open-recipe="openSavedRecipe" />
 
+    <section v-if="showMenuCode" id="menu-code" class="chain-section" aria-labelledby="menu-code-title">
+      <header class="section-heading">
+        <p class="eyebrow accent">05 / MENU CODES</p>
+        <h2 id="menu-code-title">Read a game menu code.</h2>
+        <p>Have a CRRCP1 or CRMENU1 code from the game? Paste it to inspect its dishes, score them for a location, and save compositions locally. Full page: <NuxtLink to="/recipe/menu">menu code reader</NuxtLink>.</p>
+      </header>
+      <div class="reference-content"><MenuCodeReader /></div>
+    </section>
+
     <section class="trust-section">
       <div>
         <p class="eyebrow accent">CHECK IN GAME</p>
@@ -136,7 +175,7 @@ onMounted(() => {
       </div>
       <div class="trust-copy">
         <p>The calculator uses local game data and community-checked examples. See the <NuxtLink to="/changelog">changelog and data updates</NuxtLink> after a game patch.</p>
-        <p>Recommendations optimize taste match only. They do not predict ingredient cost, supply, preparation time, station compatibility, or profit.</p>
+        <p>Recommendations optimize taste match only. Estimated ingredient base cost is shown for reference but is not optimized; supply, preparation time, station compatibility, and profit are not predicted. Decode a game menu code in the <NuxtLink to="/recipe/menu">menu code reader</NuxtLink>.</p>
         <NuxtLink class="button button--quiet" to="/recipe/methodology">Read how it works</NuxtLink>
       </div>
     </section>

@@ -22,7 +22,7 @@ body { margin: 0; background: var(--ink); color: var(--paper); line-height: 1.5;
 button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; text-decoration: none; }
-code, pre, .eyebrow, .model-stamp, .site-header nav, .button, .text-button, label, table, .recipe-meta, .search-metadata { font-family: "IBM Plex Mono", monospace; }
+code, pre, textarea, .eyebrow, .model-stamp, .site-header nav, .button, .text-button, label, table, .recipe-meta, .search-metadata { font-family: "IBM Plex Mono", monospace; }
 ::selection { background: var(--accent); color: var(--ink); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
@@ -56,7 +56,23 @@ code, pre, .eyebrow, .model-stamp, .site-header nav, .button, .text-button, labe
 .panel-heading, .section-heading { display: grid; grid-template-columns: 5fr 7fr; gap: var(--gutter); padding: clamp(1.25rem, 3vw, 3rem); border-bottom: 1px solid var(--rule); }
 .panel-heading h2, .section-heading h2, .trust-section h2 { max-width: 13ch; margin: .9rem 0 0; font-size: clamp(2.7rem, 6vw, 6.2rem); font-weight: 650; line-height: .84; letter-spacing: -.06em; }
 .panel-heading > p, .section-heading > p { align-self: end; max-width: 42rem; margin: 0; color: var(--muted); font-size: clamp(1rem, 1.5vw, 1.2rem); }
-.generator-form { display: grid; grid-template-columns: 7fr 5fr; align-items: end; gap: var(--gutter); padding: clamp(1.25rem, 4vw, 4rem); }
+.generator-form {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  grid-template-areas:
+    "label    actions"
+    "help     actions"
+    "input    actions"
+    "feedback feedback";
+  align-items: end;
+  gap: .6rem var(--gutter);
+  padding: clamp(1.25rem, 4vw, 4rem);
+}
+.generator-form__label { grid-area: label; font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
+.generator-form__help { grid-area: help; margin: 0; }
+.generator-form__input { grid-area: input; }
+.generator-form__actions { grid-area: actions; align-self: end; }
+.generator-form__feedback { grid-area: feedback; }
 .field-group { display: grid; gap: .6rem; min-width: 0; }
 .field-group label { font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
 .field-help { margin: 0; color: var(--muted); font-size: .9rem; }
@@ -64,16 +80,17 @@ code, pre, .eyebrow, .model-stamp, .site-header nav, .button, .text-button, labe
 .id-preview span:first-child i { display: inline-grid; width: 1.15rem; height: 1.15rem; place-items: center; margin-right: .35rem; border-radius: 50%; background: var(--accent); color: var(--ink); font-style: normal; }
 .id-preview:has(i) { color: var(--paper); }
 .id-preview--error { color: var(--danger); }
-input, select { width: 100%; min-height: 3.6rem; border: 1px solid var(--rule); border-radius: 0; background: #0e0e0c; padding: .8rem 1rem; color: var(--paper); font-family: "IBM Plex Mono", monospace; }
-input:hover, select:hover { border-color: color-mix(in srgb, var(--paper) 45%, transparent); }
-input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: inset 0 -2px var(--accent); }
-input::placeholder { color: #68675f; }
+input, select, textarea { width: 100%; min-height: 3.6rem; border: 1px solid var(--rule); border-radius: 0; background: #0e0e0c; padding: .8rem 1rem; color: var(--paper); font-family: "IBM Plex Mono", monospace; }
+input:hover, select:hover, textarea:hover { border-color: color-mix(in srgb, var(--paper) 45%, transparent); }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); outline: none; box-shadow: inset 0 -2px var(--accent); }
+input::placeholder, textarea::placeholder { color: #68675f; }
+textarea { min-height: 7rem; resize: vertical; line-height: 1.6; font-size: .85rem; }
 .searchable-select { position: relative; width: 100%; }
 .searchable-select--open { z-index: 40; }
 .searchable-select__input { padding-right: 2.6rem; }
 .searchable-select__chevron { position: absolute; top: 50%; right: 1rem; width: .55rem; height: .55rem; transform: translateY(-70%) rotate(45deg); pointer-events: none; border-right: 1px solid var(--muted); border-bottom: 1px solid var(--muted); }
 .searchable-select--disabled .searchable-select__chevron { opacity: .35; }
-.searchable-select__popup { position: absolute; z-index: 40; top: calc(100% + .3rem); left: 0; width: 100%; border: 1px solid var(--rule); background: #0e0e0c; box-shadow: 0 1rem 2.5rem rgb(0 0 0 / .45); }
+.searchable-select__popup { position: absolute; z-index: 40; top: calc(100% + .3rem); left: 0; width: 100%; min-width: max(100%, 16rem); border: 1px solid var(--rule); background: #0e0e0c; box-shadow: 0 1rem 2.5rem rgb(0 0 0 / .45); }
 .searchable-select__list { max-height: min(18rem, 45svh); overflow-y: auto; margin: 0; padding: .25rem 0; list-style: none; }
 .searchable-select__option { padding: .65rem 1rem; cursor: pointer; color: var(--paper); font-family: "IBM Plex Mono", monospace; font-size: .72rem; line-height: 1.35; }
 .searchable-select__option.is-active { background: var(--accent); color: var(--ink); }
@@ -134,6 +151,8 @@ input::placeholder { color: #68675f; }
 .calculation-details { margin: 1.2rem 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
 .calculation-details p { color: var(--muted); font-size: .88rem; }
 .table-wrap { overflow-x: auto; }
+/* A select popup must not be clipped by a horizontally scrollable table. */
+.table-wrap:has(.searchable-select--open) { overflow: visible; }
 table { width: 100%; border-collapse: collapse; font-size: .7rem; }
 th, td { padding: .55rem; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
 th:first-child { text-align: left; }
@@ -177,6 +196,7 @@ tfoot { color: var(--accent); }
 .footer-bottom { display: grid; grid-template-columns: minmax(0, 2fr) 1fr 1fr; gap: var(--gutter); align-items: end; padding: 1.25rem var(--gutter); border-top: 1px solid var(--rule); color: var(--muted); font-size: .67rem; text-transform: uppercase; }
 .footer-bottom p { margin: .2rem 0; }
 .footer-disclaimer p:last-child { text-transform: none; }
+.footer-analytics p:last-child { margin: .2rem 0; color: var(--muted); font-size: .62rem; line-height: 1.55; text-transform: none; }
 .footer-credit { justify-self: end; border-bottom: 1px solid transparent; color: var(--paper); text-transform: lowercase; transition: border-color 160ms ease, color 160ms ease; }
 .footer-credit:hover, .footer-credit:focus-visible { border-color: currentColor; color: var(--accent); }
 
@@ -241,6 +261,8 @@ tfoot { color: var(--accent); }
 .recipe-intro .hero__meta { grid-column: 1 / -1; }
 .recipe-intro h1 { max-width: 12ch; margin: 1.5rem 0 0; font-size: clamp(2.8rem, 7vw, 7rem); line-height: .86; letter-spacing: -.065em; }
 .recipe-intro .hero__footer { grid-template-columns: 1fr auto; }
+.recipe-intro__links { display: grid; justify-items: end; gap: .65rem; }
+.recipe-intro__links .down-link { justify-self: end; }
 .recipe-intro + .generator-panel { margin-top: 1rem; }
 
 /* Factory dashboard */
@@ -250,6 +272,8 @@ tfoot { color: var(--accent); }
 .factory-sidebar nav { display: grid; border-top: 1px solid var(--rule); font-family: "IBM Plex Mono", monospace; font-size: .72rem; text-transform: uppercase; }
 .factory-sidebar nav a { padding: .85rem 0; border-bottom: 1px solid var(--rule); color: var(--muted); }
 .factory-sidebar nav a:hover, .factory-sidebar nav a.router-link-exact-active { color: var(--accent); }
+.factory-sidebar__related { margin-bottom: 1.5rem; }
+.factory-sidebar__related p { margin-bottom: .5rem; }
 .factory-sidebar__storage { display: grid; gap: .65rem; margin-top: auto; }
 .factory-sidebar__storage select, .factory-sidebar__storage .searchable-select__input, .factory-sidebar__storage .button { min-height: 2.8rem; font-size: .68rem; }
 .factory-data-menu { border-top: 1px solid var(--rule); }
@@ -320,6 +344,12 @@ tfoot { color: var(--accent); }
 .saved-plans p { color: var(--muted); font-size: .8rem; }
 .saved-plans article > div:last-child { display: flex; gap: .5rem; }
 .saved-plans .button { min-height: 2.8rem; }
+.shopping-table { display: grid; }
+.shopping-table__head { display: grid; grid-template-columns: minmax(0, 1fr) 8rem 2.8rem; gap: .75rem; padding: .7rem 1.25rem; border-bottom: 1px solid var(--rule); color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .64rem; text-transform: uppercase; }
+.shopping-row { display: grid; grid-template-columns: minmax(0, 1fr) 8rem 2.8rem; gap: .75rem; align-items: center; padding: .8rem 1.25rem; border-bottom: 1px solid var(--rule); }
+.shopping-row input { min-height: 2.8rem; }
+.shopping-totals { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem 1.75rem; margin: 0; padding: 1rem 1.25rem; border-bottom: 1px solid var(--rule); color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .68rem; text-transform: uppercase; }
+.shopping-totals strong { color: var(--paper); }
 .recipe-filters { display: grid; grid-template-columns: 2fr 1fr auto; gap: 1rem; align-items: end; padding: 1.25rem; border-bottom: 1px solid var(--rule); }
 .recipe-filters p { color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .68rem; }
 .text-cell { max-width: 34rem; overflow: hidden; text-align: left; text-overflow: ellipsis; }
@@ -373,6 +403,16 @@ tfoot { color: var(--accent); }
 .equipment-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 .equipment-form label, .reference-controls label, .reference-content > label { display: block; margin-bottom: .5rem; font-size: .8rem; }
 .equipment-form input { min-height: 2.8rem; }
+.menu-code-field { display: grid; gap: .85rem; }
+.menu-code-field textarea { min-height: 9rem; }
+.menu-dish { border: 1px solid var(--rule); background: var(--ink); padding: 1.25rem; }
+.menu-dish + .menu-dish { margin-top: .85rem; }
+.menu-dish__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; }
+.menu-dish__head h3 { margin: 0; font-size: 1.35rem; line-height: 1.1; }
+.menu-dish__meta { color: var(--muted); font-family: "IBM Plex Mono", monospace; font-size: .66rem; text-transform: uppercase; }
+.menu-mix { list-style: none; margin: 1rem 0 0; padding: 0; border-top: 1px solid var(--rule); }
+.menu-mix li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--rule); }
+.menu-mix strong { color: var(--accent); font-family: "IBM Plex Mono", monospace; }
 .storage-comparison input { min-width: 8rem; min-height: 2.8rem; }
 .blueprint-card h2 { margin-top: 0; }
 .blueprint-card h3 { font-size: 1rem; }
@@ -381,6 +421,13 @@ tfoot { color: var(--accent); }
 .hub-reference h2 { font-size: clamp(1.5rem, 3vw, 2.7rem); }
 .hub-reference p { color: var(--muted); }
 .hub-reference .reference-links { padding-inline: 0; }
+.faq-index { list-style: none; display: grid; grid-template-columns: 1fr 1fr; margin: 0; padding: 0; }
+.faq-index li { min-width: 0; border-bottom: 1px solid var(--rule); }
+.faq-index li:nth-child(odd) { border-right: 1px solid var(--rule); }
+.faq-index a { display: flex; gap: .75rem; padding: 1rem 1.25rem; color: var(--paper); font-size: .95rem; line-height: 1.4; }
+.faq-index a::before { content: attr(data-index); color: var(--accent); font-family: "IBM Plex Mono", monospace; font-size: .7rem; }
+.faq-index a:hover { color: var(--accent); }
+.faq-answer { max-width: 70ch; }
 .tool-grid .resource-actions { width: 100%; flex-wrap: nowrap; }
 .tool-grid .resource-actions > .button { flex: 1; width: auto; min-width: 0; padding-inline: clamp(.5rem, 2vw, 1rem); }
 .changelog-page { max-width: 76rem; margin-inline: auto; }
@@ -424,6 +471,7 @@ tfoot { color: var(--accent); }
   .site-header { grid-template-columns: 1fr auto; }
   .model-stamp { display: none; }
   .panel-heading, .section-heading, .generator-form, .trend-header, .editor-layout, .trust-section { grid-template-columns: 1fr; }
+  .generator-form { grid-template-areas: "label" "help" "input" "feedback" "actions"; }
   .panel-heading > p, .section-heading > p { align-self: start; }
   .calculation-chain { grid-template-columns: 1fr 1fr; }
   .calculation-chain li:nth-child(2) { border-right: 0; }
@@ -451,6 +499,10 @@ tfoot { color: var(--accent); }
 @media (max-width: 640px) {
   .tool-guide__layout { grid-template-columns: 1fr; }
   .tool-guide__steps > li { gap: .75rem; }
+  .faq-index { grid-template-columns: 1fr; }
+  .faq-index li:nth-child(odd) { border-right: 0; }
+  .shopping-table__head { display: none; }
+  .shopping-row { grid-template-columns: minmax(0, 1fr) 5.5rem 2.8rem; }
   .equipment-form, .ingredient-options { grid-template-columns: 1fr; }
   :root { --header-h: 4rem; }
   .site-header nav { gap: .75rem; font-size: .62rem; }

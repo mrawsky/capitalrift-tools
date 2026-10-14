@@ -27,8 +27,11 @@ gamefiles/
 /scripts/verify-runtime.mjs
 /scripts/verify-generated-site.mjs
 /scripts/verify-seo.mjs
+/scripts/verify-economy.mjs
+/scripts/verify-power-climate.mjs
 /scripts/indexnow.mjs
 /seo
+/next_features.md
 
 # Local env files
 .env

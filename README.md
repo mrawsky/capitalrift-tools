@@ -2,7 +2,7 @@
 
 **Unofficial tools for CapitalRift restaurant recipes and factory production planning.**
 
-The site includes a complete crafting reference, batch and full-chain quantity calculators, a balanced factory planner, restaurant optimization, reviewed starter blueprints, and storage, hauling, and mining helpers. Calculations run locally against dated data.
+The site includes a complete crafting reference, batch and full-chain quantity calculators, a balanced factory planner, restaurant optimization and menu-code reading, reviewed starter blueprints, and power, climate, business, logistics, and market tools. Calculations run locally against dated data.
 
 Factory setups and saved production plans stay in local storage and can be backed up as JSON.
 
@@ -20,9 +20,13 @@ The planner combines shared demands before rounding machines and propagates full
 
 Every craftable item has a page at `/factory/recipes/<item-slug>`, with quantities, a complete batch chain, and reverse uses. `/factory/blueprints` provides reviewed starters. Portable blueprint links and JSON exclude personal network surplus and open a preview without replacing local data.
 
-Restaurant locations and compositions can be saved, shared, and backed up as JSON. Selected available ingredients constrain search and cache identity. Scoring still excludes stock quantities, cost, and station compatibility.
+Restaurant locations and compositions can be saved, shared, and backed up as JSON. Selected available ingredients constrain search and cache identity. Scoring still excludes stock quantities, cost, and station compatibility, though an estimated ingredient base cost is shown for reference. `/recipe/menu` decodes `CRRCP1` and `CRMENU1` codes and can score their dishes for a location.
 
-`/tools/hauling` and `/tools/mining` use checked saved-client tables with overrides or measured baselines. `/tools/storage` compares player-entered current capacities because rendering defaults may be overridden by the server.
+`/tools/logistics` combines hauling trips, transport throughput, and storage comparison with player-entered current capacities. `/tools/resources` estimates mining supply with checked client multipliers and keeps a local survey notebook for deposits, rates, and locations.
+
+`/tools/electricity`, `/tools/cooling`, and `/tools/power-station` cover the power and heat loop: device and machine draw, room temperature and slowdown, and generator fuel, margin, and a station build checklist. `/tools/business` estimates operating margin and cash runway and also covers rent, lease terms, building value, auction bids, and seizure values; `/tools/market` references commodity base prices.
+
+`/factory/shopping` plans several products at once into one combined shopping list, and the planner can add a product to it directly. The planner and statistics also estimate machine heat, room temperature, required cooling or heating, and electricity cost, linking to the power and climate tools. Starter blueprints include power, fuel, cooling, and construction setups, factory statistics add a bottleneck view, and `/tools/troubleshoot` answers common factory problems as an FAQ.
 
 ## What can I do with it?
 
@@ -36,7 +40,7 @@ Paste a restaurant `chunkId`, such as `15/18295/10789`, and the tool will:
 - explain every axis error behind the result;
 - let you edit a custom 2–8 ingredient recipe and rescore it live.
 
-All recipe calculations run locally in your browser, with no account, game login, database, or external recipe API involved. The production site uses Vercel Web Analytics and Speed Insights to measure visits and performance.
+All recipe calculations run locally in your browser, with no account, game login, database, or external recipe API involved. The production site uses Vercel Web Analytics and Speed Insights to measure visits and performance, and PostHog for product analytics and feature flags. Analytics never includes your recipe, factory, or survey data, which stay in your browser; a notice in the site footer explains this.
 
 ## Why the location ID matters
 
@@ -122,7 +126,7 @@ The documented model covers:
 
 It does **not** model:
 
-- ingredient price or recipe cost;
+- ingredient price or recipe cost (an estimated base cost is shown for reference but is not optimized);
 - inventory, supply, or availability;
 - preparation time;
 - station compatibility;
@@ -146,12 +150,12 @@ Nuxt serves the local app at `http://localhost:3000` by default.
 Useful commands:
 
 ```bash
-npm run dev        # start the development server
-npm test           # run mechanics and regression fixtures
-npm run typecheck  # validate Nuxt, Vue, and TypeScript
-npm run build      # create a production server build
-npm run generate   # create static deployment output
-npm run preview    # preview the production build
+npm run dev              # start the development server
+npm test                 # run mechanics and regression fixtures
+npm run typecheck        # validate Nuxt, Vue, and TypeScript
+npm run build            # create a production server build
+npm run generate         # create static deployment output
+npm run preview          # preview the production build
 ```
 
 ## How the project is organized

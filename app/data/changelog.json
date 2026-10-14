@@ -1,6 +1,62 @@
 {
   "entries": [
     {
+      "id": "power-climate-business-tools",
+      "date": "2026-10-14",
+      "gameVersion": "V457",
+      "title": "Power, climate, business and trading tools",
+      "summary": "Electricity, cooling, power-station, cash-runway, rent and market calculators, planner heat and power estimates, a combined shopping list, a menu-code reader, and an FAQ troubleshooter.",
+      "evidence": "Power draw, heat, temperature, rent, solvency, wage, lease and price tables were checked against a current version of the game. Verify important results in game after an update.",
+      "changes": [
+        {
+          "title": "New power and climate tools",
+          "items": [
+            "Estimate electricity bills from device, kitchen, survey and machine draw in running, idle and paused states.",
+            "Reference the regional power price curve between the published floor and ceiling, with the grid fuel mixes.",
+            "Plan room temperature, production slowdown and the air conditioners or heaters a room needs.",
+            "Compare coal, oil, hydro and wind generators, their fuel demand, operating margin and break-even price.",
+            "Gather a complete power-station build checklist from the power recipes."
+          ]
+        },
+        {
+          "title": "New business and property tools",
+          "items": [
+            "Combine revenue, rent, wages and electricity into an operating margin and a cash runway.",
+            "Model wages, hiring and heat slowdown for hired crews.",
+            "Estimate rent, lease terms and building value, and check auction bids and seizure buy-backs, all in the Business & property tool.",
+            "Reference commodity base prices and category spreads for market trading."
+          ]
+        },
+        {
+          "title": "Factory planner and statistics",
+          "items": [
+            "The planner now estimates machine heat, room temperature, cooling units and electricity cost for the machines it assigns.",
+            "Factory statistics show the same heat, cooling and power estimate alongside the bottleneck view.",
+            "Add a product straight from the planner to a combined shopping list and gather shared raw materials once.",
+            "Planner links to the logistics, resources and troubleshooting tools for sourcing external inputs."
+          ]
+        },
+        {
+          "title": "Crafting, logistics and restaurant updates",
+          "items": [
+            "Plan several products at once in a combined crafting shopping list with shared batches and leftovers.",
+            "Blueprints now cover power equipment, fuels, cooling and construction supplies with categories and search.",
+            "Logistics combines hauling, storage and transport throughput; resources combines mining and a survey notebook, and now lists coal as a ground resource.",
+            "The recipe calculator embeds the menu code reader, and answers factory problems as an FAQ with structured data for search.",
+            "Recipe candidates now show an estimated ingredient cost for reference."
+          ]
+        },
+        {
+          "title": "Analytics & feature flags",
+          "items": [
+            "The tools send privacy-conscious usage events to PostHog, alongside Vercel Web Analytics, so i can see which calculators help and improve them.",
+            "New tools can be rolled out or rolled back with PostHog feature flags; each defaults to on when PostHog is unavailable.",
+            "A footer notice explains the analytics. Recipe, factory and survey data still stay in your browser."
+          ]
+        }
+      ]
+    },
+    {
       "id": "v446-powergrid-recipes",
       "date": "2026-10-09",
       "gameVersion": "V446",

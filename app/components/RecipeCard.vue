@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { INGREDIENT_BY_ID } from '../utils/domain/ingredients'
 import { scoreRecipeAcrossTrends } from '../utils/domain/scoring'
+import { recipeCost } from '../utils/domain/cost'
 import { AXIS_LABELS } from '../utils/domain/axes'
+import { FEATURE_FLAGS } from '../utils/analytics'
 import type { RecipeCandidate, Trend } from '../utils/domain/types'
 
 const props = defineProps<{
@@ -14,6 +16,8 @@ const props = defineProps<{
 
 const copied = ref(false)
 const crossScores = computed(() => scoreRecipeAcrossTrends(props.candidate.parts, props.trends))
+const cost = computed(() => recipeCost(props.candidate.parts))
+const showCost = useFeatureFlag(FEATURE_FLAGS.recipeCost)
 const suggestedName = computed(() => {
   const top = [...props.candidate.parts].sort((a, b) => b.share - a.share).slice(0, 2)
   return `${top.map(part => INGREDIENT_BY_ID.get(part.ingredientId)?.name).join(' & ')} Blend`
@@ -55,6 +59,7 @@ async function copyRecipe() {
       <span>Exact {{ (candidate.score.match * 100).toFixed(4) }}%</span>
       <span>L1 distance {{ candidate.score.distance.toFixed(2) }}</span>
       <span>Best local trend: {{ crossScores.best.trend.name }}</span>
+      <span v-if="showCost">Est. base cost {{ cost.total.toFixed(3) }}<template v-if="cost.unpriced.length"> ({{ cost.unpriced.length }} unpriced)</template></span>
     </div>
 
     <TasteGrid :profile="candidate.score.profile" compact />

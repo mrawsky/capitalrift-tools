@@ -26,7 +26,10 @@
         <p class="eyebrow">UNOFFICIAL COMMUNITY PROJECT</p>
         <p>Unofficial community project. Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.</p>
       </div>
-      <span>FACTORY DATA STAYS IN YOUR BROWSER</span>
+      <div class="footer-analytics">
+        <p class="eyebrow">ANALYTICS &amp; FEATURE FLAGS</p>
+        <p>This site uses PostHog product analytics and feature flags, plus Vercel Web Analytics, to see which tools help and to roll out changes. Factory, restaurant and survey data stay in your browser.</p>
+      </div>
       <a class="footer-credit" href="https://mrawsky.pro" target="_blank" rel="noopener noreferrer">made by mrawsky</a>
     </div>
   </footer>

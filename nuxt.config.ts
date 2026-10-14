@@ -3,7 +3,7 @@ import catalog from './app/data/factory-catalog.json'
 import metadata from './app/data/tool-metadata.json'
 
 const recipeRoutes = [...new Set(Object.values(catalog.recipes).map(recipe => `/factory/recipes/${recipe.product.replaceAll('_', '-')}`))]
-const publicRoutes = ['/', '/recipe', '/recipe/methodology', '/factory', '/factory/recipes', '/factory/planner', '/factory/blueprints', '/factory/statistics', '/factory/production', '/factory/machines', '/tools/storage', '/tools/hauling', '/tools/mining', '/changelog']
+const publicRoutes = ['/', '/recipe', '/recipe/methodology', '/recipe/menu', '/factory', '/factory/recipes', '/factory/planner', '/factory/blueprints', '/factory/shopping', '/factory/statistics', '/factory/production', '/factory/machines', '/tools/electricity', '/tools/cooling', '/tools/power-station', '/tools/business', '/tools/logistics', '/tools/resources', '/tools/troubleshoot', '/tools/market', '/changelog']
 
 const productionSiteUrl = (
   process.env.NUXT_PUBLIC_SITE_URL
@@ -25,6 +25,11 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       siteUrl: productionSiteUrl,
+      posthog: {
+        projectToken: process.env.NUXT_PUBLIC_POSTHOG_PROJECT_TOKEN,
+        host: process.env.NUXT_PUBLIC_POSTHOG_HOST,
+        defaults: '2026-01-30',
+      },
     },
   },
   site: {
@@ -46,6 +51,10 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/methodology': { redirect: { to: '/recipe/methodology', statusCode: 301 } },
+    '/tools/hauling': { redirect: { to: '/tools/logistics', statusCode: 301 } },
+    '/tools/storage': { redirect: { to: '/tools/logistics', statusCode: 301 } },
+    '/tools/mining': { redirect: { to: '/tools/resources', statusCode: 301 } },
+    '/tools/rental': { redirect: { to: '/tools/business', statusCode: 301 } },
     '/factory/recipes/**': { prerender: true },
   },
   app: {

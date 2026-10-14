@@ -1,0 +1,343 @@
+{
+  "evidence": "Power draw, fuel and grid figures were checked against a current version of the game. Verify current values in game after updates.",
+  "kwhPerKwMin": 0.5,
+  "defaultPricePerKwh": 0.162,
+  "priceFloor": 0.06,
+  "priceCeiling": 0.4,
+  "machineStandby": 0.1,
+  "oilPumpKw": 20,
+  "deviceDraw": {
+    "lamp": {
+      "w": 60,
+      "duty": 0.5
+    },
+    "chandelier": {
+      "w": 300,
+      "duty": 0.5
+    },
+    "wall_sconce": {
+      "w": 40,
+      "duty": 0.5
+    },
+    "neon_marquee": {
+      "w": 400,
+      "duty": 1
+    },
+    "mirror_ball": {
+      "w": 200,
+      "duty": 1
+    },
+    "led_light_bar": {
+      "w": 100,
+      "duty": 1
+    },
+    "air_conditioner": {
+      "w": 1500,
+      "duty": 0.6
+    },
+    "portable_ac": {
+      "w": 1000,
+      "duty": 0.6
+    },
+    "space_heater": {
+      "w": 1500,
+      "duty": 0.6
+    },
+    "fan_heater": {
+      "w": 2000,
+      "duty": 0.5
+    },
+    "industrial_heater": {
+      "w": 20000,
+      "duty": 0.6
+    },
+    "industrial_ac": {
+      "w": 25000,
+      "duty": 0.6
+    },
+    "shop_freezer": {
+      "w": 1000,
+      "duty": 0.5
+    },
+    "station_prep": {
+      "w": 400,
+      "duty": 1
+    },
+    "shop_register": {
+      "w": 100,
+      "duty": 1
+    },
+    "glass_counter": {
+      "w": 150,
+      "duty": 1
+    },
+    "computer": {
+      "w": 150,
+      "duty": 1
+    },
+    "atm": {
+      "w": 250,
+      "duty": 1
+    },
+    "aquarium": {
+      "w": 150,
+      "duty": 1
+    },
+    "dj_booth": {
+      "w": 1000,
+      "duty": 0.5
+    },
+    "unique_display": {
+      "w": 50,
+      "duty": 1
+    },
+    "slot_classic": {
+      "w": 300,
+      "duty": 1
+    },
+    "slot_video": {
+      "w": 400,
+      "duty": 1
+    },
+    "slot_jackpot": {
+      "w": 500,
+      "duty": 1
+    },
+    "fountain": {
+      "w": 400,
+      "duty": 1
+    }
+  },
+  "kitchenDraw": {
+    "station_pot": {
+      "w": 3000,
+      "duty": 0.4
+    },
+    "station_pan": {
+      "w": 3000,
+      "duty": 0.4
+    },
+    "station_grill": {
+      "w": 5000,
+      "duty": 0.4
+    },
+    "station_fryer": {
+      "w": 7000,
+      "duty": 0.4
+    },
+    "station_oven": {
+      "w": 6000,
+      "duty": 0.4
+    }
+  },
+  "surveyDraw": {
+    "survey_tripod": {
+      "w": 200,
+      "duty": 1
+    },
+    "survey_tower": {
+      "w": 1500,
+      "duty": 1
+    },
+    "survey_array": {
+      "w": 5000,
+      "duty": 1
+    }
+  },
+  "machineDrawKw": {
+    "machine_shop": 4,
+    "furnace": 7.5,
+    "press": 4,
+    "sawmill": 4,
+    "carpentry": 1.5,
+    "metal": 3.5,
+    "electronics": 1,
+    "loom": 1.5,
+    "mill": 1,
+    "kitchen": 1.5,
+    "chemical_plant": 6,
+    "chip_fab": 6,
+    "foundry": 8,
+    "vulcanizer": 4,
+    "hydraulics_shop": 3.5,
+    "vehicle_assembly": 4,
+    "stonecutter": 3.5,
+    "brick_kiln": 7.5,
+    "steel_mill": 10,
+    "glazing_line": 8,
+    "gaming_workshop": 1,
+    "refinery": 12
+  },
+  "machineStation": {
+    "press": "manufacturing_press",
+    "carpentry": "carpentry_bench",
+    "metal": "metal_shop",
+    "electronics": "electronics_bench",
+    "vehicle_assembly": "vehicle_assembly_platform",
+    "refinery": "oil_refinery",
+    "machine_shop": "machine_shop",
+    "furnace": "furnace",
+    "sawmill": "sawmill",
+    "loom": "loom",
+    "mill": "mill",
+    "kitchen": "kitchen",
+    "chemical_plant": "chemical_plant",
+    "chip_fab": "chip_fab",
+    "foundry": "foundry",
+    "vulcanizer": "vulcanizer",
+    "hydraulics_shop": "hydraulics_shop",
+    "stonecutter": "stonecutter",
+    "brick_kiln": "brick_kiln",
+    "steel_mill": "steel_mill",
+    "glazing_line": "glazing_line",
+    "gaming_workshop": "gaming_workshop"
+  },
+  "generators": {
+    "coal": {
+      "kind": "coal",
+      "itemId": "coal_generator",
+      "name": "Coal-fired generator set",
+      "ratedKw": 5000,
+      "fuels": [
+        {
+          "item": "COAL",
+          "perMwh": 3.6
+        }
+      ],
+      "availability": 1,
+      "station": "coal_plant",
+      "gridFuel": "Coal"
+    },
+    "oil": {
+      "kind": "oil",
+      "itemId": "oil_generator",
+      "name": "Oil-fired generator set",
+      "ratedKw": 4000,
+      "fuels": [
+        {
+          "item": "DIESEL",
+          "perMwh": 3.4
+        },
+        {
+          "item": "CRUDE_OIL",
+          "perMwh": 6.5
+        }
+      ],
+      "availability": 1,
+      "station": "oil_plant",
+      "gridFuel": "Oil"
+    },
+    "hydro": {
+      "kind": "hydro",
+      "itemId": "hydro_turbine",
+      "name": "Water turbine",
+      "ratedKw": 2000,
+      "fuels": [],
+      "availability": 0.9,
+      "station": "hydro_plant",
+      "gridFuel": "Hydro"
+    },
+    "wind": {
+      "kind": "wind",
+      "itemId": "wind_turbine",
+      "name": "Wind turbine",
+      "ratedKw": 750,
+      "fuels": [],
+      "availability": 0.97,
+      "station": null,
+      "gridFuel": "Wind"
+    }
+  },
+  "gridFuels": {
+    "Solar": {
+      "mcPerMwh": 0,
+      "capacityFactor": 0.2,
+      "availability": 0.2,
+      "color": "#facc15"
+    },
+    "Wind": {
+      "mcPerMwh": 0,
+      "capacityFactor": 0.33,
+      "availability": 0.33,
+      "color": "#7dd3fc"
+    },
+    "Hydro": {
+      "mcPerMwh": 5,
+      "capacityFactor": 0.42,
+      "availability": 0.55,
+      "color": "#3b82f6"
+    },
+    "Wave and Tidal": {
+      "mcPerMwh": 5,
+      "capacityFactor": 0.25,
+      "availability": 0.25,
+      "color": "#22d3ee"
+    },
+    "Geothermal": {
+      "mcPerMwh": 10,
+      "capacityFactor": 0.75,
+      "availability": 0.85,
+      "color": "#f97316"
+    },
+    "Nuclear": {
+      "mcPerMwh": 12,
+      "capacityFactor": 0.85,
+      "availability": 0.9,
+      "color": "#a78bfa"
+    },
+    "Waste": {
+      "mcPerMwh": 30,
+      "capacityFactor": 0.6,
+      "availability": 0.8,
+      "color": "#a3a3a3"
+    },
+    "Coal": {
+      "mcPerMwh": 35,
+      "capacityFactor": 0.5,
+      "availability": 0.85,
+      "color": "#78716c"
+    },
+    "Petcoke": {
+      "mcPerMwh": 38,
+      "capacityFactor": 0.5,
+      "availability": 0.85,
+      "color": "#57534e"
+    },
+    "Biomass": {
+      "mcPerMwh": 45,
+      "capacityFactor": 0.55,
+      "availability": 0.8,
+      "color": "#84cc16"
+    },
+    "Cogeneration": {
+      "mcPerMwh": 55,
+      "capacityFactor": 0.5,
+      "availability": 0.8,
+      "color": "#fb923c"
+    },
+    "Gas": {
+      "mcPerMwh": 60,
+      "capacityFactor": 0.45,
+      "availability": 0.9,
+      "color": "#f59e0b"
+    },
+    "Other": {
+      "mcPerMwh": 70,
+      "capacityFactor": 0.3,
+      "availability": 0.7,
+      "color": "#9ca3af"
+    },
+    "Storage": {
+      "mcPerMwh": 80,
+      "capacityFactor": 0.1,
+      "availability": 0.5,
+      "color": "#14b8a6"
+    },
+    "Oil": {
+      "mcPerMwh": 140,
+      "capacityFactor": 0.12,
+      "availability": 0.85,
+      "color": "#b45309"
+    }
+  }
+}

@@ -14,17 +14,31 @@ New factories record required production assignments without claiming machines a
 
 [Starter blueprints](/factory/blueprints) are reviewed catalog-backed examples. Portable blueprint links and JSON exclude personal network surplus. Shared data opens as a preview without replacing local workspaces; saving is explicit. Restaurant locations and compositions can also be saved locally, shared, and backed up as JSON.
 
-[Storage comparison](/tools/storage) uses player-entered current capacities, accepted goods, and placement notes. Visual defaults may be overridden by server capacities and are not published as verified limits. Unknown remains unknown.
+[Logistics](/tools/logistics) combines hauling trips, storage comparison and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only; throughput turns a measured round trip into vehicles, delivery frequency and buffer stock. [Resources](/tools/resources) covers mining equipment (checked client vehicle multipliers with a player-entered unequipped baseline) and a local survey notebook for deposits, rates and locations. Unknown storage values stay unknown. No live resource map, freight duration, or profit optimizer is provided.
 
-[Hauling](/tools/hauling) uses checked saved-client base capacities, permits a current-capacity override, and predicts whole trips only. [Mining equipment](/tools/mining) uses checked client vehicle multipliers with a player-entered unequipped baseline. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and logistics are excluded. No live resource map, freight duration, market tracker, or profit optimizer is provided.
+[Electricity](/tools/electricity) estimates bills from the client's device, kitchen, survey and machine draw tables in running, idle and paused states, and links to a regional price curve between the published floor and ceiling. [Cooling](/tools/cooling) models room temperature from latitude, floor, area and machines, then reports the production slowdown and the air conditioners needed. [Power station](/tools/power-station) compares coal, oil, hydro and wind generators, estimates fuel demand, margin and break-even price, and gathers the materials for a station in one checklist.
+
+[Business & property](/tools/business) combines revenue, rent, wages and electricity into an operating margin and a cash runway, then estimates rent, lease terms and building value and sanity-checks auction bids and seizure buy-backs using the client's lease, solvency and wage model. [Market](/tools/market) references commodity base prices and category spreads with a trade-value estimate.
+
+[Combined shopping list](/factory/shopping) plans several products at once and combines shared material chains. Blueprints include reviewed power, fuel, cooling and construction setups. Factory statistics add a bottleneck view that applies a heat-slowdown to output. [Menu codes](/recipe/menu) decode CRRCP1 and CRMENU1 codes locally and can score dishes for a location. The recipe calculator can show an estimated ingredient cost for each candidate, but still ranks by taste match only.
 
 ## Use the tool
 
 - [Tool hub](/): Choose the recipe calculator or factory planner.
 - [Recipe calculator](/recipe): Enter a restaurant chunkId and compare local recipe matches.
+- [Menu code reader](/recipe/menu): Decode a CRRCP1 or CRMENU1 code and score its dishes.
 - [Factory planner](/factory): Learn how to track local factory data.
 - [Factory statistics](/factory/statistics): Review production, consumption, shortages, and machine capacity.
 - [Factory recipes](/factory/recipes): Search the bundled production recipes.
+- [Combined shopping list](/factory/shopping): Plan several products and combine their material chains.
+- [Electricity cost](/tools/electricity): Estimate power bills and reference the grid price curve.
+- [Cooling planner](/tools/cooling): Estimate room temperature, slowdown, and air conditioners needed.
+- [Power station](/tools/power-station): Compare generators and gather a station's materials.
+- [Business & property](/tools/business): Estimate operating margin, cash runway, rent, lease terms, building value, auction bids, and solvency.
+- [Logistics](/tools/logistics): Calculate hauling trips, transport throughput, and storage needs.
+- [Resources](/tools/resources): Estimate mining supply and record surveyed deposits.
+- [Troubleshooter](/tools/troubleshoot): Work through stalled-line and worker checks.
+- [Market prices](/tools/market): Reference commodity base prices and category spreads.
 - [Recipe methodology](/recipe/methodology): Learn how the local recipe model works.
 
 ## Documentation
@@ -40,7 +54,8 @@ New factories record required production assignments without claiming machines a
 
 ## Notes
 
-- Recommendations optimize verified taste match only, not cost, inventory, preparation time, station compatibility, or profit.
+- Recommendations optimize verified taste match only. An estimated ingredient base cost is shown for reference; inventory, preparation time, station compatibility, and profit are not modeled.
+- Power, climate, rent and solvency figures follow the saved client's formulas; they are estimates to verify in game after a patch.
 - Recipe names are generated by this tool and do not come from the game.
 - Factory data is stored locally. The site makes no Capital Rift API requests and does not automate play.
 - Unofficial community project. Not affiliated with, endorsed by, or associated with NIKS GAMES LLC. Capital Rift and related names and assets are property of their respective owners.

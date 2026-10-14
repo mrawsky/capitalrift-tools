@@ -1,0 +1,53 @@
+{
+  "evidence": "Rent, lease, solvency, wage, seizure and building-value figures were checked against a current version of the game. Verify current values in game after updates.",
+  "realSecondsPerGameDay": 3600,
+  "savingsRatePerDay": 0.00015,
+  "rent": {
+    "perM2PerDay": 0.85,
+    "busynessExp": 1,
+    "minPerDay": 6,
+    "areaTaperM2": 150,
+    "areaTaperExp": 0.8
+  },
+  "lease": {
+    "downPaymentDays": 48,
+    "compensationDays": 168,
+    "termRealDays": 7,
+    "evictAfterRealDays": 1
+  },
+  "seizure": {
+    "liquidationCut": 0.2,
+    "redeemFee": 0.2,
+    "saleDiscount": 0.1,
+    "holdRealDays": 2
+  },
+  "building": {
+    "valuePerM2": 95,
+    "upperFloorFactor": 0.6,
+    "basementFloorFactor": 0.4,
+    "busynessExp": 1.2,
+    "valueMin": 2500,
+    "econMaxFootprintM2": 1000000,
+    "econMaxFloorAreaM2": 3000000,
+    "maxFloorsCap": 200
+  },
+  "busyness": {
+    "min": 0.4,
+    "max": 2.5
+  },
+  "wages": {
+    "hireCost": 1000,
+    "wagePerMin": 3.3,
+    "cookPerMin": 30
+  },
+  "solvency": {
+    "criticalZeroHours": 2,
+    "criticalEvictHours": 6,
+    "atRiskHours": 24,
+    "goodNetFraction": 0.25,
+    "goodCashDays": 6
+  },
+  "auction": {
+    "listingFeePct": 1
+  }
+}
