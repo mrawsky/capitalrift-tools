@@ -7,6 +7,9 @@ export const CRAFTING_QUESTIONS = [
   { productId: 'copper_bar', question: 'How do you make Copper Bars?' },
   { productId: 'fabric', question: 'How do you make Fabric?' },
   { productId: 'mining_barrow', question: 'How do you craft a Mining Barrow?' },
+  { productId: 'electronic_roulette', question: 'How do you make an Electronic Roulette?' },
+  { productId: 'self_checkout', question: 'How do you make a Self-checkout Kiosk?' },
+  { productId: 'takeout_counter', question: 'How do you make a Takeout Counter?' },
   { productId: 'fan_heater', question: 'How do you make a Fan Heater?' },
   { productId: 'industrial_heater', question: 'How do you make an Industrial Heater?' },
   { productId: 'industrial_ac', question: 'How do you make an Industrial Air Conditioner?' },
@@ -19,7 +22,7 @@ export const CRAFTING_QUESTIONS = [
   { productId: 'wind_turbine', question: 'How do you make a Wind Turbine?' },
 ]
 
-export const NEW_CRAFTING_PRODUCTS = ['coal_bunker', 'coal_generator', 'fuel_tank', 'hydro_turbine', 'oil_generator', 'wind_turbine', 'space_heater', 'air_conditioner', 'fan_heater', 'industrial_heater', 'industrial_ac', 'portable_ac']
+export const NEW_CRAFTING_PRODUCTS = ['electronic_roulette', 'self_checkout', 'takeout_counter', 'coal_bunker', 'coal_generator', 'fuel_tank', 'hydro_turbine', 'oil_generator', 'wind_turbine', 'space_heater', 'air_conditioner', 'fan_heater', 'industrial_heater', 'industrial_ac', 'portable_ac']
 
 export function craftingAnswer(productId: string) {
   const recipe = defaultRecipeFor(productId)

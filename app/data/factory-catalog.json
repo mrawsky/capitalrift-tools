@@ -92,6 +92,7 @@
     "drill_head": "Drill Head",
     "drill_rig": "Drill Rig",
     "echo_sounder": "Echo Sounder",
+    "electronic_roulette": "Electronic Roulette",
     "electronics_bench": "Electronics Bench",
     "elevator": "Elevator",
     "engine": "Engine",
@@ -200,6 +201,7 @@
     "oil_refinery": "Oil Refinery",
     "onion_seeds": "Onion Seeds",
     "onions": "Onions",
+    "pallet": "Pallet",
     "pallet_jack": "Pallet Jack",
     "pallet_rack": "Pallet Rack",
     "paper": "Paper",
@@ -252,6 +254,7 @@
     "scarf": "Knit Scarf",
     "screen": "Monitor",
     "seismic_streamer": "Seismic Streamer",
+    "self_checkout": "Self-Checkout Kiosk",
     "sheep": "Sheep",
     "shelving_unit": "Shelving Unit",
     "shipping_container": "Shipping Container",
@@ -302,6 +305,7 @@
     "sweater": "Wool Sweater",
     "table": "Table",
     "table_long": "Long Table",
+    "takeout_counter": "Takeout Counter",
     "tartar": "Tartar",
     "tire": "Tire",
     "tomato": "Tomato",
@@ -1090,6 +1094,22 @@
         "copper_wire": 6,
         "glass": 2,
         "steel_sheet": 1
+      }
+    },
+    "electronic_roulette": {
+      "label": "Build an electronic roulette",
+      "station": "gaming_workshop",
+      "product": "electronic_roulette",
+      "batch": 1,
+      "rate": 0.02,
+      "inputs": {
+        "circuit_board": 4,
+        "copper_wire": 12,
+        "glass": 4,
+        "leather": 4,
+        "roulette_wheel": 1,
+        "screen": 2,
+        "steel_sheet": 6
       }
     },
     "elevator": {
@@ -2580,6 +2600,20 @@
         "steel_cable": 20
       }
     },
+    "self_checkout": {
+      "label": "Build a self-checkout kiosk",
+      "station": "electronics_bench",
+      "product": "self_checkout",
+      "batch": 1,
+      "rate": 0.022,
+      "inputs": {
+        "glass": 3,
+        "machine_parts": 7,
+        "plastic_part": 4,
+        "steel_sheet": 10,
+        "wire": 24
+      }
+    },
     "shelving_unit": {
       "label": "Build a shelving unit",
       "station": "metal_shop",
@@ -3029,6 +3063,19 @@
       "inputs": {
         "nails": 44,
         "plank": 40
+      }
+    },
+    "takeout_counter": {
+      "label": "Fabricate a takeout counter",
+      "station": "metal_shop",
+      "product": "takeout_counter",
+      "batch": 1,
+      "rate": 0.018,
+      "inputs": {
+        "glass": 4,
+        "plank": 6,
+        "steel_sheet": 24,
+        "wire": 12
       }
     },
     "tartar": {

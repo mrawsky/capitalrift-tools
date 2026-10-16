@@ -1,6 +1,25 @@
 {
   "entries": [
     {
+      "id": "v448-new-crafting-recipes",
+      "date": "2026-10-17",
+      "gameVersion": "V448",
+      "title": "V448: Electronic Roulette, Self-checkout Kiosk and Takeout Counter recipes",
+      "summary": "Three new crafting recipes, with ingredient calculators and complete factory production chains.",
+      "evidence": "Crafting definitions were checked against the latest version of the game on 17 October 2026. Verify important results in game after an update.",
+      "changes": [
+        {
+          "title": "New crafting recipes",
+          "items": [
+            "Added Electronic Roulette crafting at the Gaming Workshop, with batch quantities, materials, and production planning.",
+            "Added Self-checkout Kiosk crafting at the Electronics Bench, with batch quantities, materials, and production planning.",
+            "Added Takeout Counter crafting at the Metal Shop, with batch quantities, materials, and production planning.",
+            "The crafting reference now includes 264 recipes."
+          ]
+        }
+      ]
+    },
+    {
       "id": "power-climate-business-tools",
       "date": "2026-10-14",
       "gameVersion": "V457",
