@@ -413,6 +413,13 @@ tfoot { color: var(--accent); }
 .menu-mix { list-style: none; margin: 1rem 0 0; padding: 0; border-top: 1px solid var(--rule); }
 .menu-mix li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem 0; border-bottom: 1px solid var(--rule); }
 .menu-mix strong { color: var(--accent); font-family: "IBM Plex Mono", monospace; }
+.menu-code-export { margin-top: .75rem; }
+.menu-code-export__form { display: grid; gap: .75rem; margin-top: .75rem; border: 1px solid var(--rule); padding: 1rem; background: var(--ink); }
+.menu-code-export__form label { display: block; margin-bottom: .35rem; color: var(--muted); font-size: .8rem; }
+.menu-code-export__form input, .menu-code-export__form select { width: 100%; min-height: 2.6rem; }
+.menu-code-export__form textarea { width: 100%; font-family: "IBM Plex Mono", monospace; font-size: .75rem; }
+.menu-code-export__fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+@media (max-width: 640px) { .menu-code-export__fields { grid-template-columns: 1fr; } }
 .storage-comparison input { min-width: 8rem; min-height: 2.8rem; }
 .blueprint-card h2 { margin-top: 0; }
 .blueprint-card h3 { font-size: 1rem; }

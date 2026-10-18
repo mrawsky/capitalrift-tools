@@ -1,6 +1,25 @@
 {
   "entries": [
     {
+      "id": "recipe-menu-code-export",
+      "date": "2026-10-18",
+      "gameVersion": "V449",
+      "title": "Export generated recipes as game menu codes",
+      "summary": "Copy any optimized recipe as a CRRCP1 code, or export the whole generated menu as a single CRMENU1 code for quicker entry in game.",
+      "evidence": "The code prefixes and payload fields follow the community-verified CRRCP1 and CRMENU1 format already used by the menu code reader. Verify imported dishes in game after an update.",
+      "changes": [
+        {
+          "title": "Recipe menu code export",
+          "items": [
+            "Every generated candidate now has an Export as recipe code button that builds a single-dish CRRCP1 code with an editable name, station, price and servings.",
+            "The recipe checker's live mix can be exported the same way once the composition is valid.",
+            "A new Export full menu code button on the results section packs every distinct generated candidate into one CRMENU1 code, up to the game's twelve-dish limit.",
+            "The generated code is shown in a read-only field and copied with one click, so it can be pasted into the in-game menu importer or back into the menu code reader."
+          ]
+        }
+      ]
+    },
+    {
       "id": "v448-new-crafting-recipes",
       "date": "2026-10-17",
       "gameVersion": "V448",

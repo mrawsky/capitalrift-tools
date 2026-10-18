@@ -8,6 +8,7 @@ const RECIPE_PREFIX = 'CRRCP1'
 const MENU_PREFIX = 'CRMENU1'
 const MAX_CODE_LENGTH = 8192
 const MAX_DISHES = 12
+export const MAX_MENU_DISHES = MAX_DISHES
 const MIN_INGREDIENTS = 2
 const MAX_INGREDIENTS = 8
 const MAX_NAME_LENGTH = 40
@@ -17,6 +18,13 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
 const ALPHABET_INDEX = new Map([...ALPHABET].map((character, index) => [character, index]))
 
 export type MenuKind = 'recipe' | 'menu'
+
+export interface RecipeCodeDetails {
+  name?: string
+  vessel?: Station
+  price?: number
+  servings?: number
+}
 
 export interface DecodedDish {
   name: string
@@ -133,4 +141,33 @@ export function encodeMenuCode(value: DecodedMenuCode): string {
   }))
   const prefix = value.kind === 'recipe' ? RECIPE_PREFIX : MENU_PREFIX
   return `${prefix}.${base64UrlEncode(new TextEncoder().encode(JSON.stringify(payload)))}`
+}
+
+function suggestedDishName(parts: readonly RecipePart[]): string {
+  const top = [...parts].sort((a, b) => b.share - a.share).slice(0, 2)
+  return `${top.map(part => INGREDIENT_BY_ID.get(part.ingredientId)?.name ?? part.ingredientId).join(' & ')} Blend`
+}
+
+// Builds one validated dish from a mix. Names are trimmed to the game limit and
+// station, price and servings fall back to safe defaults so the code decodes.
+export function toDecodedDish(parts: readonly RecipePart[], details: RecipeCodeDetails = {}): DecodedDish {
+  const name = (details.name?.trim() || suggestedDishName(parts)).slice(0, MAX_NAME_LENGTH)
+  const vessel = details.vessel && STATIONS.includes(details.vessel) ? details.vessel : 'prep'
+  const requestedPrice = Number(details.price ?? MIN_PRICE)
+  const price = Number.isFinite(requestedPrice)
+    ? Math.min(MAX_PRICE, Math.max(MIN_PRICE, Math.round(requestedPrice * 100) / 100))
+    : MIN_PRICE
+  const requestedServings = Number(details.servings ?? 1)
+  const servings = Number.isFinite(requestedServings) && requestedServings > 0 ? Math.floor(requestedServings) : 1
+  return { name, vessel, mix: parts.map(part => ({ ...part })), price, servings }
+}
+
+export function encodeRecipeCode(parts: readonly RecipePart[], details: RecipeCodeDetails = {}): string {
+  return encodeMenuCode({ kind: 'recipe', dishes: [toDecodedDish(parts, details)] })
+}
+
+export function encodeMenuFromRecipes(recipes: readonly { parts: readonly RecipePart[]; details?: RecipeCodeDetails }[]): string {
+  if (recipes.length === 0) throw new Error('A menu needs at least one dish.')
+  if (recipes.length > MAX_DISHES) throw new Error(`A menu code holds at most ${MAX_DISHES} dishes.`)
+  return encodeMenuCode({ kind: 'menu', dishes: recipes.map(recipe => toDecodedDish(recipe.parts, recipe.details)) })
 }

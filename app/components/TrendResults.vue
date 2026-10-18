@@ -1,12 +1,29 @@
 <script setup lang="ts">
 import { AXIS_LABELS } from '../utils/domain/axes'
-import type { OptimizationResponse, Trend } from '../utils/domain/types'
+import { MAX_MENU_DISHES } from '../utils/domain/menuCode'
+import type { OptimizationResponse, RecipePart, Trend } from '../utils/domain/types'
 
-defineProps<{
+const props = defineProps<{
   trends: Trend[]
   optimization: OptimizationResponse
   chunkId: string
 }>()
+
+// The whole generated menu: every distinct candidate across the three trends,
+// capped at the game's twelve-dish limit.
+const exportDishes = computed(() => {
+  const seen = new Set<string>()
+  const dishes: { parts: RecipePart[] }[] = []
+  for (const result of props.optimization.results) {
+    for (const candidate of result.candidates) {
+      if (seen.has(candidate.signature)) continue
+      seen.add(candidate.signature)
+      dishes.push({ parts: candidate.parts })
+      if (dishes.length >= MAX_MENU_DISHES) return dishes
+    }
+  }
+  return dishes
+})
 </script>
 
 <template>
@@ -15,6 +32,9 @@ defineProps<{
       <p class="eyebrow accent">03 / OPTIMIZED RECIPES</p>
       <h2 id="results-title">Menu candidates, ranked by exact match.</h2>
       <p>Best found—not claimed as global optima. Every two-ingredient mix among your selected ingredients was checked exhaustively; larger recipes use deterministic refinement.</p>
+      <div class="button-row">
+        <MenuCodeExport :dishes="exportDishes" kind="menu" label="Export full menu code (CRMENU1)" />
+      </div>
     </header>
 
     <article v-for="trend in trends" :key="trend.index" class="trend-block">

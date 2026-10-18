@@ -6,6 +6,7 @@ export const ANALYTICS_EVENTS = {
   shoppingListBuilt: 'shopping_list_built',
   menuCodeDecoded: 'menu_code_decoded',
   menuCodeSaved: 'menu_code_saved',
+  menuCodeExported: 'menu_code_exported',
   surveyDepositSaved: 'survey_deposit_saved',
   faqOpened: 'faq_opened',
 } as const

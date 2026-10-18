@@ -22,6 +22,7 @@ const suggestedName = computed(() => {
   const top = [...props.candidate.parts].sort((a, b) => b.share - a.share).slice(0, 2)
   return `${top.map(part => INGREDIENT_BY_ID.get(part.ingredientId)?.name).join(' & ')} Blend`
 })
+const exportDishes = computed(() => [{ parts: props.candidate.parts, name: suggestedName.value }])
 
 async function copyRecipe() {
   const lines = [
@@ -82,6 +83,7 @@ async function copyRecipe() {
     </details>
 
     <button class="text-button" type="button" @click="copyRecipe">{{ copied ? 'Copied' : 'Copy recipe' }} <span aria-hidden="true">↗</span></button>
+    <MenuCodeExport :dishes="exportDishes" kind="recipe" label="Export as recipe code" />
     <RecipeActions :parts="candidate.parts" :chunk-id="chunkId" />
     <span class="sr-only" aria-live="polite">{{ copied ? 'Recipe copied to clipboard.' : '' }}</span>
   </article>

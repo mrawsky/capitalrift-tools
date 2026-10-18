@@ -43,6 +43,7 @@ Generic events are prefixed by tool via the `tool` property.
 | `shopping_list_built` | shopping list | `product_count`, `raw_material_count`, `intermediate_count`, `total_batches` |
 | `menu_code_decoded` | menu-code reader | `valid`, `error`, `code_kind`, `dish_count` |
 | `menu_code_saved` | menu-code reader | `dish_count`, `saved_total` |
+| `menu_code_exported` | recipe calculator export | `tool`, `code_kind`, `dish_count`, `vessel` |
 | `survey_deposit_saved` | `/tools/resources` | `resource`, `rate_per_min`, `has_gear`, `has_location` |
 | `faq_opened` | `/tools/troubleshoot` | `question_id`, `index` |
 | `hub_tool_opened` | home hub | `path` |

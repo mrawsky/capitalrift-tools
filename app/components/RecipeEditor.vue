@@ -18,6 +18,7 @@ const errors = computed(() => validateRecipeComposition(rows.value.map(row => ({
 const result = computed(() => errors.value.length ? null : scoreRecipeAcrossTrends(rows.value, props.trends))
 const cost = computed(() => errors.value.length ? null : recipeCost(rows.value))
 const showCost = useFeatureFlag(FEATURE_FLAGS.recipeCost)
+const exportDishes = computed(() => [{ parts: rows.value.map(row => ({ ...row, share: Number(row.share) })) }])
 
 function addRow() {
   const next = INGREDIENTS.find(ingredient => !rows.value.some(row => row.ingredientId === ingredient.id))
@@ -73,6 +74,7 @@ async function copyCustomRecipe() {
           </div>
           <p v-if="cost && showCost" class="form-note" role="status">Estimated ingredient base cost: {{ cost.total.toFixed(3) }}<template v-if="cost.unpriced.length"> ({{ cost.unpriced.length }} ingredient(s) unpriced)</template>. Cost is shown for reference; candidates are ranked by taste match only.</p>
           <button class="text-button" type="button" @click="copyCustomRecipe">{{ copied ? 'Copied' : 'Copy custom recipe' }} ↗</button>
+          <MenuCodeExport :dishes="exportDishes" kind="recipe" label="Export as recipe code" />
           <RecipeActions :parts="rows" :chunk-id="chunkId" />
         </template>
         <p v-else class="empty-state">Complete a valid recipe to calculate all three local matches.</p>
