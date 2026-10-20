@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { EQUIPMENT_MECHANICS, containersRequired, throughputPlan, tripsRequired } from '../../utils/equipment'
+import { EQUIPMENT_MECHANICS, containersRequired, garagePlan, throughputPlan, tripsRequired } from '../../utils/equipment'
 import { itemName, productPath } from '../../utils/factory/catalog'
-useToolSeo('Capital Rift Logistics: Hauling, Storage & Transport Throughput', 'Plan Capital Rift logistics: calculate hauling trips from vehicle capacity, compare storage, and turn a measured round trip into vehicles, delivery frequency and buffer stock.', true)
+useToolSeo('Capital Rift Logistics: Hauling, Storage, Garage Fuel & Transport Throughput', 'Plan Capital Rift logistics: calculate hauling trips from vehicle capacity, compare storage, plan garage fuel and repair kits, and turn a measured round trip into vehicles, delivery frequency and buffer stock.', true)
 const vehicle = ref(EQUIPMENT_MECHANICS.hauling[0]!.id)
 const quantity = ref(1000)
 const capacityOverride = ref<number | ''>('')
 const selected = computed(() => EQUIPMENT_MECHANICS.hauling.find(entry => entry.id === vehicle.value)!)
 const capacity = computed(() => capacityOverride.value === '' ? selected.value.cargo : Number(capacityOverride.value))
 const trips = computed(() => tripsRequired(quantity.value, capacity.value))
-const storageIds = ['crate', 'rack', 'cabinet', 'shelving_unit', 'stockroom_rack', 'storage_locker', 'pallet_rack', 'lumber_stack', 'shipping_container', 'grain_silo', 'oil_drum']
+const storageIds = ['delivery_space', 'crate', 'rack', 'cabinet', 'shelving_unit', 'stockroom_rack', 'storage_locker', 'pallet_rack', 'lumber_stack', 'shipping_container', 'grain_silo', 'oil_drum']
 const storageValues = reactive<Record<string, { capacity?: number; accepts: string; placement: string }>>({})
 for (const id of storageIds) storageValues[id] = { accepts: '', placement: '' }
 const ranked = computed(() => storageIds.filter(id => Number.isFinite(storageValues[id]?.capacity) && (storageValues[id]?.capacity ?? 0) > 0).sort((a, b) => storageValues[b]!.capacity! - storageValues[a]!.capacity!))
@@ -16,6 +16,8 @@ function setCapacity(id: string, event: Event) { const text = (event.target as H
 const demandPerMinute = ref(60)
 const roundTripMinutes = ref(8)
 const throughput = computed(() => throughputPlan(demandPerMinute.value, capacity.value, roundTripMinutes.value))
+const garageFleet = reactive<Record<string, number>>({ sedan: 1, suv: 0, van: 0, truck: 0 })
+const garage = computed(() => garagePlan(Object.entries(garageFleet).map(([id, count]) => ({ id, count }))))
 const telemetry = useToolTelemetry('logistics')
 watch([trips, throughput], () => telemetry.calculated({ vehicle: vehicle.value, quantity: quantity.value, trips: trips.value, demand_per_min: demandPerMinute.value, vehicles_needed: throughput.value?.vehiclesNeeded ?? null, buffer_stock: throughput.value === null ? null : Math.round(throughput.value.bufferStock * 100) / 100 }))
 function fmt(value: number, digits = 0) { return value.toLocaleString('en-US', { maximumFractionDigits: digits }) }
@@ -53,9 +55,26 @@ function fmt(value: number, digits = 0) { return value.toLocaleString('en-US', {
       <div class="panel-title"><h2>Vehicle cargo reference</h2></div>
       <div class="table-wrap"><table><thead><tr><th>Vehicle</th><th>Transport</th><th>Base cargo units</th><th>Trips for {{ fmt(quantity) }}</th></tr></thead><tbody><tr v-for="entry in EQUIPMENT_MECHANICS.hauling" :key="entry.id"><th>{{ entry.name }}</th><td>{{ entry.mode }}</td><td>{{ fmt(entry.cargo) }}</td><td>{{ tripsRequired(quantity, entry.cargo) }}</td></tr></tbody></table></div>
     </section>
+    <section class="factory-panel reference-content">
+      <div class="panel-title"><h2>Garage fuel &amp; fleet</h2></div>
+      <p class="panel-note">A logistics garage needs a fuel pump, parking spots and a mechanic. The mechanic fuels the fleet from the room's own stock and spends repair kits to keep the vehicles running.</p>
+      <div class="equipment-form">
+        <div v-for="entry in EQUIPMENT_MECHANICS.garage.fleet" :key="entry.id"><label :for="`garage-${entry.id}`">{{ entry.name }}</label><input :id="`garage-${entry.id}`" v-model.number="garageFleet[entry.id]" type="number" min="0" max="100" step="1"></div>
+      </div>
+      <ul class="reference-links">
+        <li>Fleet size: <strong>{{ garage.totalVehicles }}</strong> vehicle(s) — mechanics needed: <strong>{{ garage.mechanicsNeeded }}</strong> (one mechanic covers {{ EQUIPMENT_MECHANICS.garage.vehiclesPerMechanic }} vehicles).</li>
+        <li>Fuel burn: <strong>{{ fmt(garage.fuelPerMin, 4) }} units/min</strong><template v-for="(amount, item) in garage.fuelByItem" :key="item"> — {{ fmt(amount, 4) }} {{ item }}/min</template>.</li>
+        <li>Top rate if every vehicle works: <strong>{{ fmt(garage.topRatePerMin, 2) }} units/min</strong> of freight, within {{ EQUIPMENT_MECHANICS.garage.reachKm }} km of shipping.</li>
+      </ul>
+      <div class="table-wrap"><table><thead><tr><th>Vehicle</th><th>Count</th><th>Fuel</th><th>Burn / min</th><th>Tank units</th><th>Tank lasts</th></tr></thead><tbody><tr v-for="row in garage.tankHours" :key="row.id"><th>{{ row.name }}</th><td>{{ row.count }}</td><td>{{ garage.rows.find(r => r.id === row.id)?.fuel }}</td><td>{{ fmt(garage.rows.find(r => r.id === row.id)?.fuelPerMin ?? 0, 4) }}</td><td>{{ fmt(garage.rows.find(r => r.id === row.id)?.tankUnits ?? 0) }}</td><td>{{ fmt(row.hours, 1) }} h</td></tr></tbody></table></div>
+      <p class="form-note">Keep at least <strong>{{ EQUIPMENT_MECHANICS.garage.lowStockMinutes }} minutes</strong> of each supply in the room, or the garage flags low stock. Stock these three items:
+        <NuxtLink :to="productPath('gasoline')">Gasoline</NuxtLink>,
+        <NuxtLink :to="productPath('diesel')">Diesel</NuxtLink> and
+        <NuxtLink :to="productPath('vehicle_repair_kit')">Vehicle Repair Kits</NuxtLink>.</p>
+    </section>
     <section class="factory-panel">
       <div class="panel-title"><h2>Storage comparison</h2></div>
-      <p class="panel-note">Enter capacities from your game, then compare how many containers your stock needs. Placement defaults may be overridden by the server.</p>
+      <p class="panel-note">Enter capacities from your game, then compare how many containers your stock needs. Placement defaults may be overridden by the server. A delivery space receives what the lines bring and hands it to a worker; it is not bulk storage.</p>
       <div class="table-wrap"><table class="storage-comparison"><thead><tr><th>Storage</th><th>In-game capacity</th><th>Containers needed</th><th>Accepted items</th><th>Placement notes</th></tr></thead><tbody><tr v-for="id in storageIds" :key="id"><th><NuxtLink :to="productPath(id)">{{ itemName(id) }}</NuxtLink></th><td><input :value="storageValues[id]!.capacity ?? ''" type="number" min="1" step="any" placeholder="Unknown" :aria-label="`${itemName(id)} in-game capacity`" @input="setCapacity(id, $event)"></td><td>{{ containersRequired(quantity, storageValues[id]!.capacity) ?? 'Unknown / invalid' }}</td><td><input v-model="storageValues[id]!.accepts" :aria-label="`${itemName(id)} accepted items`" placeholder="Check in game"></td><td><input v-model="storageValues[id]!.placement" :aria-label="`${itemName(id)} placement restrictions`" placeholder="Check in game"></td></tr></tbody></table></div>
       <p v-if="ranked.length" class="form-note" role="status">Largest entered capacity: {{ itemName(ranked[0]!) }}, {{ storageValues[ranked[0]!]!.capacity }} units. Check accepted goods and placement before choosing it.</p>
     </section>
@@ -66,6 +85,7 @@ function fmt(value: number, digits = 0) { return value.toLocaleString('en-US', {
         <li><div><strong>Set a delivery request</strong><p>Choose items or categories and enter an amount. An acceptance filter alone does not request a delivery.</p></div></li>
         <li><div><strong>Enable shipping at the source</strong><p>Configure what it ships out so the network can use the stock.</p></div></li>
         <li><div><strong>Match supply to demand</strong><p>Compare delivered units per minute with your <NuxtLink to="/factory/statistics">factory demand</NuxtLink>.</p></div></li>
+        <li><div><strong>Stock the garage</strong><p>A logistics garage needs a <NuxtLink :to="productPath('fuel_pump')">fuel pump</NuxtLink>, parking spots, a mechanic, and fuel and repair kits in the room.</p></div></li>
       </ol>
       <div class="tool-guide__actions"><NuxtLink class="button" to="/tools/resources">Survey & resources →</NuxtLink></div>
     </section>

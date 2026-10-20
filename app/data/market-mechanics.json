@@ -92,6 +92,7 @@
     "rack": 140,
     "cabinet": 110,
     "delivery_space": 150,
+    "pallet": 150,
     "shipping_container": 1500,
     "grain_silo": 2400,
     "pallet_rack": 700,
@@ -102,6 +103,7 @@
     "shop_shelf": 240,
     "shop_freezer": 380,
     "shop_register": 520,
+    "self_checkout": 700,
     "display_platform": 1500,
     "station_pot": 340,
     "station_pan": 320,
@@ -110,6 +112,7 @@
     "station_oven": 520,
     "station_prep": 260,
     "mop_cart": 180,
+    "takeout_counter": 600,
     "cafe_table": 85,
     "cafe_table_square": 90,
     "table_long": 210,
@@ -351,12 +354,16 @@
     "mirror_wall_panel": 120,
     "slot_jackpot": 1050,
     "gold_statue": 740,
+    "electronic_roulette": 1100,
     "coal": 7,
     "coal_generator": 45000,
     "oil_generator": 30000,
     "hydro_turbine": 28000,
     "wind_turbine": 14000,
     "coal_bunker": 3000,
-    "fuel_tank": 2500
+    "fuel_tank": 2500,
+    "gasoline": 13,
+    "vehicle_repair_kit": 180,
+    "fuel_pump": 750
   }
 }

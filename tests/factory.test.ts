@@ -116,8 +116,8 @@ describe('factory planner domain', () => {
   it('ships a consistent bundled catalog', () => {
     expect(Object.keys(rawCatalog).sort()).toEqual(['items', 'recipes'])
     expect(FACTORY_CATALOG.version).toBe(CURRENT_RELEASE_KEY)
-    expect(FACTORY_CATALOG.items).toHaveLength(346)
-    expect(FACTORY_CATALOG.recipes).toHaveLength(264)
+    expect(FACTORY_CATALOG.items).toHaveLength(349)
+    expect(FACTORY_CATALOG.recipes).toHaveLength(267)
     expect(new Set(FACTORY_CATALOG.recipes.map(recipe => recipe.id)).size).toBe(FACTORY_CATALOG.recipes.length)
     for (const recipe of FACTORY_CATALOG.recipes) {
       expect(FACTORY_CATALOG.itemById.has(recipe.productId)).toBe(true)

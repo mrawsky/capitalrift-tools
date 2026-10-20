@@ -1,7 +1,7 @@
 import mechanics from '../data/economy-mechanics.json'
 
 export const ECONOMY_MECHANICS = mechanics
-const { rent: RENT, lease: LEASE, seizure: SEIZURE, building: BUILDING, busyness: BUSYNESS, wages: WAGES, solvency: SOLVENCY, auction: AUCTION } = mechanics
+const { rent: RENT, lease: LEASE, seizure: SEIZURE, building: BUILDING, busyness: BUSYNESS, wages: WAGES, solvency: SOLVENCY, auction: AUCTION, runningCosts: RUNNING, rentalProblems: REPAIRS } = mechanics
 
 export const MINUTES_PER_REAL_DAY = 1440
 
@@ -51,6 +51,69 @@ export function leaseTerms(rentPerDayValue: number): LeaseTerms {
 
 export function rentPerMinute(rentPerDayValue: number): number {
   return Number.isFinite(rentPerDayValue) ? Math.max(0, rentPerDayValue) / 60 : 0
+}
+
+// The game splits the rent a tenant pays into upkeep, a property manager's cut
+// and an average repair allowance before the landlord keeps anything.
+export function averageRepairShare(): number {
+  const weighted = (entries: readonly { weight: number, costMul: number }[]) =>
+    entries.reduce((sum, entry) => sum + entry.weight * entry.costMul, 0)
+  const unit = weighted(REPAIRS.unit) * REPAIRS.unitRepairRate * REPAIRS.unitRepairCost / 24
+  const building = weighted(REPAIRS.building) * REPAIRS.buildingRepairRate * REPAIRS.buildingRepairCost / 24
+  return unit + building
+}
+
+export interface LandlordBreakdown {
+  grossPerDay: number
+  upkeepPerDay: number
+  managerPerDay: number
+  repairsPerDay: number
+  netPerDay: number
+  netPerMinute: number
+}
+
+export function landlordBreakdown(rentPerDayValue: number, managed: boolean): LandlordBreakdown {
+  const gross = Number.isFinite(rentPerDayValue) ? Math.max(0, rentPerDayValue) : 0
+  const upkeep = gross * RENT.upkeepShare
+  const manager = managed ? gross * RENT.managerShare : 0
+  const repairs = gross * averageRepairShare()
+  const net = Math.max(0, gross - upkeep - manager - repairs)
+  return {
+    grossPerDay: gross,
+    upkeepPerDay: upkeep,
+    managerPerDay: manager,
+    repairsPerDay: repairs,
+    netPerDay: net,
+    netPerMinute: net / 60,
+  }
+}
+
+export function makeReadyFee(rentPerDayValue: number): number {
+  const perDay = Number.isFinite(rentPerDayValue) ? Math.max(0, rentPerDayValue) : 0
+  return perDay * RENT.fitoutDays
+}
+
+export type BusinessKind = 'shop' | 'restaurant' | 'cart' | 'casino'
+
+export const BUSINESS_KINDS: readonly BusinessKind[] = ['shop', 'restaurant', 'cart', 'casino']
+
+export function runningCostShare(kind: BusinessKind): number {
+  switch (kind) {
+    case 'shop': return RUNNING.shopShare
+    case 'restaurant': return RUNNING.restaurantShare
+    case 'cart': return RUNNING.cartShare
+    case 'casino': return RUNNING.casinoShare
+  }
+}
+
+// Shops, restaurants, carts and casinos pay running costs out of their takings.
+export function runningCostPerMin(grossPerMin: number, kind: BusinessKind): number {
+  const gross = Number.isFinite(grossPerMin) ? Math.max(0, grossPerMin) : 0
+  return gross * runningCostShare(kind)
+}
+
+export function staffWagePerMin(): number {
+  return WAGES.staffWagePerMin
 }
 
 export type SolvencyTier = 'ok' | 'behind' | 'burning' | 'at_risk' | 'critical'
@@ -129,4 +192,4 @@ export function listingFee(openingBid: number): number {
   return Number.isFinite(openingBid) && openingBid > 0 ? openingBid * AUCTION.listingFeePct / 100 : 0
 }
 
-export const BUSINESS_CONSTANTS = { WAGES, SEIZURE, LEASE, SOLVENCY, RENT, BUILDING, BUSYNESS, AUCTION }
+export const BUSINESS_CONSTANTS = { WAGES, SEIZURE, LEASE, SOLVENCY, RENT, BUILDING, BUSYNESS, AUCTION, RUNNING, REPAIRS }

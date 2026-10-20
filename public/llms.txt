@@ -4,7 +4,7 @@
 
 ## Crafting, capacity, and community tools
 
-Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 261 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
+Every craftable product has a stable page at `/factory/recipes/<item-slug>`, derived from catalog IDs with underscores changed to hyphens. The 267 pages include inputs, batch yield, nominal output rates, full batch chains, ingredient links, and reverse uses. Battery-pack crafting is `/factory/recipes/battery`.
 
 Batches are `ceil(requestedQuantity / batchOutput)`. Inputs are batches times ingredients per batch. Shared demands are aggregated before rounding in both quantity chains and continuous plans. The continuous planner propagates whole-machine full-speed demand upstream; `perMinute` means output units/min, not batches/min.
 
@@ -14,11 +14,11 @@ New factories record required production assignments without claiming machines a
 
 [Starter blueprints](/factory/blueprints) are reviewed catalog-backed examples. Portable blueprint links and JSON exclude personal network surplus. Shared data opens as a preview without replacing local workspaces; saving is explicit. Restaurant locations and compositions can also be saved locally, shared, and backed up as JSON.
 
-[Logistics](/tools/logistics) combines hauling trips, storage comparison and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only; throughput turns a measured round trip into vehicles, delivery frequency and buffer stock. [Resources](/tools/resources) covers mining equipment (checked client vehicle multipliers with a player-entered unequipped baseline) and a local survey notebook for deposits, rates and locations. Unknown storage values stay unknown. No live resource map, freight duration, or profit optimizer is provided.
+[Logistics](/tools/logistics) combines hauling trips, storage comparison, garage fuel planning and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only; throughput turns a measured round trip into vehicles, delivery frequency and buffer stock. The garage section uses the client's vehicle fuel burn and tank sizes to plan a fleet's gasoline, diesel and repair-kit draw, and how many mechanics a fleet needs. [Resources](/tools/resources) covers mining equipment (checked client vehicle multipliers with a player-entered unequipped baseline) and a local survey notebook for deposits, rates and locations. Unknown storage values stay unknown. No live resource map, freight duration, or profit optimizer is provided.
 
 [Electricity](/tools/electricity) estimates bills from the client's device, kitchen, survey and machine draw tables in running, idle and paused states, and links to a regional price curve between the published floor and ceiling. [Cooling](/tools/cooling) models room temperature from latitude, floor, area and machines, then reports the production slowdown and the air conditioners needed. [Power station](/tools/power-station) compares coal, oil, hydro and wind generators, estimates fuel demand, margin and break-even price, and gathers the materials for a station in one checklist.
 
-[Business & property](/tools/business) combines revenue, rent, wages and electricity into an operating margin and a cash runway, then estimates rent, lease terms and building value and sanity-checks auction bids and seizure buy-backs using the client's lease, solvency and wage model. [Market](/tools/market) references commodity base prices and category spreads with a trade-value estimate.
+[Business & property](/tools/business) combines revenue, rent, wages and electricity into an operating margin and a cash runway, then estimates rent, lease terms and building value and sanity-checks auction bids and seizure buy-backs using the client's lease, solvency and wage model. It also shows the landlord's net rent after the game's upkeep share, property-manager cut and average repair allowance, the make-ready fee a new tenant triggers, and the running costs that shops, restaurants, carts and casinos pay out of their takings. [Market](/tools/market) references commodity base prices and category spreads with a trade-value estimate.
 
 [Combined shopping list](/factory/shopping) plans several products at once and combines shared material chains. Blueprints include reviewed power, fuel, cooling and construction setups. Factory statistics add a bottleneck view that applies a heat-slowdown to output. [Menu codes](/recipe/menu) decode CRRCP1 and CRMENU1 codes locally and can score dishes for a location. The recipe calculator can show an estimated ingredient cost for each candidate, but still ranks by taste match only.
 
@@ -34,8 +34,8 @@ New factories record required production assignments without claiming machines a
 - [Electricity cost](/tools/electricity): Estimate power bills and reference the grid price curve.
 - [Cooling planner](/tools/cooling): Estimate room temperature, slowdown, and air conditioners needed.
 - [Power station](/tools/power-station): Compare generators and gather a station's materials.
-- [Business & property](/tools/business): Estimate operating margin, cash runway, rent, lease terms, building value, auction bids, and solvency.
-- [Logistics](/tools/logistics): Calculate hauling trips, transport throughput, and storage needs.
+- [Business & property](/tools/business): Estimate operating margin, cash runway, rent, lease terms, building value, net rent after upkeep and managers, running costs, auction bids, and solvency.
+- [Logistics](/tools/logistics): Calculate hauling trips, garage fuel and repair-kit draw, transport throughput, and storage needs.
 - [Resources](/tools/resources): Estimate mining supply and record surveyed deposits.
 - [Troubleshooter](/tools/troubleshoot): Work through stalled-line and worker checks.
 - [Market prices](/tools/market): Reference commodity base prices and category spreads.

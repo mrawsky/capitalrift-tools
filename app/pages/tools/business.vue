@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BUSINESS_CONSTANTS, buildingValue, cashRunway, hireCost, leaseTerms, listingFee, rentPerDay, rentPerMinute, seizureRecovery, solvencyForecast, wageCostPerMin } from '../../utils/business'
+import { BUSINESS_CONSTANTS, BUSINESS_KINDS, averageRepairShare, buildingValue, cashRunway, hireCost, landlordBreakdown, leaseTerms, listingFee, makeReadyFee, rentPerDay, rentPerMinute, runningCostShare, seizureRecovery, solvencyForecast, wageCostPerMin } from '../../utils/business'
 useToolSeo('Capital Rift Business, Cash Runway & Property Planner', 'Combine revenue, rent, wages and electricity into an operating margin and cash runway, estimate rent, lease terms and building value, and check auction bids and seizure buy-backs in Capital Rift.', true)
 const revenuePerMin = ref(20)
 const materialPerMin = ref(5)
@@ -17,6 +17,9 @@ const floors = ref(3)
 const basements = ref(0)
 const busyness = ref(1.2)
 const openingBid = ref(0)
+const managed = ref(true)
+const businessKind = ref<'shop' | 'restaurant' | 'cart' | 'casino'>('shop')
+const businessGrossPerMin = ref(20)
 const wagePerMin = computed(() => wageCostPerMin(workers.value))
 const rentMin = computed(() => rentPerMinute(rentPerDayInput.value))
 const operatingCostPerMin = computed(() => Math.max(0, materialPerMin.value) + Math.max(0, electricityPerMin.value) + wagePerMin.value)
@@ -31,10 +34,16 @@ const propertyRent = computed(() => rentPerDay({ unitAreaM2: unitAreaM2.value, b
 const value = computed(() => buildingValue({ buildingAreaM2: buildingAreaM2.value, floors: floors.value, basements: basements.value, busyness: busyness.value }))
 const lease = computed(() => leaseTerms(propertyRent.value))
 const yearRent = computed(() => propertyRent.value * 365)
-const buyVsRentYears = computed(() => propertyRent.value > 0 ? value.value / propertyRent.value / 365 : 0)
+const landlord = computed(() => landlordBreakdown(propertyRent.value, managed.value))
+const buyVsRentYears = computed(() => landlord.value.netPerDay > 0 ? value.value / landlord.value.netPerDay / 365 : 0)
 const fee = computed(() => listingFee(openingBid.value))
 const recovery = computed(() => seizureRecovery(value.value))
-const bidVerdict = computed(() => { if (openingBid.value <= 0 || value.value <= 0) return ''; const ratio = openingBid.value / value.value; if (ratio < 0.8) return 'Below the estimated value — a good opening bid.'; if (ratio > 1.2) return 'Above the estimated value — bid with care.'; return 'Close to the estimated value.' })
+const bidVerdict = computed(() => { if (openingBid.value <= 0 || value.value <= 0) return ''; const ratio = openingBid.value / value.value; if (ratio < BUSINESS_CONSTANTS.AUCTION.lowBidRatio) return 'Below the estimated value — a good opening bid.'; if (ratio > BUSINESS_CONSTANTS.AUCTION.highBidRatio) return 'Above the estimated value — bid with care.'; return 'Close to the estimated value.' })
+const fitout = computed(() => makeReadyFee(propertyRent.value))
+const repairShare = computed(() => averageRepairShare())
+const runningShare = computed(() => runningCostShare(businessKind.value))
+const runningCost = computed(() => Math.max(0, businessGrossPerMin.value) * runningShare.value)
+const runningNet = computed(() => Math.max(0, businessGrossPerMin.value) - runningCost.value)
 const tierLabel: Record<string, string> = { ok: 'OK', behind: 'Behind', tight: 'Tight', good: 'Good', loss: 'Loss', danger: 'Danger', short: 'Short', burning: 'Burning', at_risk: 'At risk', critical: 'Critical' }
 const telemetry = useToolTelemetry('business')
 watch([netPerMin, runway, solvency], () => telemetry.calculated({ net_per_min: Math.round(netPerMin.value * 100) / 100, margin_percent: Math.round(marginPercent.value * 10) / 10, runway_tier: runway.value.tier, runway_days: runway.value.runwayDays === null ? null : Math.round(runway.value.runwayDays * 10) / 10, solvency_tier: solvency.value.tier, workers: workers.value }))
@@ -105,7 +114,7 @@ function duration(minutes: number | null) { if (minutes === null) return '—'; 
         <article><span>Rent / day</span><strong>{{ money0(propertyRent) }}</strong></article>
         <article><span>Rent / year</span><strong>{{ money0(yearRent) }}</strong></article>
         <article><span>Building value</span><strong>{{ money0(value) }}</strong></article>
-        <article><span>Buy vs rent</span><strong>{{ fmt(buyVsRentYears, 1) }} yrs</strong><small>of rent equals the price</small></article>
+        <article><span>Buy vs rent</span><strong>{{ fmt(buyVsRentYears, 1) }} yrs</strong><small>of net rent equals the price</small></article>
       </div>
       <div class="button-row reference-content"><button class="button" type="button" @click="usePropertyRent">Use this rent in the margin above</button></div>
       <p class="form-note">Rent uses ${{ BUSINESS_CONSTANTS.RENT.perM2PerDay }}/m²/day, a minimum of ${{ BUSINESS_CONSTANTS.RENT.minPerDay }}/day, and a tapered rentable area. Busyness is capped between {{ BUSINESS_CONSTANTS.BUSYNESS.min }} and {{ BUSINESS_CONSTANTS.BUSYNESS.max }}.</p>
@@ -117,6 +126,38 @@ function duration(minutes: number | null) { if (minutes === null) return '—'; 
       </tbody></table></div>
     </section>
     <section class="factory-panel reference-content">
+      <div class="panel-title"><h2>Landlord economics</h2></div>
+      <p class="form-note">What a tenant pays is not what you keep. The game takes building upkeep, a property manager's cut and an average repair allowance off the top of every rent payment. This uses the rent estimate above.</p>
+      <div class="equipment-form">
+        <div><label for="land-managed">Property manager</label><select id="land-managed" v-model="managed"><option :value="true">Hired (manager cut applies)</option><option :value="false">No manager (self-managed)</option></select></div>
+      </div>
+      <div class="kpi-grid" aria-label="Landlord net rent">
+        <article><span>Tenants pay / day</span><strong>{{ money0(landlord.grossPerDay) }}</strong></article>
+        <article><span>Your net / day</span><strong>{{ money0(landlord.netPerDay) }}</strong><small>{{ fmt(landlord.grossPerDay > 0 ? (landlord.netPerDay / landlord.grossPerDay) * 100 : 0, 1) }}% of gross</small></article>
+        <article><span>Upkeep</span><strong>−{{ money0(landlord.upkeepPerDay) }}</strong><small>{{ Math.round(BUSINESS_CONSTANTS.RENT.upkeepShare * 100) }}% of rent</small></article>
+        <article><span>Manager</span><strong>−{{ money0(landlord.managerPerDay) }}</strong><small>{{ Math.round(BUSINESS_CONSTANTS.RENT.managerShare * 100) }}% of rent</small></article>
+      </div>
+      <ul class="reference-links">
+        <li>Average repairs: <strong>−{{ money0(landlord.repairsPerDay) }}/day</strong> ({{ fmt(repairShare * 100, 2) }}% of rent, from the game's per-unit and per-building repair rates).</li>
+        <li>Make-ready fee before a new tenant moves in: <strong>{{ money0(fitout) }}</strong> ({{ BUSINESS_CONSTANTS.RENT.fitoutDays }} days of rent). It waits for a tenant, so an empty unit does not cost it yet.</li>
+        <li v-if="landlord.netPerDay <= 0" class="danger">This rent does not cover upkeep, managers and repairs. Raise the rent or drop the manager.</li>
+        <li v-else>Net rent per minute: <strong>{{ money(landlord.netPerMinute) }}</strong> before your own costs.</li>
+      </ul>
+    </section>
+    <section class="factory-panel reference-content">
+      <div class="panel-title"><h2>Running costs</h2></div>
+      <p class="form-note">Shops, restaurants, carts and casinos now pay running costs out of their takings: staff hours between customers, card fees, permits, insurance, shrink, supplies and upkeep.</p>
+      <div class="equipment-form">
+        <div><label for="run-kind">Business type</label><select id="run-kind" v-model="businessKind"><option v-for="kind in BUSINESS_KINDS" :key="kind" :value="kind">{{ kind }}</option></select></div>
+        <div><label for="run-gross">Takings / min</label><input id="run-gross" v-model.number="businessGrossPerMin" type="number" min="0" step="0.01"></div>
+      </div>
+      <div class="kpi-grid" aria-label="Running costs">
+        <article><span>Running cost / min</span><strong>{{ money(runningCost) }}</strong><small>{{ fmt(runningShare * 100, 0) }}% of takings</small></article>
+        <article><span>Left after running costs</span><strong :class="{ positive: runningNet > 0, danger: runningNet <= 0 }">{{ money(runningNet) }}</strong></article>
+      </div>
+      <p class="form-note">Staff in NPC-paid businesses earn {{ money(BUSINESS_CONSTANTS.WAGES.staffWagePerMin) }}/min worked. Your own hired crews are costed separately in the operating margin above.</p>
+    </section>
+    <section class="factory-panel reference-content">
       <div class="panel-title"><h2>Auction and seizure check</h2></div>
       <div class="equipment-form"><div><label for="prop-bid">Opening bid / Buy Now</label><input id="prop-bid" v-model.number="openingBid" type="number" min="0" step="1"></div></div>
       <ul class="reference-links">
@@ -126,6 +167,6 @@ function duration(minutes: number | null) { if (minutes === null) return '—'; 
       </ul>
     </section>
     <div class="button-row reference-actions"><NuxtLink class="button" to="/tools/electricity">Estimate electricity</NuxtLink><NuxtLink class="button" to="/tools/market">Market prices</NuxtLink><NuxtLink class="button" to="/tools/cooling">Cooling planner</NuxtLink></div>
-    <p class="reference-note"><NuxtLink to="/changelog">Changelog & data updates</NuxtLink>. Calculations use the client's rent, lease, wage and solvency model; building value is an estimate from per-m² constants, not a live appraisal. Check important figures in game after an update.</p>
+    <p class="reference-note"><NuxtLink to="/changelog">Changelog & data updates</NuxtLink>. Calculations use the client's rent, lease, wage and solvency model, including the landlord upkeep, manager and repair allowances; building value is an estimate from per-m² constants, not a live appraisal. Check important figures in game after an update.</p>
   </main>
 </template>

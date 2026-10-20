@@ -1,6 +1,24 @@
 <script setup lang="ts">
 import { productPath } from '../utils/factory/catalog'
 import { CRAFTING_QUESTIONS, craftingAnswer } from '../utils/factory/reference'
+
+// The answers are rendered on the page, so the same text is published as
+// structured data for search engines and AI systems.
+useHead(() => ({
+  script: [{
+    key: 'crafting-faq-schema',
+    type: 'application/ld+json',
+    textContent: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: CRAFTING_QUESTIONS.map(entry => ({
+        '@type': 'Question',
+        name: entry.question,
+        acceptedAnswer: { '@type': 'Answer', text: craftingAnswer(entry.productId) },
+      })),
+    }),
+  }],
+}))
 </script>
 
 <template>

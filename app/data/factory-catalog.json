@@ -111,11 +111,13 @@
     "fountain": "Fountain",
     "franks": "Franks",
     "fryer_oil": "Fryer Oil",
+    "fuel_pump": "Fuel Pump",
     "fuel_tank": "Fuel Tank",
     "furnace": "Furnace",
     "gaming_table_frame": "Gaming Table Frame",
     "gaming_workshop": "Gaming Workshop",
     "garage_roller": "Garage Door",
+    "gasoline": "Gasoline",
     "gear": "Gear",
     "giant_dice": "Giant Dice",
     "glass": "Glass",
@@ -321,6 +323,7 @@
     "vase": "Ceramic Vase",
     "vehicle_assembly_platform": "Vehicle Assembly Platform",
     "vehicle_cab": "Vehicle Cab",
+    "vehicle_repair_kit": "Vehicle Repair Kit",
     "velvet": "Velvet",
     "velvet_curtain": "Velvet Curtain",
     "vinegar": "Vinegar",
@@ -1238,6 +1241,22 @@
         "sunflower": 12
       }
     },
+    "fuel_pump": {
+      "label": "Build a fuel pump",
+      "station": "metal_shop",
+      "product": "fuel_pump",
+      "batch": 1,
+      "rate": 0.02,
+      "inputs": {
+        "circuit_board": 2,
+        "concrete": 6,
+        "copper_wire": 10,
+        "glass": 6,
+        "hydraulic_pump": 2,
+        "plastic_part": 8,
+        "steel_sheet": 12
+      }
+    },
     "fuel_tank": {
       "label": "Build a fuel tank",
       "station": "metal_shop",
@@ -1272,6 +1291,16 @@
       "inputs": {
         "steel_sheet": 10,
         "wire": 6
+      }
+    },
+    "gasoline": {
+      "label": "Refine gasoline",
+      "station": "oil_refinery",
+      "product": "gasoline",
+      "batch": 4,
+      "rate": 1.2,
+      "inputs": {
+        "crude_oil": 5
       }
     },
     "gear": {
@@ -3313,6 +3342,19 @@
         "glass": 4,
         "plastic_part": 3,
         "steel_sheet": 6
+      }
+    },
+    "vehicle_repair_kit": {
+      "label": "Pack a vehicle repair kit",
+      "station": "hydraulics_shop",
+      "product": "vehicle_repair_kit",
+      "batch": 1,
+      "rate": 0.1,
+      "inputs": {
+        "machine_parts": 2,
+        "plastic_part": 2,
+        "rubber": 2,
+        "steel_sheet": 2
       }
     },
     "velvet": {

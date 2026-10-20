@@ -7,7 +7,10 @@
     "busynessExp": 1,
     "minPerDay": 6,
     "areaTaperM2": 150,
-    "areaTaperExp": 0.8
+    "areaTaperExp": 0.8,
+    "upkeepShare": 0.25,
+    "managerShare": 0.07,
+    "fitoutDays": 48
   },
   "lease": {
     "downPaymentDays": 48,
@@ -22,11 +25,11 @@
     "holdRealDays": 2
   },
   "building": {
-    "valuePerM2": 95,
+    "valuePerM2": 2280,
     "upperFloorFactor": 0.6,
     "basementFloorFactor": 0.4,
     "busynessExp": 1.2,
-    "valueMin": 2500,
+    "valueMin": 60000,
     "econMaxFootprintM2": 1000000,
     "econMaxFloorAreaM2": 3000000,
     "maxFloorsCap": 200
@@ -38,7 +41,30 @@
   "wages": {
     "hireCost": 1000,
     "wagePerMin": 3.3,
-    "cookPerMin": 30
+    "cookPerMin": 30,
+    "staffWagePerMin": 8
+  },
+  "runningCosts": {
+    "shopShare": 0.4,
+    "restaurantShare": 0.4,
+    "cartShare": 0.59,
+    "casinoShare": 0.45
+  },
+  "rentalProblems": {
+    "unitRepairRate": 0.22,
+    "unitRepairCost": 6.3,
+    "buildingRepairRate": 0.25,
+    "buildingRepairCost": 3.2,
+    "unit": [
+      { "kind": "wall_hole", "weight": 0.25, "costMul": 0.8 },
+      { "kind": "leak", "weight": 0.35, "costMul": 1.2 },
+      { "kind": "window", "weight": 0.2, "costMul": 1.1 },
+      { "kind": "pests", "weight": 0.2, "costMul": 0.8 }
+    ],
+    "building": [
+      { "kind": "hvac", "weight": 0.6, "costMul": 1.2 },
+      { "kind": "power", "weight": 0.4, "costMul": 0.7 }
+    ]
   },
   "solvency": {
     "criticalZeroHours": 2,
@@ -48,6 +74,8 @@
     "goodCashDays": 6
   },
   "auction": {
-    "listingFeePct": 1
+    "listingFeePct": 1,
+    "lowBidRatio": 0.8,
+    "highBidRatio": 1.2
   }
 }

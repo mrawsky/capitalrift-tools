@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MARKET_MECHANICS, basePrice, categoryNames, categorySpread, storePrice } from '../../utils/market'
+import { MARKET_MECHANICS, basePrice, categoryNames, categorySpread } from '../../utils/market'
 useToolSeo('Capital Rift Commodity Prices & Market Trading Reference', 'Reference Capital Rift commodity base prices, category spreads and the store markup, and estimate a fair resale or player-trade value for goods.', true)
 const spreadCategory = ref(categoryNames()[0] ?? 'Bundle')
 const categoryOptions = categoryNames().map(category => ({ value: category, label: category }))

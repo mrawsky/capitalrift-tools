@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CLIMATE_MECHANICS, heatOptions, outdoorTemperature, roomTemperature } from '../../utils/climate'
+import { CLIMATE_MECHANICS, heatOptions, roomTemperature } from '../../utils/climate'
 import { POWER_MECHANICS, costPerMinute, optionContinuousKw } from '../../utils/power'
 useToolSeo('Capital Rift Room Temperature & Cooling Planner', 'Estimate Capital Rift room temperature from latitude, floor, area and machines, then see the production slowdown and the air conditioners needed to cool it.', true)
 const latDeg = ref(40)
@@ -59,7 +59,7 @@ function money(value: number) { return `$${value.toLocaleString('en-US', { minim
       <ul class="reference-links">
         <li>Breakdown: building {{ fmt(result.buildingC) }}°C + floor depth {{ fmt(result.depthC) }}°C + devices {{ fmt(result.devicesC) }}°C + machines {{ fmt(result.machinesC) }}°C.</li>
         <li v-if="result.acsToCool">Cooling the room with {{ result.acsToCool }} industrial AC(s) costs about {{ money(acCostMin) }}/min at the entered price.</li>
-        <li v-else-if="result.tempC < CLIMATE_MECHANICS.config.comfortLow">The room is below the comfortable band; add a heater such as an industrial heater (1500 heat) if that matters here.</li>
+        <li v-else-if="result.tempC < CLIMATE_MECHANICS.config.comfortLow">The room is below the comfortable band; add a heater such as an industrial heater ({{ CLIMATE_MECHANICS.deviceHeat.industrial_heater }} heat) if that matters here.</li>
         <li v-else>The room is within the comfortable band; no cooling is required.</li>
       </ul>
     </section>

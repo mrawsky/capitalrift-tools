@@ -14,7 +14,7 @@ New factories record required production assignments without claiming machines a
 
 [Starter blueprints](/factory/blueprints) are reviewed catalog-backed examples. Portable blueprint links and JSON exclude personal network surplus. Shared data opens as a preview without replacing local workspaces; saving is explicit. Restaurant locations and compositions can also be saved locally, shared, and backed up as JSON.
 
-[Logistics](/tools/logistics) combines hauling, storage and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only. [Resources](/tools/resources) estimates mining supply from checked client vehicle multipliers and a player-entered unequipped baseline, and keeps a local survey notebook. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and live logistics are excluded.
+[Logistics](/tools/logistics) combines hauling, storage, garage fuel and transport throughput. Hauling uses checked saved-client base capacities with a current-capacity override and predicts whole trips only. A logistics garage needs a fuel pump, parking spots and a mechanic; the mechanic fuels the fleet from the room's stock and spends repair kits. The client's garage fleet table gives each vehicle a fuel item, a burn rate per minute and a tank size, and one mechanic covers 10 vehicles. [Resources](/tools/resources) estimates mining supply from checked client vehicle multipliers and a player-entered unequipped baseline, and keeps a local survey notebook. Strongest available vehicles are assigned first, one per miner; others have multiplier one. Geology, depletion, changing ore mix, yield bonuses, and live logistics are excluded.
 
 ## Power, climate, rent and market
 
@@ -25,6 +25,8 @@ Generators are coal (5000 kW, 3.6 coal/MWh), oil (4000 kW, 3.4 diesel or 6.5 cru
 Room temperature is `building + depth + deviceHeat + machineHeat` over the area, where `outdoor = 27 - 32 * sin²(latitude)`, `building = 20 + 0.55 * (outdoor - 20)`, upper floors add `min(3, floor * 0.25)`, and basements subtract `floor * 3`. Above `28°C` production runs at `max(0.75, 1 - 0.025 * (temp - 28))`, and air conditioners needed are `ceil((rawTemp - 28) * area / 1500)`.
 
 Rent is `$0.85/m²/day` with a `$6` minimum and a tapered rentable area; lease terms are a 48-day down payment, a 7-day term, 168-day compensation and one-day arrears before eviction. Wages are `$3.30/min` per active worker with a `$1000` hire cost. Solvency reports when cash reaches zero, when seizable assets run out, and when unpaid rent risks eviction.
+
+A tenant's rent is not the landlord's income. The client takes building upkeep (25% of rent), a property manager's cut (7% of rent when a manager is hired) and an average repair allowance before the landlord keeps anything. The repair allowance is the weighted average of the client's per-unit problems (wall hole, leak, window, pests) and per-building problems (HVAC, power), weighted by scope, occurrence and cost multiplier. A make-ready fee of 48 days of rent is charged when a new tenant moves in, and it waits for a tenant. Shops, restaurants, carts and casinos pay running costs out of their takings: 40% for a shop, 40% for a restaurant, 59% for a cart and 45% for a casino. Staff in NPC-paid businesses earn `$8/min` worked.
 
 ## Primary pages
 

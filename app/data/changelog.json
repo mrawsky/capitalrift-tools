@@ -1,6 +1,58 @@
 {
   "entries": [
     {
+      "id": "v462-economy-rebalance-and-fuel-chain",
+      "date": "2026-10-20",
+      "gameVersion": "V462",
+      "title": "V462: Rebalanced economy, fuel chain and garage planning",
+      "summary": "Building values, landlord costs and business running costs follow the rebalanced economy, three new fuel-chain recipes and seven new market prices are added, and a garage fuel planner covers logistics fleets.",
+      "evidence": "Crafting, market, economy, power and equipment tables were checked against the 19 October 2026 game build (V462). Verify important results in game after an update.",
+      "changes": [
+        {
+          "title": "Corrected economy figures",
+          "items": [
+            "Building value now uses the rebalanced $2,280 per m² and $60,000 minimum, so property estimates, buy-versus-rent comparisons and auction bid checks are no longer understated by roughly 24 times.",
+            "The business tool shows the landlord's net rent: the game's 25% building upkeep, 7% property-manager cut and average repair allowance are taken off the rent a tenant pays.",
+            "The 48-day make-ready fee a new tenant triggers is shown alongside the rent estimate.",
+            "A new running-costs section covers the takings that shops (40%), restaurants (40%), carts (59%) and casinos (45%) pay out of their turnover, plus the $8 per minute that staff in NPC-paid businesses earn."
+          ]
+        },
+        {
+          "title": "New crafting recipes",
+          "items": [
+            "Added Gasoline refining at the Oil Refinery, with batch quantities, materials, and production planning.",
+            "Added Vehicle Repair Kit packing at the Hydraulics Shop, with batch quantities, materials, and production planning.",
+            "Added Fuel Pump building at the Metal Shop, with batch quantities, materials, and production planning.",
+            "The crafting reference now includes 267 recipes."
+          ]
+        },
+        {
+          "title": "Logistics garages and fuel",
+          "items": [
+            "A new garage section plans a logistics fleet: fuel burn per minute by vehicle, how long a full tank lasts, how many mechanics a fleet needs, and which items the room must stock.",
+            "The garage plan uses the game's own vehicle fuel rates, so a fleet of vans and box trucks can be compared against sedans and SUVs.",
+            "A delivery space joins the storage comparison table, and the logistics checklist now covers garage setup."
+          ]
+        },
+        {
+          "title": "Market and power data",
+          "items": [
+            "Seven missing market prices are added: Gasoline, Vehicle Repair Kit, Fuel Pump, Self-Checkout Kiosk, Takeout Counter, Electronic Roulette and Pallet. Every catalogued item now has a base price.",
+            "Power draw tables gain the Self-Checkout Kiosk, Electronic Roulette and Fuel Pump, and the Takeout Counter joins the kitchen stations.",
+            "Market, power, climate and equipment tables are all re-checked against the same build."
+          ]
+        },
+        {
+          "title": "More reliable data checks",
+          "items": [
+            "The data verification scripts now read the saved game client directly instead of a small loader stub, so a data check compares against the real tables.",
+            "New checks cover the crafting recipe table, item registry and market prices, which were previously not verified automatically.",
+            "New checks cover the landlord upkeep, manager and repair figures, and the garage fuel table."
+          ]
+        }
+      ]
+    },
+    {
       "id": "recipe-menu-code-export",
       "date": "2026-10-18",
       "gameVersion": "V449",

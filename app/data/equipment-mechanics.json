@@ -17,5 +17,18 @@
     { "itemId": "mining_excavator", "multiplier": 5 },
     { "itemId": "haul_truck", "multiplier": 7 },
     { "itemId": "bucket_wheel_excavator", "multiplier": 10 }
-  ]
+  ],
+  "garage": {
+    "vehiclesPerMechanic": 10,
+    "fuelItems": ["gasoline", "diesel"],
+    "supplyItems": ["gasoline", "diesel", "vehicle_repair_kit"],
+    "lowStockMinutes": 60,
+    "reachKm": 5,
+    "fleet": [
+      { "id": "sedan", "name": "Sedan", "fuel": "gasoline", "fuelPerMin": 0.005, "tankUnits": 4, "topRatePerMin": 0.5 },
+      { "id": "suv", "name": "SUV", "fuel": "gasoline", "fuelPerMin": 0.008, "tankUnits": 6, "topRatePerMin": 0.8 },
+      { "id": "van", "name": "Van", "fuel": "gasoline", "fuelPerMin": 0.012, "tankUnits": 8, "topRatePerMin": 1.5 },
+      { "id": "truck", "name": "Box Truck", "fuel": "diesel", "fuelPerMin": 0.02, "tankUnits": 12, "topRatePerMin": 3 }
+    ]
+  }
 }

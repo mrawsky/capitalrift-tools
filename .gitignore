@@ -20,6 +20,9 @@ logs
 
 # factory catalog
 gamefiles/
+
+# independent console scripts (deed finder)
+/another-scripts/
 /generate_dataset
 /docs/equipment-evidence.md
 /docs/seo-2026-10-07.md
@@ -29,9 +32,13 @@ gamefiles/
 /scripts/verify-seo.mjs
 /scripts/verify-economy.mjs
 /scripts/verify-power-climate.mjs
+/scripts/verify-market.mjs
+/scripts/verify-catalog.mjs
+/scripts/bundle-source.mjs
 /scripts/indexnow.mjs
 /seo
 /next_features.md
+.swarm
 
 # Local env files
 .env

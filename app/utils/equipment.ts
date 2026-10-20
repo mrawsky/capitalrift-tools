@@ -30,3 +30,54 @@ export function miningAssignment(miners: number, vehicles: Readonly<Record<strin
   while (selected.length < miners) selected.push(1)
   return selected
 }
+
+export type GarageVehicle = typeof mechanics.garage.fleet[number]
+
+export function garageVehicle(id: string): GarageVehicle | undefined {
+  return mechanics.garage.fleet.find(entry => entry.id === id)
+}
+
+// A garage mechanic fuels and repairs the fleet from the room's own stock, so a
+// garage needs fuel, repair kits and parking spaces before it earns anything.
+export function garagePlan(vehicles: readonly { id: string, count: number }[]) {
+  const rows = vehicles
+    .map(entry => {
+      const vehicle = garageVehicle(entry.id)
+      if (!vehicle || !Number.isFinite(entry.count) || entry.count <= 0) return null
+      const count = Math.floor(entry.count)
+      return {
+        id: vehicle.id,
+        name: vehicle.name,
+        count,
+        fuel: vehicle.fuel,
+        fuelPerMin: vehicle.fuelPerMin * count,
+        tankUnits: vehicle.tankUnits * count,
+        topRatePerMin: vehicle.topRatePerMin * count,
+      }
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+
+  const totalVehicles = rows.reduce((sum, row) => sum + row.count, 0)
+  const fuelPerMin = rows.reduce((sum, row) => sum + row.fuelPerMin, 0)
+  const topRatePerMin = rows.reduce((sum, row) => sum + row.topRatePerMin, 0)
+  const fuelByItem: Record<string, number> = {}
+  for (const row of rows) fuelByItem[row.fuel] = (fuelByItem[row.fuel] ?? 0) + row.fuelPerMin
+
+  return {
+    rows,
+    totalVehicles,
+    fuelPerMin,
+    topRatePerMin,
+    fuelByItem,
+    mechanicsNeeded: Math.ceil(totalVehicles / mechanics.garage.vehiclesPerMechanic),
+    // A mechanic fills each vehicle from the room's stock; the tank sets how
+    // long one full tank lasts at that vehicle's burn rate. Tank units divided
+    // by units per minute gives minutes, so the result is scaled to hours.
+    tankHours: rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      count: row.count,
+      hours: row.fuelPerMin > 0 ? (row.tankUnits / row.fuelPerMin) / 60 : 0,
+    })),
+  }
+}

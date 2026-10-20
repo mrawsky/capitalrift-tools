@@ -6,6 +6,8 @@
   "priceCeiling": 0.4,
   "machineStandby": 0.1,
   "oilPumpKw": 20,
+  "hvacBaseWm2": 4,
+  "hvacWm2PerC": 1,
   "deviceDraw": {
     "lamp": {
       "w": 60,
@@ -67,6 +69,10 @@
       "w": 100,
       "duty": 1
     },
+    "self_checkout": {
+      "w": 250,
+      "duty": 1
+    },
     "glass_counter": {
       "w": 150,
       "duty": 1
@@ -103,9 +109,17 @@
       "w": 500,
       "duty": 1
     },
+    "electronic_roulette": {
+      "w": 800,
+      "duty": 1
+    },
     "fountain": {
       "w": 400,
       "duty": 1
+    },
+    "fuel_pump": {
+      "w": 400,
+      "duty": 0.5
     }
   },
   "kitchenDraw": {
@@ -128,6 +142,10 @@
     "station_oven": {
       "w": 6000,
       "duty": 0.4
+    },
+    "takeout_counter": {
+      "w": 1500,
+      "duty": 0.6
     }
   },
   "surveyDraw": {
